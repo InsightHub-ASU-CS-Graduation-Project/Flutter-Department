@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/views/favorit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/widget/card_container.dart';
 
 class LaborInformationScreen extends StatefulWidget {
   const LaborInformationScreen({super.key});
+
+  static const String routeName = '/laborInformationScreen';
 
   @override
   State<LaborInformationScreen> createState() => _LaborInformationScreenState();
@@ -11,31 +15,30 @@ class LaborInformationScreen extends StatefulWidget {
 
 class _LaborInformationScreenState extends State<LaborInformationScreen> {
 
-  String? selectedJob;
-  String? selectedExperience;
+  int? selectedJob;
+  int? selectedExperience;
 
-  final List<String> jobs = [
-    "Software Developer",
-    "Designer",
-    "Marketing Specialist",
-    "Engineer",
-    "Business Analyst",
-    "Product Manager"
+  final List<Map<String, dynamic>> jobs = [
+    {"id": 1, "name": "Software Developer"},
+    {"id": 2, "name": "Designer"},
+    {"id": 3, "name": "Marketing Specialist"},
+    {"id": 4, "name": "Engineer"},
+    {"id": 5, "name": "Business Analyst"},
+    {"id": 6, "name": "Product Manager"}
   ];
 
-  final List<String> experienceYears = [
-    "0 - 1 years",
-    "1 - 3 years",
-    "3 - 5 years",
-    "5 - 10 years",
-    "10+ years"
+  final List<Map<String, dynamic>> experienceYears = [
+    {"value": 1, "text": "0 - 1 years"},
+    {"value": 2, "text": "1 - 3 years"},
+    {"value": 3, "text": "3 - 5 years"},
+    {"value": 5, "text": "5 - 10 years"},
+    {"value": 10, "text": "10+ years"}
   ];
 
   bool get isValid => selectedJob != null && selectedExperience != null;
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -78,64 +81,69 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
 
               const SizedBox(height: 32),
 
-              /// JOBS TO FOLLOW
-              const Text(
-                "Jobs to follow",
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
+              CardContainer(
+                children: [
 
-              const SizedBox(height: 8),
-
-              DropdownButtonFormField<String>(
-                value: selectedJob,
-                decoration: InputDecoration(
-                  hintText: "Select job",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  /// JOBS
+                  const Text(
+                    "Jobs to follow",
+                    style: TextStyle(fontWeight: FontWeight.w500),
                   ),
-                ),
-                items: jobs.map((job) {
-                  return DropdownMenuItem(
-                    value: job,
-                    child: Text(job),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedJob = value;
-                  });
-                },
-              ),
 
-              const SizedBox(height: 24),
+                  const SizedBox(height: 8),
 
-              /// YEARS EXPERIENCE
-              const Text(
-                "Years of experience",
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-
-              const SizedBox(height: 8),
-
-              DropdownButtonFormField<String>(
-                value: selectedExperience,
-                decoration: InputDecoration(
-                  hintText: "Select years",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  DropdownButtonFormField<int>(
+                    value: selectedJob,
+                    decoration: InputDecoration(
+                      hintText: "Select job",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    items: jobs.map((job) {
+                      return DropdownMenuItem<int>(
+                        value: job["id"],
+                        child: Text(job["name"]),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedJob = value;
+                      });
+                    },
                   ),
-                ),
-                items: experienceYears.map((year) {
-                  return DropdownMenuItem(
-                    value: year,
-                    child: Text(year),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedExperience = value;
-                  });
-                },
+
+                  const SizedBox(height: 24),
+
+                  /// EXPERIENCE
+                  const Text(
+                    "Years of experience",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  DropdownButtonFormField<int>(
+                    value: selectedExperience,
+                    decoration: InputDecoration(
+                      hintText: "Select years",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    items: experienceYears.map((year) {
+                      return DropdownMenuItem<int>(
+                        value: year["value"],
+                        child: Text(year["text"]),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedExperience = value;
+                      });
+                    },
+                  ),
+                ],
               ),
 
               const Spacer(),
@@ -147,23 +155,30 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
                 child: ElevatedButton(
                   onPressed: isValid
                       ? () {
-                        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const InterestSelectionScreen(),
-          ),
-        );
+
+                          Navigator.pushNamed(
+                            context,
+                            Routes.interestSelectionScreen,
+                            arguments: {
+                              "jobId": selectedJob,
+                              "yearsExperience": selectedExperience,
+                            },
+                          );
+
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
+                    backgroundColor: AppColors.primaryBlue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   child: const Text(
-                    "Continue",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    "Next",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -175,4 +190,4 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
       ),
     );
   }
-}//make continuo to this page  InterestSelectionScreen()
+}

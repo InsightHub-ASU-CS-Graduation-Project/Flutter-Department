@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/views/passowrd_regisster.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/widget/card_container.dart';
 
 class RegisterEmailScreen extends StatefulWidget {
   const RegisterEmailScreen({super.key});
@@ -25,10 +26,7 @@ class _RegisterEmailScreenState extends State<RegisterEmailScreen> {
       // هنا يمكن حفظ الإيميل
       // context.read<UserCubit>().updateEmail(email);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const RegisterPasswordScreen()),
-      );
+      Navigator.pushNamed(context, Routes.registerPasswordScreen);
     }
   }
 
@@ -63,41 +61,46 @@ class _RegisterEmailScreenState extends State<RegisterEmailScreen> {
                 ),
                 const SizedBox(height: 40),
 
-                /// Label
-                const Text("Email address", style: TextStyle(fontSize: 14)),
-                const SizedBox(height: 8),
+                CardContainer(
+                  children: [
+                    /// Label
+                    const Text("Email address", style: TextStyle(fontSize: 14)),
+                    const SizedBox(height: 8),
 
-                /// Email Field
-                TextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    hintText: "you@example.com",
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(
-                        color: Colors.blue,
-                        width: 2,
+                    /// Email Field
+                    TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        hintText: "you@example.com",
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(
+                            color: Colors.blue,
+                            width: 2,
+                          ),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'This field is required';
+                        }
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          return 'Enter a valid email address';
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'This field is required';
-                    }
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'Enter a valid email address';
-                    }
-                    return null;
-                  },
+                  ],
                 ),
+
                 const SizedBox(height: 30),
 
                 /// Next Button

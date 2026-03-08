@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/views/confirmation.dart';
+
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/widget/next_button.dart';
 
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({super.key});
@@ -94,7 +97,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
                         children: [
                           Icon(
                             item['icon'],
-                            color: isSelected ? const Color(0xFF2563EB) : Colors.black54,
+                            color: isSelected ?  AppColors.primaryBlue : Colors.black54,
                             size: 32,
                           ),
                           const SizedBox(height: 8),
@@ -102,7 +105,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
                             item['label'],
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: isSelected ? const Color(0xFF2563EB) : Colors.black87,
+                              color: isSelected ?  AppColors.primaryBlue : Colors.black87,
                             ),
                           ),
                         ],
@@ -116,29 +119,13 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
             // NEXT BUTTON
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
-              child: SizedBox(
-                width: double.infinity,
-                height: 56,
-                child: ElevatedButton(
-                  onPressed: _selectedInterests.isEmpty
-                      ? null
-                      : () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ConfirmationScreen(
-                                firstName: "John", // Replace with real data
-                                interests: _selectedInterests.toList(),
-                              ),
-                            ),
-                          );
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: const Text("Continue", style: TextStyle(color: Colors.white, fontSize: 16)),
-                ),
+              child: NextButton(
+                label: 'Next',
+                onPressed: _selectedInterests.isEmpty
+                    ? null
+                    : () {
+                        Navigator.pushNamed(context, Routes.confirmationScreen);
+                      },
               ),
             ),
           ],

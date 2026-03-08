@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/views/email_registter.dart';
-import 'package:insight_hub/views/sign_in.dart';
 import 'package:insight_hub/widget/logo.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/constant/app_colors.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -19,8 +19,8 @@ class WelcomeScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xffEFF6FF), // blue-50
-              Colors.white,
+              AppColors.bgLightBlue,
+              AppColors.bgWhite,
             ],
           ),
         ),
@@ -40,7 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 34,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xff111827),
+                    color: AppColors.textDark,
                   ),
                 ),
 
@@ -51,7 +51,7 @@ class WelcomeScreen extends StatelessWidget {
                   "Let's get started",
                   style: TextStyle(
                     fontSize: 18,
-                    color: Color(0xff6B7280),
+                    color: AppColors.textGray,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -63,19 +63,14 @@ class WelcomeScreen extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff2563EB),
+                      backgroundColor: AppColors.primaryBlue,
                       padding: const EdgeInsets.symmetric(vertical: 18),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const RegisterEmailScreen(),
-                        ),
-                      );
+                      Navigator.pushNamed(context, Routes.registerEmailScreen);
                     },
                     child: const Text(
                       "Continue",
@@ -89,17 +84,12 @@ class WelcomeScreen extends StatelessWidget {
                 // Login Text Button
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SignInScreen(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, Routes.signInScreen);
                   },
                   child: const Text(
                     "Already have an account? Log in",
                     style: TextStyle(
-                      color: Color(0xff2563EB),
+                      color: AppColors.primaryBlue,
                       decoration: TextDecoration.underline,
                     ),
                   ),

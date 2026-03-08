@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/views/favorit.dart';
-import 'package:insight_hub/views/labor_information.dart';
+
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/widget/card_container.dart';
 
 class RegisterEducationScreen extends StatefulWidget {
   const RegisterEducationScreen({super.key});
@@ -45,43 +47,47 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
               const Text('Your academic background', style: TextStyle(color: Colors.grey, fontSize: 16)),
               const SizedBox(height: 32),
         
-              // Birthday Picker
-              const Text("Birthdate", style: TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 8),
-              InkWell(
-                onTap: _pickDate,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFD1D5DB)),
+              CardContainer(
+                children: [
+                  // Birthday Picker
+                  const Text("Birthdate", style: TextStyle(fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 8),
+                  InkWell(
+                    onTap: _pickDate,
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _birthdate == null ? "Select date" : DateFormat('MMMM dd, yyyy').format(_birthdate!),
-                        style: TextStyle(color: _birthdate == null ? Colors.grey : Colors.black),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color:  AppColors.borderMedium),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      const Icon(LucideIcons.calendar, size: 20, color: Colors.blue),
-                    ],
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _birthdate == null ? "Select date" : DateFormat('MMMM dd, yyyy').format(_birthdate!),
+                            style: TextStyle(color: _birthdate == null ? Colors.grey : Colors.black),
+                          ),
+                          const Icon(LucideIcons.calendar, size: 20, color: Colors.blue),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
-        
-              const SizedBox(height: 24),
-        
-              // College Input
-              const Text("College", style: TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 8),
-              TextField(
-                controller: _collegeController,
-                onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  hintText: "University name",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
+          
+                  const SizedBox(height: 24),
+          
+                  // College Input
+                  const Text("College", style: TextStyle(fontWeight: FontWeight.w500)),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _collegeController,
+                    onChanged: (_) => setState(() {}),
+                    decoration: InputDecoration(
+                      hintText: "University name",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ],
               ),
         
               const SizedBox(height: 24),
@@ -100,15 +106,12 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _isValid ? () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LaborInformationScreen()), // Replace with next screen
-                  ): null,
+                  onPressed: _isValid ? () => Navigator.pushNamed(context, Routes.laborInformationScreen): null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2563EB),
+                    backgroundColor:  AppColors.primaryBlue,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: const Text('Complete', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: const Text('Next', style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
               ),
               const SizedBox(height: 20),

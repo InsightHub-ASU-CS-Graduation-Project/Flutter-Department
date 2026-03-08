@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/views/email_registter.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/widget/card_container.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -17,12 +18,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _handleContinue() {
     if (_formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SignInScreen(),
-        ),
-      );
+      Navigator.pushNamed(context, Routes.signInScreen);
     }
   }
 
@@ -74,37 +70,41 @@ class _SignInScreenState extends State<SignInScreen> {
 
                 const SizedBox(height: 32),
 
-                const Text(
-                  "Email address",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                /// Email Field
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    hintText: "you@example.com",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                CardContainer(
+                  children: [
+                    const Text(
+                      "Email address",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
 
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Email is required";
-                    }
+                    const SizedBox(height: 8),
 
-                    if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                      return "Enter valid email";
-                    }
+                    /// Email Field
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        hintText: "you@example.com",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
 
-                    return null;
-                  },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Email is required";
+                        }
+
+                        if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                          return "Enter valid email";
+                        }
+
+                        return null;
+                      },
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 24),
@@ -132,12 +132,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>RegisterEmailScreen() ,
-                        ),
-                      );
+                      Navigator.pushNamed(context, Routes.registerEmailScreen);
                     },
                     child: const Text.rich(
                       TextSpan(

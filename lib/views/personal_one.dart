@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/views/personal_two.dart';
+import 'package:insight_hub/widget/card_container.dart';
+
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/constant/app_colors.dart';
 
 class RegisterNameScreen extends StatefulWidget {
   const RegisterNameScreen({super.key});
@@ -77,7 +80,7 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
                       const SizedBox(height: 32),
 
                       /// NAME CARD
-                      _cardContainer([
+                      CardContainer(children: [
                         _label("First Name"),
                         _textField(_firstNameController, "John"),
                         const SizedBox(height: 16),
@@ -88,12 +91,12 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
                       const SizedBox(height: 16),
 
                       /// GENDER CARD
-                      _cardContainer([
+                      CardContainer(children: [
                         _label("Gender"),
                         DropdownButtonFormField<String>(
                           value: _selectedGender,
                           decoration: _inputDecoration("Select gender"),
-                          items: ['Male', 'Female', 'Other']
+                          items: ['Male', 'Female']
                               .map(
                                 (val) => DropdownMenuItem(
                                   value: val,
@@ -118,13 +121,7 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
               padding: const EdgeInsets.all(24),
               child: _nextButton(
                 onPressed: _isValid
-                    ? () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                const RegisterEducationScreen(),
-                          ),
-                        )
+                    ? () => Navigator.pushNamed(context, Routes.registerEducationScreen)
                     : null,
                 label: "Next",
               ),
@@ -142,22 +139,8 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
           text,
           style: const TextStyle(
             fontWeight: FontWeight.w500,
-            color: Color(0xFF374151),
+            color: AppColors.textDarkGray,
           ),
-        ),
-      );
-
-  /// CARD CONTAINER
-  Widget _cardContainer(List<Widget> children) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFFF9FAFB),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: const Color(0xFFE5E7EB)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
         ),
       );
 
@@ -197,8 +180,8 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF2563EB),
-            disabledBackgroundColor: const Color(0xFFD1D5DB),
+            backgroundColor:  AppColors.primaryBlue,
+            disabledBackgroundColor:  AppColors.disabledButton,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -215,3 +198,4 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
         ),
       );
 }
+
