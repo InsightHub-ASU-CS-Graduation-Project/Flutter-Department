@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/widget/card_container.dart';
+import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
+import 'package:insight_hub/model/jop_year.dart';
 
 class LaborInformationScreen extends StatefulWidget {
-  const LaborInformationScreen({super.key});
+const LaborInformationScreen({super.key});
+static const String routeName = '/laborInformationScreen';
 
-  static const String routeName = '/laborInformationScreen';
+@override
 
-  @override
   State<LaborInformationScreen> createState() => _LaborInformationScreenState();
+
 }
 
 class _LaborInformationScreenState extends State<LaborInformationScreen> {
@@ -18,12 +21,13 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
   int? selectedJob;
   int? selectedExperience;
 
+
   final List<Map<String, dynamic>> jobs = [
     {"id": 1, "name": "Software Developer"},
     {"id": 2, "name": "Designer"},
     {"id": 3, "name": "Marketing Specialist"},
     {"id": 4, "name": "Engineer"},
-    {"id": 5, "name": "Business Analyst"},
+    {"id": 5, "name": "Business Analyst"},//list backend
     {"id": 6, "name": "Product Manager"}
   ];
 
@@ -37,6 +41,30 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
 
   bool get isValid => selectedJob != null && selectedExperience != null;
 
+  void _handleNext() async {
+    if (isValid) {
+      final selectedJobs = [SelectedJob(jobId: selectedJob!, yearsExperience: selectedExperience!)];
+      context.read<RegisterCubit>().saveJobs(selectedJobs);
+      
+      final navigator = Navigator.of(context);
+      final messenger = ScaffoldMessenger.of(context);
+      
+      final response = await context.read<RegisterCubit>().register();
+      
+      if (response['success'] == true) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Registration successful!')),
+        );
+        navigator.pushNamed(Routes.confirmationScreen);
+      } else {
+        String errorMessage = response['error'] ?? 'Registration failed';
+        messenger.showSnackBar(
+          SnackBar(content: Text('Error: $errorMessage')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,10 +73,7 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: BackButton()
       ),
 
       body: SafeArea(
@@ -58,13 +83,13 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               const SizedBox(height: 10),
-
               const Text(
                 "Labor Information",
                 style: TextStyle(
+
                   fontSize: 30,
+                  
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -145,27 +170,14 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
                   ),
                 ],
               ),
-
               const Spacer(),
-
               /// NEXT BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
                   onPressed: isValid
-                      ? () {
-
-                          Navigator.pushNamed(
-                            context,
-                            Routes.interestSelectionScreen,
-                            arguments: {
-                              "jobId": selectedJob,
-                              "yearsExperience": selectedExperience,
-                            },
-                          );
-
-                        }
+                      ? _handleNext
                       : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryBlue,
@@ -190,4 +202,5 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
       ),
     );
   }
+  
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/widget/card_container.dart';
 
@@ -36,11 +35,9 @@ class _SignInScreenState extends State<SignInScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
+        leading: BackButton()
         ),
-      ),
+      
 
       body: SafeArea(
         child: Padding(

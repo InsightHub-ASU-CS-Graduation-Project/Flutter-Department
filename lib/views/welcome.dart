@@ -11,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
    
     return Scaffold(
-      
+
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
                 
                 // Icon Circle
                 CustomLogo(),
-
+      
                 // Title
                 const Text(
                   "Welcome",
@@ -43,9 +43,9 @@ class WelcomeScreen extends StatelessWidget {
                     color: AppColors.textDark,
                   ),
                 ),
-
+      
                 const SizedBox(height: 12),
-
+      
                 // Subtitle
                 const Text(
                   "Let's get started",
@@ -55,9 +55,9 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-
+      
                 const SizedBox(height: 60),
-
+      
                 // Continue Button
                 SizedBox(
                   width: double.infinity,
@@ -78,9 +78,9 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
+      
                 const SizedBox(height: 16),
-
+      
                 // Login Text Button
                 TextButton(
                   onPressed: () {

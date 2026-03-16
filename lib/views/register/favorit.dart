@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/widget/next_button.dart';
+import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({super.key});
@@ -23,7 +24,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
     {'id': 'business', 'label': 'Business', 'icon': LucideIcons.briefcase},
     {'id': 'design', 'label': 'Design', 'icon': LucideIcons.palette},
     {'id': 'energy', 'label': 'Energy', 'icon': LucideIcons.zap},
-    {'id': 'engineering', 'label': 'Engineering', 'icon': LucideIcons.cpu},
+    {'id': 'engineering', 'label': 'Engineering', 'icon': LucideIcons.cpu}, 
     {'id': 'marketing', 'label': 'Marketing', 'icon': LucideIcons.trendingUp},
     {'id': 'hr', 'label': 'Human Resources', 'icon': LucideIcons.users},
   ];
@@ -33,9 +34,16 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
       if (_selectedInterests.contains(id)) {
         _selectedInterests.remove(id);
       } else {
-        _selectedInterests.add(id);
+        if (_selectedInterests.length < 3) {
+          _selectedInterests.add(id);
+        }
       }
     });
+  }
+
+  void _handleNext() {
+   
+    Navigator.pushNamed(context, Routes.confirmationScreen);
   }
 
   @override
@@ -45,23 +53,40 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: BackButton()
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "What interests you?",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "What interests you?",
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFDBEAFE),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    '${_selectedInterests.length}/3',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF2563EB),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             const Text(
-              "Select at least one to continue",
+              "Select 1 to 3 interests to continue",
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 24),
@@ -79,9 +104,10 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
                 itemBuilder: (context, index) {
                   final item = _categories[index];
                   final isSelected = _selectedInterests.contains(item['id']);
+                  final canSelect = isSelected || _selectedInterests.length < 3;
 
                   return GestureDetector(
-                    onTap: () => _toggleInterest(item['id']),
+                    onTap: canSelect ? () => _toggleInterest(item['id']) : null,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       decoration: BoxDecoration(
@@ -97,7 +123,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
                         children: [
                           Icon(
                             item['icon'],
-                            color: isSelected ?  AppColors.primaryBlue : Colors.black54,
+                            color: isSelected ?  AppColors.primaryBlue : (canSelect ? Colors.black54 : Colors.grey[300]),
                             size: 32,
                           ),
                           const SizedBox(height: 8),
@@ -105,7 +131,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
                             item['label'],
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: isSelected ?  AppColors.primaryBlue : Colors.black87,
+                              color: isSelected ?  AppColors.primaryBlue : (canSelect ? Colors.black87 : Colors.grey[400]),
                             ),
                           ),
                         ],
@@ -123,9 +149,7 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
                 label: 'Next',
                 onPressed: _selectedInterests.isEmpty
                     ? null
-                    : () {
-                        Navigator.pushNamed(context, Routes.confirmationScreen);
-                      },
+                    : _handleNext,
               ),
             ),
           ],
@@ -134,3 +158,4 @@ class _InterestSelectionScreenState extends State<InterestSelectionScreen> {
     );
   }
 }
+

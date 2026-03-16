@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 import 'package:insight_hub/widget/card_container.dart';
-import 'package:insight_hub/widget/next_button.dart';
-// Assuming you have a provider or state management for UserData
-// import 'package:your_app/providers/user_provider.dart'; 
+import 'package:insight_hub/widget/next_button.dart'; 
 
 class RegisterPasswordScreen extends StatefulWidget {
   const RegisterPasswordScreen({super.key});
@@ -24,20 +23,21 @@ class _RegisterPasswordScreenState extends State<RegisterPasswordScreen> {
   bool _showConfirmPassword = false;
 
   // Validation Logic
-  bool get _isPasswordValid {
-    final pass = _passwordController.text;
-    return pass.length >= 8 && pass.contains(RegExp(r'\d'));
-  }
-
-  bool get _passwordsMatch {
+bool get isPasswordValid {
+  final pass = _passwordController.text;
+  return pass.length >= 8 &&
+         pass.contains(RegExp(r'\d')) &&
+         pass.contains(RegExp(r'[A-Z]'));
+}
+  bool get passwordsMatch {
     final pass = _passwordController.text;
     final confirm = _confirmController.text;
     return pass == confirm && confirm.isNotEmpty;
   }
 
   void _handleNext() {
-    if (_isPasswordValid && _passwordsMatch) {
-      // updateUserData(password: _passwordController.text);
+    if (isPasswordValid && passwordsMatch) {
+      context.read<RegisterCubit>().savePassword(_passwordController.text);
       Navigator.pushNamed(context, Routes.registerNameScreen);
     }
   }
@@ -57,10 +57,7 @@ class _RegisterPasswordScreenState extends State<RegisterPasswordScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black87),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: BackButton()
       ),
       body: SafeArea(
         child: Padding(
@@ -129,7 +126,7 @@ class _RegisterPasswordScreenState extends State<RegisterPasswordScreen> {
 
               // Next Button - Fixed at bottom
               NextButton(
-                onPressed: (_isPasswordValid && _passwordsMatch) ? _handleNext : null,
+                onPressed: (isPasswordValid && passwordsMatch) ? _handleNext : null,
               ),
               const SizedBox(height: 16),
             ],
@@ -161,7 +158,7 @@ class _RegisterPasswordScreenState extends State<RegisterPasswordScreen> {
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey[300]!)),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Colors.blue, width: 2)),
       suffixIcon: IconButton(
-        icon: Icon(isVisible ? LucideIcons.eyeOff : LucideIcons.eye, size: 20),
+        icon: Icon(isVisible ?LucideIcons.eye :  LucideIcons.eyeOff, size: 20),
         onPressed: onToggle,
       ),
     );

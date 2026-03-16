@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/widget/card_container.dart';
-
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 
 class RegisterNameScreen extends StatefulWidget {
   const RegisterNameScreen({super.key});
@@ -23,6 +23,19 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
       _lastNameController.text.trim().isNotEmpty &&
       _selectedGender != null;
 
+  void _handleNext() {
+    if (_isValid) {
+      context.read<RegisterCubit>().saveName(
+        _firstNameController.text.trim(),
+        _lastNameController.text.trim(),
+      );
+      // Convert gender string to int: Male = 1, Female = 2
+      int genderInt = _selectedGender == 'Male' ? 1 : 2;
+      context.read<RegisterCubit>().saveGender(genderInt);
+      Navigator.pushNamed(context, Routes.registerEducationScreen);
+    }
+  }
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -38,10 +51,7 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(LucideIcons.arrowLeft, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
+        leading: BackButton()
       ),
 
       body: SafeArea(
@@ -120,9 +130,7 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
             Padding(
               padding: const EdgeInsets.all(24),
               child: _nextButton(
-                onPressed: _isValid
-                    ? () => Navigator.pushNamed(context, Routes.registerEducationScreen)
-                    : null,
+                onPressed: _isValid ? _handleNext : null,
                 label: "Next",
               ),
             ),

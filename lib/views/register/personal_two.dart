@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/widget/card_container.dart';
+import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 
 class RegisterEducationScreen extends StatefulWidget {
   const RegisterEducationScreen({super.key});
@@ -13,7 +15,6 @@ class RegisterEducationScreen extends StatefulWidget {
   @override
   State<RegisterEducationScreen> createState() => _RegisterEducationScreenState();
 }
-
 class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
   DateTime? _birthdate;
   final _collegeController = TextEditingController();
@@ -21,21 +22,46 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
 
   bool get _isValid => _birthdate != null && _collegeController.text.isNotEmpty;
 
+  void _handleNext() {
+    if (_isValid) {
+      context.read<RegisterCubit>().saveBirthDate(_birthdate!);
+      context.read<RegisterCubit>().saveCollage(_collegeController.text);
+      context.read<RegisterCubit>().saveGraduation(_graduated);
+      Navigator.pushNamed(context, Routes.laborInformationScreen);
+    }
+  }
+
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
+    await showCupertinoModalPopup<void>(
       context: context,
-      initialDate: DateTime(2000),
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
+      builder: (BuildContext context) => Container(
+        height: 250,
+        padding: const EdgeInsets.only(top: 6.0),
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        child: SafeArea(
+          top: false,
+          child: CupertinoDatePicker(
+            initialDateTime: _birthdate ?? DateTime(2000),
+            mode: CupertinoDatePickerMode.date,
+            minimumDate: DateTime(1950),
+            maximumDate: DateTime(DateTime.now().year - 18, DateTime.now().month, DateTime.now().day),
+            onDateTimeChanged: (DateTime newDate) {
+              setState(() => _birthdate = newDate);
+            },
+          ),
+        ),
+      ),
     );
-    if (picked != null) setState(() => _birthdate = picked);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, elevation: 0, iconTheme: const IconThemeData(color: Colors.black)),
+      appBar: AppBar(backgroundColor: Colors.white, elevation: 0, leading: BackButton()),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -89,9 +115,7 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
                   ),
                 ],
               ),
-        
               const SizedBox(height: 24),
-        
               // Graduated Toggle
               SwitchListTile(
                 title: const Text("I have graduated", style: TextStyle(fontWeight: FontWeight.w500)),
@@ -100,13 +124,12 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
                 onChanged: (val) => setState(() => _graduated = val),
                 contentPadding: EdgeInsets.zero,
               ),
-        
-          
+
               SizedBox(
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: _isValid ? () => Navigator.pushNamed(context, Routes.laborInformationScreen): null,
+                  onPressed: _isValid ? _handleNext : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor:  AppColors.primaryBlue,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
