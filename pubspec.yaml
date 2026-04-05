@@ -29,11 +29,12 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   bloc: ^9.2.0
-  flutter_bloc: 9.1.1
   cupertino_icons: ^1.0.8
   dio: ^5.9.2
+  file_picker: ^10.3.10
   flutter:
     sdk: flutter
+  flutter_bloc: 9.1.1
   intl: ^0.20.2
   lucide_icons: ^0.257.0
 

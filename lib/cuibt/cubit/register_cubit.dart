@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
+// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 import 'package:insight_hub/model/register_model.dart';
 import 'package:insight_hub/model/jop_year.dart';
+import 'package:insight_hub/model/app_error.dart';
 import 'package:insight_hub/services/Dio.dart';
 
 part 'register_state.dart';
@@ -63,13 +66,43 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
 
-  /// Register User
-  Future<Map<String, dynamic>> register() async {
+  /// Submit Register
+  Future<void> submitRegister() async {
+
+
+    emit(RegisterLoading());
+
     final model = buildModel();
-    return await registerUser(model);
+
+    try {
+      final response = await dio.post(
+        Endpoints.register,
+        data: model.toJson(),
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      emit(RegisterSuccess({
+        'success': true,
+        'statusCode': response.statusCode,
+        'data': response.data,
+      }));
+    } on DioException catch (e) {
+      String errorMessage;
+      if (e.response != null) {
+        final appError = AppError.fromJson(e.response!.data);
+        errorMessage = appError.getErrorMessage();
+      } else {
+        errorMessage = 'Network error';
+      }
+      emit(RegisterFailure(errorMessage));
+    } catch (e) {
+      emit(RegisterFailure('Unexpected error: $e'));
+    }
   }
 
-  /// ld RegisterModel
+  // Build RegisterModel
   RegisterModel buildModel() {
     return RegisterModel(
       firstName: firstName!,
@@ -85,3 +118,14 @@ class RegisterCubit extends Cubit<RegisterState> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+

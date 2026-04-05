@@ -9,6 +9,7 @@ import 'package:insight_hub/views/register/personal_one.dart';
 import 'package:insight_hub/views/register/personal_two.dart';
 import 'package:insight_hub/views/register/labor_information.dart';
 import 'package:insight_hub/views/register/confirmation.dart';
+import 'package:insight_hub/views/profile.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
           Routes.registerEducationScreen: (_) => const RegisterEducationScreen(),
           Routes.laborInformationScreen: (_) => const LaborInformationScreen(),
           Routes.confirmationScreen: (_) => ConfirmationScreen(),
+          Routes.profileScreen: (_) => const ProfileScreen(),
         },
       ),
     );

@@ -99,7 +99,7 @@ bool get isPasswordValid {
                           const Padding(
                             padding: EdgeInsets.only(top: 8.0, bottom: 24.0),
                             child: Text(
-                              "Min 8 characters, at least one number",
+                              "Min 8 characters, at least one number, and one uppercase letter",
                               style: TextStyle(fontSize: 12, color: Colors.grey),
                             ),
                           ),

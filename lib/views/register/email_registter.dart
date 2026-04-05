@@ -3,17 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
-import 'package:insight_hub/model/register_model.dart';
 import 'package:insight_hub/widget/back_button.dart';
 import 'package:insight_hub/widget/card_container.dart';
 import 'package:insight_hub/widget/next_button.dart';
+import 'package:insight_hub/widget/validatores.dart';
 
 class RegisterEmailScreen extends StatefulWidget {
   const RegisterEmailScreen({super.key});
-  //make routname
+ //make routname
 
-  @override
-  State<RegisterEmailScreen> createState() => _RegisterEmailScreenState();
+ @override
+ State<RegisterEmailScreen> createState() => _RegisterEmailScreenState();
 }
 
 class _RegisterEmailScreenState extends State<RegisterEmailScreen> {
@@ -103,21 +103,12 @@ class _RegisterEmailScreenState extends State<RegisterEmailScreen> {
                             ),
                           ),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'This field is required';
-                          }
-                          if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                            return 'Enter a valid email address';
-                          }
-                          return null;
-                        },
+                        validator:Validators.email,
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: 30),
-
+                  const Spacer(),
                   /// Next Button
                   SizedBox(
                     width: double
@@ -127,6 +118,7 @@ class _RegisterEmailScreenState extends State<RegisterEmailScreen> {
                       onPressed: handleNext,
                     ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

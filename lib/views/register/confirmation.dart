@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -8,7 +9,7 @@ class ConfirmationScreen extends StatelessWidget {
 //make routname
   static const String routeName = '/confirmationScreen';
 
-   ConfirmationScreen({super.key});
+  ConfirmationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +73,7 @@ class ConfirmationScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
+                  onPressed: () => Navigator.pushReplacementNamed(context, Routes.profileScreen),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:  AppColors.primaryBlue, // blue-600
                     shape: RoundedRectangleBorder(
@@ -90,7 +91,6 @@ class ConfirmationScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
               const SizedBox(height: 40),
             ],
           ),

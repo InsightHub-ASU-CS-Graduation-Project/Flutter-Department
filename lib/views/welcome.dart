@@ -5,8 +5,7 @@ import 'package:insight_hub/constant/app_colors.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
-//make routname for welcome screen
-  static const String routeName = '/welcomeScreen';
+
   @override
   Widget build(BuildContext context) {
    
