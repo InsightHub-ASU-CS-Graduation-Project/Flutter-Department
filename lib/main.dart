@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:insight_hub/cuibt/cubit/logout_cubit.dart';
+import 'package:insight_hub/services/secure_storege.dart';
 import 'package:insight_hub/views/welcome.dart';
 import 'package:insight_hub/views/sign_in.dart';
 import 'package:insight_hub/views/register/email_registter.dart';
@@ -11,6 +13,7 @@ import 'package:insight_hub/views/register/labor_information.dart';
 import 'package:insight_hub/views/register/confirmation.dart';
 import 'package:insight_hub/views/profile.dart';
 import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 
 void main()async {
@@ -19,6 +22,8 @@ void main()async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown
   ]);
+ SecureStorage.init();  
+
   runApp(const MyApp());
 }
 
@@ -27,8 +32,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => RegisterCubit(),
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => RegisterCubit()),
+        BlocProvider(create: (context) => LoginCubit()),
+        BlocProvider(create:  (context) => LogoutCubit()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Insight Hub',

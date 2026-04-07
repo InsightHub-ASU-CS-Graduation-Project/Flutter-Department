@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 import 'package:insight_hub/widget/card_container.dart';
 import 'package:insight_hub/widget/validatores.dart';
 
@@ -18,6 +20,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _handleContinue() {
     if (_formKey.currentState!.validate()) {
+      context.read<LoginCubit>().login(
+      _emailController.text,
+      _passwordController.text,
+    );
       Navigator.pushNamed(context, Routes.profileScreen);
       
     }
@@ -34,6 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      
 
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -96,6 +103,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
+                              
                               validator: Validators.email,
                             ),
 

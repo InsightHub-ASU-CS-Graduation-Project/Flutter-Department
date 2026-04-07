@@ -14,3 +14,4 @@
     {"value": 5, "text": "5 - 10 years"},
     {"value": 10, "text": "10+ years"}
   ];
+const String tokenKey = 'token';

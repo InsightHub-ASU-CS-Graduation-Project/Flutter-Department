@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:insight_hub/constant/labor_list.dart';
+import 'package:insight_hub/services/secure_storege.dart';
 // ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 import 'package:insight_hub/model/register_model.dart';
 import 'package:insight_hub/model/jop_year.dart';
 import 'package:insight_hub/model/app_error.dart';
 import 'package:insight_hub/services/Dio.dart';
-
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
@@ -82,6 +85,13 @@ class RegisterCubit extends Cubit<RegisterState> {
           headers: {'Content-Type': 'application/json'},
         ),
       );
+    var token = response.data["token"];
+    if (token != null) {
+        // Store the token securely, e.g., using flutter_secure_storage
+        // await FlutterSecureStorage().write(key: tokenKey, value: token);
+        await SecureStorage.writeData(key: tokenKey, value: token);
+        print('Token received: $token');
+      }
 
       emit(RegisterSuccess({
         'success': true,
@@ -89,13 +99,36 @@ class RegisterCubit extends Cubit<RegisterState> {
         'data': response.data,
       }));
     } on DioException catch (e) {
-      String errorMessage;
-      if (e.response != null) {
-        final appError = AppError.fromJson(e.response!.data);
-        errorMessage = appError.getErrorMessage();
+      String errorMessage = 'Unknown error';
+      final responseData = e.response?.data;
+
+      if (responseData != null) {
+        if (responseData is Map<String, dynamic>) {
+          final appError = AppError.fromJson(responseData);
+          errorMessage = appError.getErrorMessage();
+        } else if (responseData is String) {
+          try {
+            final decoded = jsonDecode(responseData);
+            if (decoded is Map<String, dynamic>) {
+              final appError = AppError.fromJson(decoded);
+              errorMessage = appError.getErrorMessage();
+            } else if (decoded is List) {
+              errorMessage = decoded.join(', ');
+            } else {
+              errorMessage = responseData;
+            }
+          } catch (_) {
+            errorMessage = responseData;
+          }
+        } else if (responseData is List) {
+          errorMessage = responseData.join(', ');
+        } else {
+          errorMessage = responseData.toString();
+        }
       } else {
         errorMessage = 'Network error';
       }
+
       emit(RegisterFailure(errorMessage));
     } catch (e) {
       emit(RegisterFailure('Unexpected error: $e'));

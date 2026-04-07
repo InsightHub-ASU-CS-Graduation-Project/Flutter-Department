@@ -53,4 +53,5 @@ class Endpoints {
   static const String baseUrl = "https://saccharinely-hormonal-annelle.ngrok-free.dev/api";
   static const String register = "$baseUrl/Account/register";
   static const String login = "$baseUrl/account/login";
+  static const String logout = "$baseUrl/account/logout";
 }

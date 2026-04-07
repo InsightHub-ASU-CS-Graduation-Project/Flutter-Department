@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/cuibt/cubit/logout_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 import 'package:insight_hub/widget/bottom_nav.dart';
 
@@ -14,6 +16,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<RegisterCubit>();
+    final logoutCubit = context.read<LogoutCubit>();
 
     final profileSections = [
       {
@@ -52,10 +55,29 @@ class ProfileScreen extends StatelessWidget {
 
     final settingsItems = [
       {'icon': LucideIcons.settings, 'label': 'Account Settings', 'action': () {}, 'isDestructive': false},
-      {'icon': LucideIcons.logOut, 'label': 'Log Out', 'action': () {}, 'isDestructive': true},
+      {
+        'icon': LucideIcons.logOut,
+        'label': 'Log Out',
+        'action': () => logoutCubit.logout(),
+        'isDestructive': true,
+      },
     ];
 
-    return Scaffold(
+    return BlocListener<LogoutCubit, LogoutState>(
+      listener: (context, state) {
+        if (state is LogoutSuccess) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.signInScreen,
+            (route) => false,
+          );
+        } else if (state is LogoutFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMessage)),
+          );
+        }
+      },
+      child: Scaffold(
       backgroundColor: const Color(0xFFF9FAFB), // gray-50
       body: SafeArea(
         child: Column(
@@ -324,6 +346,7 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
