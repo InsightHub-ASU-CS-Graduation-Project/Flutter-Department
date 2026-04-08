@@ -11,6 +11,7 @@ import 'package:insight_hub/views/register/personal_one.dart';
 import 'package:insight_hub/views/register/personal_two.dart';
 import 'package:insight_hub/views/register/labor_information.dart';
 import 'package:insight_hub/views/register/confirmation.dart';
+import 'package:insight_hub/views/splash.dart';
 import 'package:insight_hub/views/profile.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Insight Hub',
-        home: const WelcomeScreen(),
+        home: const SplashScreen(),
         routes: {
           Routes.welcomeScreen: (_) => const WelcomeScreen(),
           Routes.signInScreen: (_) => const SignInScreen(),

@@ -1,73 +1,40 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:insight_hub/constant/labor_list.dart';
-import 'package:insight_hub/model/app_error.dart';
-import 'package:insight_hub/services/Dio.dart';
+import 'package:insight_hub/services/api_service.dart';
 import 'package:insight_hub/services/secure_storege.dart';
 import 'package:meta/meta.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
+  final ApiService _apiService = ApiService();
+
   LoginCubit() : super(LoginInitial());
 
-  
   Future<void> login(String email, String password) async {
     emit(LoginLoading());
     try {
-        final response =await dio.post(
-          Endpoints.login,
-          data: {
-            'email': email,
-            'password': password,
-          },
-          options: Options(
-            headers: {'Content-Type': 'application/json'},
-          ),
-        );
-        //check if response contains token and store it securely
-        var token = response.data["token"];
+      final result = await _apiService.post(
+        '/account/login',
+        data: {
+          'email': email,
+          'password': password,
+        },
+      );
+
+      if (result['success']) {
+        // Check if response contains token and store it securely
+        final token = result['data']['token'];
         if (token != null) {
           await SecureStorage.writeData(key: tokenKey, value: token);
-          print('Token received: $token');
         }
 
-     
-      emit(LoginSuccess({
-        'success': true,
-        'statusCode': response.statusCode,
-        'data': response.data,
-      
-      }));
-    } on DioException catch (e) {
-    String errorMessage = 'Something went wrong';
-
-    if (e.type == DioExceptionType.connectionTimeout) {
-      errorMessage = 'Connection timeout';
-    } else if (e.type == DioExceptionType.badResponse) {
-      final data = e.response?.data;
-
-      if (data is Map<String, dynamic>) {
-        errorMessage = AppError.fromJson(data).getErrorMessage();
-      } else if (data is String) {
-        try {
-          final decoded = jsonDecode(data);
-          if (decoded is Map<String, dynamic>) {
-            errorMessage =
-                AppError.fromJson(decoded).getErrorMessage();
-          }
-        } catch (_) {
-          errorMessage = data;
-        }
+        emit(LoginSuccess(result));
+      } else {
+        emit(LoginFailure(result['error']));
       }
-    } else {
-      errorMessage = 'Network error';
+    } catch (e) {
+      emit(LoginFailure('Unexpected error'));
     }
-
-    emit(LoginFailure(errorMessage));
-  } catch (e) {
-    emit(LoginFailure('Unexpected error'));
-  }}
+  }
 }

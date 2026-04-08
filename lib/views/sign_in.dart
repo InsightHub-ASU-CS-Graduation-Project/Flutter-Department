@@ -21,11 +21,9 @@ class _SignInScreenState extends State<SignInScreen> {
   void _handleContinue() {
     if (_formKey.currentState!.validate()) {
       context.read<LoginCubit>().login(
-      _emailController.text,
-      _passwordController.text,
-    );
-      Navigator.pushNamed(context, Routes.profileScreen);
-      
+        _emailController.text,
+        _passwordController.text,
+      );
     }
   }
 
@@ -38,7 +36,17 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return BlocListener<LoginCubit, LoginState>(
+      listener: (context, state) {
+        if (state is LoginSuccess) {
+          Navigator.pushNamed(context, Routes.profileScreen);
+        } else if (state is LoginFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.error)),
+          );
+        }
+      },
+      child: Scaffold(
       backgroundColor: Colors.white,
       
 
@@ -189,6 +197,7 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }
+  }

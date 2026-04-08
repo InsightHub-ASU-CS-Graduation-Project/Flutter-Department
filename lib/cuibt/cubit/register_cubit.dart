@@ -1,18 +1,15 @@
-import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:insight_hub/constant/labor_list.dart';
+import 'package:insight_hub/services/api_service.dart';
 import 'package:insight_hub/services/secure_storege.dart';
-// ignore: depend_on_referenced_packages
 import 'package:meta/meta.dart';
 import 'package:insight_hub/model/register_model.dart';
 import 'package:insight_hub/model/jop_year.dart';
-import 'package:insight_hub/model/app_error.dart';
-import 'package:insight_hub/services/Dio.dart';
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
+  final ApiService _apiService = ApiService();
+
   RegisterCubit() : super(RegisterInitial());
 
   String? firstName;
@@ -71,65 +68,26 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   /// Submit Register
   Future<void> submitRegister() async {
-
-
     emit(RegisterLoading());
 
     final model = buildModel();
 
     try {
-      final response = await dio.post(
-        Endpoints.register,
+      final result = await _apiService.post(
+        '/Account/register',
         data: model.toJson(),
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-        ),
       );
-    var token = response.data["token"];
-    if (token != null) {
-        // Store the token securely, e.g., using flutter_secure_storage
-        // await FlutterSecureStorage().write(key: tokenKey, value: token);
-        await SecureStorage.writeData(key: tokenKey, value: token);
-        print('Token received: $token');
-      }
 
-      emit(RegisterSuccess({
-        'success': true,
-        'statusCode': response.statusCode,
-        'data': response.data,
-      }));
-    } on DioException catch (e) {
-      String errorMessage = 'Unknown error';
-      final responseData = e.response?.data;
-
-      if (responseData != null) {
-        if (responseData is Map<String, dynamic>) {
-          final appError = AppError.fromJson(responseData);
-          errorMessage = appError.getErrorMessage();
-        } else if (responseData is String) {
-          try {
-            final decoded = jsonDecode(responseData);
-            if (decoded is Map<String, dynamic>) {
-              final appError = AppError.fromJson(decoded);
-              errorMessage = appError.getErrorMessage();
-            } else if (decoded is List) {
-              errorMessage = decoded.join(', ');
-            } else {
-              errorMessage = responseData;
-            }
-          } catch (_) {
-            errorMessage = responseData;
-          }
-        } else if (responseData is List) {
-          errorMessage = responseData.join(', ');
-        } else {
-          errorMessage = responseData.toString();
+      if (result['success']) {
+        final token = result['data']['token'];
+        if (token != null) {
+          await SecureStorage.writeData(key: tokenKey, value: token);
         }
-      } else {
-        errorMessage = 'Network error';
-      }
 
-      emit(RegisterFailure(errorMessage));
+        emit(RegisterSuccess(result));
+      } else {
+        emit(RegisterFailure(result['error']));
+      }
     } catch (e) {
       emit(RegisterFailure('Unexpected error: $e'));
     }
