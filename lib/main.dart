@@ -2,10 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/cuibt/cubit/logout_cubit.dart';
+
+import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
+
 import 'package:insight_hub/services/secure_storege.dart';
+
 import 'package:insight_hub/views/onboarding.dart';
+
 import 'package:insight_hub/views/welcome.dart';
+
 import 'package:insight_hub/views/sign_in.dart';
+
 import 'package:insight_hub/views/register/email_registter.dart';
 import 'package:insight_hub/views/register/passowrd_regisster.dart';
 import 'package:insight_hub/views/register/personal_one.dart';
@@ -40,11 +47,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => RegisterCubit()),
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create:  (context) => LogoutCubit()),
+        BlocProvider(create:  (context) => ProfileCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Insight Hub',
-        home: const OnboardingScreen(),
+        home: const SplashScreen(),
         routes: {
           Routes.onboardingScreen: (_) => const OnboardingScreen(),
           Routes.welcomeScreen: (_) => const WelcomeScreen(),

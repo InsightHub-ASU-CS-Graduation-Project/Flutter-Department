@@ -20,9 +20,7 @@ class ApiService {
         receiveTimeout: const Duration(seconds: 10),
         sendTimeout: const Duration(seconds: 10),
         responseType: ResponseType.json,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
       ),
     );
 
@@ -71,6 +69,7 @@ class ApiService {
 
   String _parseErrorMessage(DioException e) {
     final responseData = e.response?.data;
+    final statusCode = e.response?.statusCode;
 
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout ||
@@ -82,7 +81,22 @@ class ApiService {
       return 'Unable to connect. Please check your internet or try again later.';
     }
 
-    if (e.type == DioExceptionType.badResponse && responseData is Map<String, dynamic>) {
+    if (statusCode == 401) {
+      if (responseData is Map<String, dynamic>) {
+        final apiMessage = AppError.fromJson(responseData).getErrorMessage();
+        if (apiMessage.isNotEmpty &&
+            apiMessage.toLowerCase() != 'unauthorized' &&
+            apiMessage.toLowerCase() != 'unauthenticated' &&
+            apiMessage.toLowerCase() != 'unknown error') {
+          return apiMessage;
+        }
+      }
+
+      return 'The email or password is invalid.';
+    }
+
+    if (e.type == DioExceptionType.badResponse &&
+        responseData is Map<String, dynamic>) {
       return AppError.fromJson(responseData).getErrorMessage();
     }
 
@@ -100,11 +114,7 @@ class ApiService {
     Options? options,
   }) {
     return _handleRequest(
-      _dio.get(
-        endpoint,
-        queryParameters: queryParameters,
-        options: options,
-      ),
+      _dio.get(endpoint, queryParameters: queryParameters, options: options),
     );
   }
 
@@ -156,15 +166,3 @@ class ApiService {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

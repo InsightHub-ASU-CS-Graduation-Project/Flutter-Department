@@ -25,10 +25,7 @@ class _RegisterEmailScreenState extends State<RegisterEmailScreen> {
     super.dispose();
   }
  
-@override
-
-
-  void handleNext() {
+void handleNext() {
     if (_formKey.currentState!.validate()) {
      final email = emailController.text;
       

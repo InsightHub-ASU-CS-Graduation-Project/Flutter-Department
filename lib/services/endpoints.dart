@@ -5,4 +5,5 @@ class Endpoints {
   static const String login = '/account/login';
   static const String register = '/Account/register';
   static const String logout = '/account/logout';
+  static const String profile = '/account/profile';
 }

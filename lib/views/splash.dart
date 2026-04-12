@@ -5,6 +5,7 @@ import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/storage_keys.dart';
 import 'package:insight_hub/services/secure_storege.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -64,11 +65,12 @@ class _SplashScreenState extends State<SplashScreen>
     await Future.delayed(const Duration(seconds: 2));
 
     final token = await SecureStorage.readData(key: tokenKey);
-    final onboardingSeen = await SecureStorage.readData(key: onboardingSeenKey);
+    final prefs = await SharedPreferences.getInstance();
+    final onboardingSeen = prefs.getBool(onboardingSeenKey) ?? false;
 
     final nextRoute = token != null && token.isNotEmpty
         ? Routes.profileScreen
-        : onboardingSeen == 'true'
+        : onboardingSeen
             ? Routes.welcomeScreen
             : Routes.onboardingScreen;
 

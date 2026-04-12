@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/storage_keys.dart';
-import 'package:insight_hub/services/secure_storege.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -52,7 +52,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _finishOnboarding() async {
-    await SecureStorage.writeData(key: onboardingSeenKey, value: 'true');
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(onboardingSeenKey, true);
 
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, Routes.welcomeScreen);

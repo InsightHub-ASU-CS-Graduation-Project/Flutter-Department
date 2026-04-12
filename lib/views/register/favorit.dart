@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/widget/next_button.dart';
-import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 
 class InterestSelectionScreen extends StatefulWidget {
   const InterestSelectionScreen({super.key});
