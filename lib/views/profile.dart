@@ -63,8 +63,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'value': profile.collage.trim().isEmpty ? 'Not set' : profile.collage,
       },
       {
-        'label': 'Graduation Status',
-        'value': profile.isGraduated ? 'Graduated' : 'Currently Enrolled',
+        'label': 'Employment Status',
+        'value': profile.isEmployed ? 'Employed' : 'Not Employed',
       },
       {
         'label': 'Jobs',
@@ -393,7 +393,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return LucideIcons.atSign;
       case 'College':
         return LucideIcons.graduationCap;
-      case 'Graduation Status':
+      case 'Employment Status':
         return LucideIcons.award;
       case 'Jobs':
         return LucideIcons.briefcase;

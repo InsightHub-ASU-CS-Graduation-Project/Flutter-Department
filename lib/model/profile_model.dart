@@ -5,7 +5,7 @@ class ProfileModel {
   final String lastName;
   final int? gender;
   final String collage;
-  final bool isGraduated;
+  final bool isEmployed;
   final List<ProfileJob> jobs;
 
   const ProfileModel({
@@ -15,7 +15,7 @@ class ProfileModel {
     required this.lastName,
     required this.gender,
     required this.collage,
-    required this.isGraduated,
+    required this.isEmployed,
     required this.jobs,
   });
 
@@ -27,7 +27,7 @@ class ProfileModel {
       lastName: (json['lastName'] ?? '').toString(),
       gender: json['gender'] is int ? json['gender'] as int : int.tryParse('${json['gender']}'),
       collage: (json['collage'] ?? '').toString(),
-      isGraduated: json['isGraduated'] == true,
+      isEmployed: json['isEmployed'] == true,
       jobs: (json['jobs'] as List<dynamic>? ?? [])
           .whereType<Map<String, dynamic>>()
           .map(ProfileJob.fromJson)

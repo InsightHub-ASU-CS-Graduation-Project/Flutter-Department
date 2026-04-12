@@ -14,7 +14,9 @@ import 'package:insight_hub/views/welcome.dart';
 import 'package:insight_hub/views/sign_in.dart';
 
 import 'package:insight_hub/views/register/email_registter.dart';
+
 import 'package:insight_hub/views/register/passowrd_regisster.dart';
+
 import 'package:insight_hub/views/register/personal_one.dart';
 import 'package:insight_hub/views/register/personal_two.dart';
 import 'package:insight_hub/views/register/labor_information.dart';

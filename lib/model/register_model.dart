@@ -6,7 +6,7 @@ class RegisterModel {
   final int gender;
   final DateTime birthDate;
   final String collage;
-  final bool isGraduated;
+  final bool isEmployed;
   final String email;
   final String password;
   final String confirmPassword;
@@ -18,7 +18,7 @@ class RegisterModel {
     required this.gender,
     required this.birthDate,
     required this.collage,
-    required this.isGraduated,
+    required this.isEmployed,
     required this.email,
     required this.password,
     required this.confirmPassword,
@@ -32,7 +32,7 @@ class RegisterModel {
       "gender": gender,
       "birthDate":  birthDate.toUtc().toIso8601String(),
       "collage": collage,
-      "isGraduated": isGraduated,
+      "isEmployed": isEmployed,
       "email": email,
       "password": password,
       "confirmPassword": confirmPassword,
@@ -47,7 +47,7 @@ class RegisterModel {
       gender: json["gender"],
       birthDate: DateTime.parse(json["birthDate"]),
       collage: json["collage"],
-      isGraduated: json["isGraduated"],
+      isEmployed: json["isEmployed"],
       email: json["email"],
       password: json["password"],
       selectedJobs: (json["selectedJobs"] as List)

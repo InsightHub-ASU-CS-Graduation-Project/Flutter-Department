@@ -18,7 +18,7 @@ class RegisterEducationScreen extends StatefulWidget {
 class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
   DateTime? _birthdate;
   final _collegeController = TextEditingController();
-  bool _graduated = false;
+  bool _isEmployed = false;
 
   bool get _isValid => _birthdate != null && _collegeController.text.isNotEmpty;
 
@@ -26,7 +26,7 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
     if (_isValid) {
       context.read<RegisterCubit>().saveBirthDate(_birthdate!);
       context.read<RegisterCubit>().saveCollage(_collegeController.text);
-      context.read<RegisterCubit>().saveGraduation(_graduated);
+      context.read<RegisterCubit>().saveEmployment(_isEmployed);
       Navigator.pushNamed(context, Routes.laborInformationScreen);
     }
   }
@@ -116,12 +116,12 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
                 ],
               ),
               const SizedBox(height: 24),
-              // Graduated Toggle
+              // Employment Toggle
               SwitchListTile(
-                title: const Text("I have graduated", style: TextStyle(fontWeight: FontWeight.w500)),
-                value: _graduated,
+                title: const Text("I am employed", style: TextStyle(fontWeight: FontWeight.w500)),
+                value: _isEmployed,
                 activeColor: Colors.blue,
-                onChanged: (val) => setState(() => _graduated = val),
+                onChanged: (val) => setState(() => _isEmployed = val),
                 contentPadding: EdgeInsets.zero,
               ),
 

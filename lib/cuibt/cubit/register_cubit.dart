@@ -18,7 +18,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   int? gender;
   DateTime? birthDate;
   String? collage;
-  bool? isGraduated;
+  bool? isEmployed;
   String? email;
   String? password;
   String? confirmPassword;
@@ -56,9 +56,9 @@ class RegisterCubit extends Cubit<RegisterState> {
     collage = value;
   }
 
-  /// Save Graduation Status
-  void saveGraduation(bool value) {
-    isGraduated = value;
+  /// Save Employment Status
+  void saveEmployment(bool value) {
+    isEmployed = value;
   }
 
   /// Save Selected Jobs
@@ -103,7 +103,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       gender: gender!,
       birthDate: birthDate!,
       collage: collage!,
-      isGraduated: isGraduated!,
+      isEmployed: isEmployed!,
       email: email!,
       password: password!,
       confirmPassword: confirmPassword!,
