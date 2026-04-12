@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:insight_hub/constant/labor_list.dart';
 import 'package:insight_hub/model/app_error.dart';
+import 'package:insight_hub/model/question_model.dart';
 import 'package:insight_hub/services/endpoints.dart';
 import 'package:insight_hub/services/secure_storege.dart';
 
@@ -164,5 +165,64 @@ class ApiService {
         options: options,
       ),
     );
+  }
+
+  Future<List<QuestionModel>> fetchQuestions({required String target}) async {
+    final result = await get(
+      Endpoints.questions,
+      queryParameters: {'target': target},
+    );
+
+    if (result['success'] != true) {
+      throw Exception(result['error']?.toString() ?? 'Failed to load questions.');
+    }
+
+    final items = _extractQuestionList(result['data']);
+
+    return items
+        .map((item) => QuestionModel.fromJson(Map<String, dynamic>.from(item)))
+        .toList();
+  }
+
+  Future<void> submitAnswers({required Map<int, dynamic> answers}) async {
+    final payload = {
+      'answers': answers.entries
+          .map(
+            (entry) => {
+              'questionId': entry.key,
+              'value': entry.value is int
+                  ? entry.value
+                  : int.tryParse('${entry.value}') ?? 0,
+            },
+          )
+          .toList(),
+    };
+
+    final result = await post(Endpoints.answers, data: payload);
+
+    if (result['success'] != true) {
+      throw Exception(result['error']?.toString() ?? 'Failed to submit answers.');
+    }
+  }
+
+  List<Map<String, dynamic>> _extractQuestionList(dynamic data) {
+    if (data is List) {
+      return data
+          .whereType<Map>()
+          .map((item) => Map<String, dynamic>.from(item))
+          .toList();
+    }
+
+    if (data is Map<String, dynamic>) {
+      final nestedList = data['data'] ?? data['questions'] ?? data['items'];
+      if (nestedList is List) {
+        return nestedList
+            .whereType<Map>()
+            .map((item) => Map<String, dynamic>.from(item))
+            .toList();
+      }
+    }
+
+    return const [];
   }
 }

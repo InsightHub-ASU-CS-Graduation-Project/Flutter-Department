@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/constant/routes.dart';
 
 class BottomNav extends StatelessWidget {
-  const BottomNav({super.key});
+  final int currentIndex;
+
+  const BottomNav({
+    super.key,
+    required this.currentIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +31,25 @@ class BottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildNavItem(Icons.home, 'Home', false, () {}),
-          _buildNavItem(Icons.search, 'Search', false, () {}),
-          _buildNavItem(Icons.interests, 'Intersted', false, () {}),
-          _buildNavItem(Icons.person, 'Profile', true, () {}),
+          _buildNavItem(context, 0, Icons.home, 'Home'),
+          _buildNavItem(context, 1, Icons.search, 'Search'),
+          _buildNavItem(context, 2, Icons.interests, 'Intersted'),
+          _buildNavItem(context, 3, Icons.person, 'Profile'),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, bool isActive, VoidCallback onTap) {
+  Widget _buildNavItem(
+    BuildContext context,
+    int index,
+    IconData icon,
+    String label,
+  ) {
+    final isActive = currentIndex == index;
+
     return InkWell(
-      onTap: onTap,
+      onTap: () => _handleTap(context, index),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -57,5 +70,26 @@ class BottomNav extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _handleTap(BuildContext context, int index) {
+    if (index == currentIndex) {
+      return;
+    }
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacementNamed(context, Routes.questionScreen);
+        return;
+      case 3:
+        Navigator.pushReplacementNamed(context, Routes.profileScreen);
+        return;
+      default:
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('This section is not available yet.'),
+          ),
+        );
+    }
   }
 }
