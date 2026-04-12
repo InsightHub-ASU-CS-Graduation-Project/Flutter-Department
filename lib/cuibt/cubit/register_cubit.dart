@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:insight_hub/constant/labor_list.dart';
+import 'package:insight_hub/services/endpoints.dart';
 import 'package:insight_hub/services/api_service.dart';
 import 'package:insight_hub/services/secure_storege.dart';
 import 'package:meta/meta.dart';
@@ -74,19 +75,20 @@ class RegisterCubit extends Cubit<RegisterState> {
 
     try {
       final result = await _apiService.post(
-        '/Account/register',
+        Endpoints.register,
         data: model.toJson(),
       );
 
-      if (result['success']) {
-        final token = result['data']['token'];
+      if (result['success'] == true) {
+        final data = result['data'];
+        final token = data is Map<String, dynamic> ? data['token'] : null;
         if (token != null) {
-          await SecureStorage.writeData(key: tokenKey, value: token);
+          await SecureStorage.writeData(key: tokenKey, value: token.toString());
         }
 
         emit(RegisterSuccess(result));
       } else {
-        emit(RegisterFailure(result['error']));
+        emit(RegisterFailure(result['error']?.toString() ?? 'Registration failed'));
       }
     } catch (e) {
       emit(RegisterFailure('Unexpected error: $e'));

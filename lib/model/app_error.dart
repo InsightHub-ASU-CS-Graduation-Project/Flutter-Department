@@ -12,11 +12,16 @@ class AppError {
   });
 
   factory AppError.fromJson(Map<String, dynamic> json) {
+    final rawErrors = json['errors'];
     return AppError(
       message: json['message'] as String?,
       error: json['error'] as String?,
       msg: json['msg'] as String?,
-      errors: json['errors'] != null ? List<String>.from(json['errors']) : null,
+      errors: rawErrors is List
+          ? rawErrors.map((error) => error.toString()).toList()
+          : rawErrors != null
+              ? [rawErrors.toString()]
+              : null,
     );
   }
   String getErrorMessage() {

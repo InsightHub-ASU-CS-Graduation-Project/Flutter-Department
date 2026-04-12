@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/cuibt/cubit/logout_cubit.dart';
 import 'package:insight_hub/services/secure_storege.dart';
+import 'package:insight_hub/views/onboarding.dart';
 import 'package:insight_hub/views/welcome.dart';
 import 'package:insight_hub/views/sign_in.dart';
 import 'package:insight_hub/views/register/email_registter.dart';
@@ -43,8 +44,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Insight Hub',
-        home: const SplashScreen(),
+        home: const OnboardingScreen(),
         routes: {
+          Routes.onboardingScreen: (_) => const OnboardingScreen(),
           Routes.welcomeScreen: (_) => const WelcomeScreen(),
           Routes.signInScreen: (_) => const SignInScreen(),
           Routes.registerEmailScreen: (_) => const RegisterEmailScreen(),

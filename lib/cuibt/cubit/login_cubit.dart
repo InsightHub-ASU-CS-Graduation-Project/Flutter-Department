@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:insight_hub/constant/labor_list.dart';
+import 'package:insight_hub/services/endpoints.dart';
 import 'package:insight_hub/services/api_service.dart';
 import 'package:insight_hub/services/secure_storege.dart';
 import 'package:meta/meta.dart';
@@ -15,23 +16,23 @@ class LoginCubit extends Cubit<LoginState> {
     emit(LoginLoading());
     try {
       final result = await _apiService.post(
-        '/account/login',
+        Endpoints.login,
         data: {
           'email': email,
           'password': password,
         },
       );
 
-      if (result['success']) {
-        // Check if response contains token and store it securely
-        final token = result['data']['token'];
+      if (result['success'] == true) {
+        final data = result['data'];
+        final token = data is Map<String, dynamic> ? data['token'] : null;
         if (token != null) {
-          await SecureStorage.writeData(key: tokenKey, value: token);
+          await SecureStorage.writeData(key: tokenKey, value: token.toString());
         }
 
         emit(LoginSuccess(result));
       } else {
-        emit(LoginFailure(result['error']));
+        emit(LoginFailure(result['error']?.toString() ?? 'Login failed'));
       }
     } catch (e) {
       emit(LoginFailure('Unexpected error'));

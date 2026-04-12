@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/constant/labor_list.dart';
+import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/constant/storage_keys.dart';
+import 'package:insight_hub/services/secure_storege.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,15 +26,14 @@ class _SplashScreenState extends State<SplashScreen>
   void initState() {
     super.initState();
 
-    // Detect theme
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       setState(() {
         _isDarkMode =
             MediaQuery.of(context).platformBrightness == Brightness.dark;
       });
     });
 
-    // Scale animation
     _scaleController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -40,7 +42,6 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _scaleController, curve: Curves.elasticOut),
     );
 
-    // Fade animation
     _fadeController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -49,18 +50,31 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
     );
 
-    // Start animations
     _scaleController.forward();
     Future.delayed(const Duration(milliseconds: 200), () {
-      _fadeController.forward();
-    });
-
-    // Navigation (زي ما هو)
-    Future.delayed(const Duration(seconds: 10), () {
       if (mounted) {
-        Navigator.pushReplacementNamed(context, Routes.welcomeScreen);
+        _fadeController.forward();
       }
     });
+
+    _navigateFromSplash();
+  }
+
+  Future<void> _navigateFromSplash() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    final token = await SecureStorage.readData(key: tokenKey);
+    final onboardingSeen = await SecureStorage.readData(key: onboardingSeenKey);
+
+    final nextRoute = token != null && token.isNotEmpty
+        ? Routes.profileScreen
+        : onboardingSeen == 'true'
+            ? Routes.welcomeScreen
+            : Routes.onboardingScreen;
+
+    if (!mounted) return;
+
+    Navigator.pushReplacementNamed(context, nextRoute);
   }
 
   @override
@@ -95,15 +109,12 @@ class _SplashScreenState extends State<SplashScreen>
         ),
         child: Stack(
           children: [
-            // ⭐ النجوم (ثابتة وموزعة بشكل متوازن)
             Positioned(top: 80, left: 40, child: _buildStar()),
             Positioned(top: 150, right: 60, child: _buildStar()),
             Positioned(top: 250, left: 30, child: _buildStar()),
             Positioned(top: 350, right: 40, child: _buildStar()),
             Positioned(bottom: 200, left: 50, child: _buildStar()),
             Positioned(bottom: 120, right: 70, child: _buildStar()),
-
-            // Main Content
             Center(
               child: ScaleTransition(
                 scale: _scaleAnimation,
@@ -112,7 +123,6 @@ class _SplashScreenState extends State<SplashScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Logo
                       Container(
                         margin: const EdgeInsets.only(bottom: 32),
                         padding: const EdgeInsets.all(24),
@@ -133,10 +143,8 @@ class _SplashScreenState extends State<SplashScreen>
                           color: Colors.white,
                         ),
                       ),
-
-                      // Brand Name
                       Text(
-                        "InsightHub",
+                        'InsightHub',
                         style: TextStyle(
                           fontSize: 40,
                           fontWeight: FontWeight.bold,
@@ -145,12 +153,9 @@ class _SplashScreenState extends State<SplashScreen>
                               : AppColors.textDark,
                         ),
                       ),
-
                       const SizedBox(height: 12),
-
-                      // Tagline
                       Text(
-                        "Your gateway to market intelligence",
+                        'Your gateway to market intelligence',
                         style: TextStyle(
                           fontSize: 16,
                           color: _isDarkMode
@@ -159,10 +164,7 @@ class _SplashScreenState extends State<SplashScreen>
                         ),
                         textAlign: TextAlign.center,
                       ),
-
                       const SizedBox(height: 48),
-
-                      // ✨ Shimmer Loading Text
                       Shimmer.fromColors(
                         baseColor: _isDarkMode
                             ? Colors.grey[700]!
@@ -171,7 +173,7 @@ class _SplashScreenState extends State<SplashScreen>
                             ? Colors.grey[500]!
                             : Colors.white,
                         child: Text(
-                          "Loading",
+                          'Loading',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -186,8 +188,6 @@ class _SplashScreenState extends State<SplashScreen>
                 ),
               ),
             ),
-
-            // Bottom Branding
             Positioned(
               bottom: 32,
               left: 0,
@@ -195,12 +195,10 @@ class _SplashScreenState extends State<SplashScreen>
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: Text(
-                  "Powered by Data Intelligence",
+                  'Powered by Data Intelligence',
                   style: TextStyle(
                     fontSize: 12,
-                    color: _isDarkMode
-                        ? Colors.grey[600]
-                        : Colors.grey[400],
+                    color: _isDarkMode ? Colors.grey[600] : Colors.grey[400],
                   ),
                   textAlign: TextAlign.center,
                 ),

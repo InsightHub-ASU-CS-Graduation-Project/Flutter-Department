@@ -13,10 +13,25 @@ class ProfileScreen extends StatelessWidget {
 
   static const String routeName = '/profileScreen';
 
+  String _initialFrom(String? value) {
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return '?';
+    return trimmed[0].toUpperCase();
+  }
+
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<RegisterCubit>();
     final logoutCubit = context.read<LogoutCubit>();
+    final fullName =
+        '${cubit.firstName ?? ''} ${cubit.lastName ?? ''}'.trim().isEmpty
+            ? 'Guest User'
+            : '${cubit.firstName ?? ''} ${cubit.lastName ?? ''}'.trim();
+    final email = (cubit.email?.trim().isNotEmpty ?? false)
+        ? cubit.email!.trim()
+        : 'No email available';
+    final avatarInitials =
+        '${_initialFrom(cubit.firstName)}${_initialFrom(cubit.lastName)}';
 
     final profileSections = [
       {
@@ -25,12 +40,12 @@ class ProfileScreen extends StatelessWidget {
           {
             'icon': LucideIcons.user,
             'label': 'Full Name',
-            'value': '${cubit.firstName ?? ''} ${cubit.lastName ?? ''}'.trim(),
+            'value': fullName,
           },
           {
             'icon': LucideIcons.mail,
             'label': 'Email',
-            'value': cubit.email ?? 'Not set',
+            'value': email,
           },
           {
             'icon': LucideIcons.calendar,
@@ -144,7 +159,7 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               child: Center(
                                 child: Text(
-                                  '${(cubit.firstName ?? '')[0]}${(cubit.lastName ?? '')[0]}'.toUpperCase(),
+                                  avatarInitials,
                                   style: const TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.bold,
@@ -155,7 +170,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              '${cubit.firstName ?? ''} ${cubit.lastName ?? ''}'.trim(),
+                              fullName,
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -164,7 +179,7 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              cubit.email ?? '',
+                              email,
                               style: const TextStyle(
                                 fontSize: 14,
                                 color: Color(0xFF6B7280), // gray-600
