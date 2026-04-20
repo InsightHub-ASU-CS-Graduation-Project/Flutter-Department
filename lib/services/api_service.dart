@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:insight_hub/constant/labor_list.dart';
 import 'package:insight_hub/model/app_error.dart';
 import 'package:insight_hub/model/match_model.dart';
@@ -8,7 +9,9 @@ import 'package:insight_hub/services/secure_storege.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
+  static final ValueNotifier<int> unauthorizedNotifier = ValueNotifier<int>(0);
   late final Dio _dio;
+  bool _isHandlingUnauthorized = false;
 
   factory ApiService() {
     return _instance;
@@ -51,6 +54,7 @@ class ApiService {
         'error': null,
       };
     } on DioException catch (e) {
+      await _handleUnauthorized(e);
       final errorMessage = _parseErrorMessage(e);
 
       return {
@@ -66,6 +70,35 @@ class ApiService {
         'data': null,
         'error': 'Unexpected error: $e',
       };
+    }
+  }
+
+  Future<void> _handleUnauthorized(DioException e) async {
+    final statusCode = e.response?.statusCode;
+    final requestPath = e.requestOptions.path.toLowerCase();
+    final hasAuthHeader =
+        e.requestOptions.headers['Authorization']?.toString().isNotEmpty ==
+        true;
+
+    final isAuthRequest =
+        requestPath == Endpoints.login.toLowerCase() ||
+        requestPath == Endpoints.register.toLowerCase();
+
+    if (statusCode != 401 || !hasAuthHeader || isAuthRequest) {
+      return;
+    }
+
+    if (_isHandlingUnauthorized) {
+      return;
+    }
+
+    _isHandlingUnauthorized = true;
+
+    try {
+      await SecureStorage.deleteData(key: tokenKey);
+      unauthorizedNotifier.value++;
+    } finally {
+      _isHandlingUnauthorized = false;
     }
   }
 
