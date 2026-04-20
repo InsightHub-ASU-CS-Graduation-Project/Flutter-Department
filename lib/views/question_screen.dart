@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
 import 'package:insight_hub/model/profile_model.dart';
@@ -103,12 +104,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         BlocListener<QuestionCubit, QuestionState>(
           listener: (context, state) {
             if (state is QuestionLoaded && state.didSubmitSucceed) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Answers submitted successfully.'),
-                ),
-              );
-              
+              Navigator.pushReplacementNamed(context, Routes.matchScreen);
             }
           },
         ),

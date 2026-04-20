@@ -8,4 +8,5 @@ class Endpoints {
   static const String profile = '/account/profile';
   static const String questions = '/Survey/questions';
   static const String answers = '/Survey/submit';
+  static const String match = '/Matching/find-match';
 }

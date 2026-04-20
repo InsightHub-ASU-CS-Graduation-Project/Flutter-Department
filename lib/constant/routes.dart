@@ -20,6 +20,8 @@ class Routes {
 
   static const String questionScreen = '/questionScreen';
 
+  static const String matchScreen = '/matchScreen';
+
   static const String profileScreen = '/profileScreen';
 
 }

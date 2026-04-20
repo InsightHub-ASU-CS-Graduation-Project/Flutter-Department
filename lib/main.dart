@@ -30,11 +30,13 @@ import 'package:insight_hub/views/splash.dart';
 import 'package:insight_hub/views/profile.dart';
 
 import 'package:insight_hub/views/question_screen.dart';
+import 'package:insight_hub/views/match_screen.dart';
 
 import 'package:insight_hub/constant/routes.dart';
 
 import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 
+import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
 
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
@@ -65,6 +67,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => LoginCubit()),
         BlocProvider(create:  (context) => LogoutCubit()),
         BlocProvider(create:  (context) => ProfileCubit()),
+        BlocProvider(create:  (context) => MatchCubit()),
         BlocProvider(create:  (context) => QuestionCubit()),
       ],
       child: MaterialApp(
@@ -82,6 +85,7 @@ class MyApp extends StatelessWidget {
           Routes.laborInformationScreen: (_) => const LaborInformationScreen(),
           Routes.confirmationScreen: (_) => ConfirmationScreen(),
           Routes.questionScreen: (_) => const QuestionScreen(),
+          Routes.matchScreen: (_) => const MatchScreen(),
           Routes.profileScreen: (_) => const ProfileScreen(),
         },
       ),

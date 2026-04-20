@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:insight_hub/constant/labor_list.dart';
 import 'package:insight_hub/model/app_error.dart';
+import 'package:insight_hub/model/match_model.dart';
 import 'package:insight_hub/model/question_model.dart';
 import 'package:insight_hub/services/endpoints.dart';
 import 'package:insight_hub/services/secure_storege.dart';
@@ -203,6 +204,21 @@ class ApiService {
     if (result['success'] != true) {
       throw Exception(result['error']?.toString() ?? 'Failed to submit answers.');
     }
+  }
+
+  Future<MatchResultModel> findMatch() async {
+    final result = await post(Endpoints.match);
+
+    if (result['success'] != true) {
+      throw Exception(result['error']?.toString() ?? 'Failed to load match result.');
+    }
+
+    final data = result['data'];
+    if (data is! Map<String, dynamic>) {
+      throw Exception('Invalid match response.');
+    }
+
+    return MatchResultModel.fromJson(data);
   }
 
   List<Map<String, dynamic>> _extractQuestionList(dynamic data) {
