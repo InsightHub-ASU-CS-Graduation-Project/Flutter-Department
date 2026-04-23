@@ -8,6 +8,10 @@ sealed class MatchState {
   const MatchState();
 }
 
+final class MatchInitial extends MatchState {
+  const MatchInitial();
+}
+
 final class MatchLoading extends MatchState {
   const MatchLoading();
 }
@@ -29,9 +33,14 @@ class MatchCubit extends Cubit<MatchState> {
 
   MatchCubit({ApiService? apiService})
       : _apiService = apiService ?? ApiService(),
-        super(const MatchLoading());
+        super(const MatchInitial());
 
   Future<void> getMatch() async {
+    // Persistent behavior: If already loaded, don't fetch again
+    if (state is MatchLoaded) {
+      return;
+    }
+
     emit(const MatchLoading());
 
     try {
@@ -40,6 +49,14 @@ class MatchCubit extends Cubit<MatchState> {
     } catch (error) {
       emit(MatchError(_errorMessage(error)));
     }
+  }
+
+  void reset() {
+    emit(const MatchInitial());
+  }
+
+  void emitResult(MatchResultModel result) {
+    emit(MatchLoaded(result));
   }
 
   String _errorMessage(Object error) {

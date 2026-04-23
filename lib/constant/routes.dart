@@ -1,4 +1,5 @@
 class Routes {
+  static const String homeScreen = '/homeScreen';
 
   static const String onboardingScreen = '/onboardingScreen';
 
@@ -23,5 +24,7 @@ class Routes {
   static const String matchScreen = '/matchScreen';
 
   static const String profileScreen = '/profileScreen';
+
+  static const String surveyMenuScreen = '/surveyMenuScreen';
 
 }

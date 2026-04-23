@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
+import 'package:insight_hub/model/match_model.dart';
 import 'package:insight_hub/model/profile_model.dart';
 import 'package:insight_hub/model/question_model.dart';
 import 'package:insight_hub/widget/bottom_nav.dart';
@@ -104,7 +106,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
         BlocListener<QuestionCubit, QuestionState>(
           listener: (context, state) {
             if (state is QuestionLoaded && state.didSubmitSucceed) {
-              Navigator.pushReplacementNamed(context, Routes.matchScreen);
+              // Invalidate cached match result so a fresh fetch is forced
+              context.read<MatchCubit>().reset();
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.matchScreen,
+              );
             }
           },
         ),
@@ -343,10 +350,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
             },
           ),
         ),
-        bottomNavigationBar: const BottomNav(currentIndex: 0),
+        bottomNavigationBar: const BottomNav(
+          currentIndex: 2,
+        ),
       ),
     );
   }
+
+
 }
 
 class _QuestionCard extends StatelessWidget {
@@ -439,13 +450,13 @@ class _ChoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = groupValue == option.id;
+    final isSelected = groupValue == option.numericValue;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
-        onTap: () => onSelected(option.id),
+        onTap: () => onSelected(option.numericValue),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -462,7 +473,7 @@ class _ChoiceTile extends StatelessWidget {
           child: Row(
             children: [
               Radio<int>(
-                value: option.id,
+                value: option.numericValue,
                 groupValue: groupValue,
                 onChanged: (value) {
                   if (value != null) {

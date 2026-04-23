@@ -15,9 +15,11 @@ import 'package:insight_hub/views/register/personal_two.dart';
 import 'package:insight_hub/views/register/labor_information.dart';
 import 'package:insight_hub/views/register/confirmation.dart';
 import 'package:insight_hub/views/splash.dart';
+import 'package:insight_hub/views/home_screen.dart';
 import 'package:insight_hub/views/profile.dart';
 import 'package:insight_hub/views/question_screen.dart';
 import 'package:insight_hub/views/match_screen.dart';
+import 'package:insight_hub/views/survey_menu_screen.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
@@ -86,6 +88,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           Routes.onboardingScreen: (_) => const OnboardingScreen(),
           Routes.welcomeScreen: (_) => const WelcomeScreen(),
+          Routes.homeScreen: (_) => const HomeScreen(),
           Routes.signInScreen: (_) => const SignInScreen(),
           Routes.registerEmailScreen: (_) => const RegisterEmailScreen(),
           Routes.registerPasswordScreen: (_) => const RegisterPasswordScreen(),
@@ -96,6 +99,7 @@ class _MyAppState extends State<MyApp> {
           Routes.questionScreen: (_) => const QuestionScreen(),
           Routes.matchScreen: (_) => const MatchScreen(),
           Routes.profileScreen: (_) => const ProfileScreen(),
+          Routes.surveyMenuScreen: (_) => const SurveyMenuScreen(),
         },
       ),
     );

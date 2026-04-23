@@ -219,18 +219,22 @@ class ApiService {
   }
 
   Future<void> submitAnswers({required Map<int, dynamic> answers}) async {
+       
+   
     final payload = {
       'answers': answers.entries
           .map(
             (entry) => {
               'questionId': entry.key,
-              'value': entry.value is int
+              'answerValue': entry.value is int
                   ? entry.value
                   : int.tryParse('${entry.value}') ?? 0,
             },
           )
           .toList(),
     };
+    print("=== PAYLOAD SENT ===");
+print(payload);
 
     final result = await post(Endpoints.answers, data: payload);
 

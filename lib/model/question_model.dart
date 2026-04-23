@@ -15,16 +15,19 @@ enum QuestionType {
 class OptionModel {
   final int id;
   final String text;
+  final int numericValue;
 
   const OptionModel({
     required this.id,
     required this.text,
+    required this.numericValue,
   });
 
   factory OptionModel.fromJson(Map<String, dynamic> json) {
     return OptionModel(
       id: _readInt(json['id'] ?? json['value']),
       text: (json['text'] ?? json['label'] ?? '').toString(),
+      numericValue: _readInt(json['numericValue'] ?? json['value'] ?? json['id']),
     );
   }
 

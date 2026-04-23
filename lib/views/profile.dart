@@ -66,10 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'label': 'Employment Status',
         'value': profile.isEmployed ? 'Employed' : 'Not Employed',
       },
-      {
-        'label': 'Jobs',
-        'value': jobs.isEmpty ? 'Not set' : jobs,
-      },
+      {'label': 'Jobs', 'value': jobs.isEmpty ? 'Not set' : jobs},
     ];
   }
 
@@ -103,18 +100,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 (route) => false,
               );
             } else if (state is LogoutFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
             }
           },
         ),
         BlocListener<ProfileCubit, ProfileState>(
           listener: (context, state) {
             if (state is ProfileFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
             }
           },
         ),
@@ -148,10 +145,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 4),
                     Text(
                       'Manage your account information',
-                      style: TextStyle(
-                        color: Color(0xFFBFDBFE),
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Color(0xFFBFDBFE), fontSize: 14),
                     ),
                   ],
                 ),
@@ -417,11 +411,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: const Color(0xFFF3F4F6),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(
-              icon,
-              size: 20,
-              color: const Color(0xFF6B7280),
-            ),
+            child: Icon(icon, size: 20, color: const Color(0xFF6B7280)),
           ),
           const SizedBox(width: 12),
           Expanded(

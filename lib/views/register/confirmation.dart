@@ -9,7 +9,7 @@ class ConfirmationScreen extends StatelessWidget {
 //make routname
   static const String routeName = '/confirmationScreen';
 
-  ConfirmationScreen({super.key});
+  const ConfirmationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

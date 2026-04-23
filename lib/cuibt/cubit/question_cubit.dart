@@ -24,7 +24,6 @@ final class QuestionLoaded extends QuestionState {
   final bool isSubmitting;
   final bool didSubmitSucceed;
   final String? validationMessage;
-
   const QuestionLoaded({
     required this.questions,
     this.answers = const {},
@@ -83,6 +82,7 @@ class QuestionCubit extends Cubit<QuestionState> {
   }
 
   void answerQuestion(int questionId, dynamic value) {
+      print("Q:$questionId → value:$value");
     final currentState = state;
     if (currentState is! QuestionLoaded) {
       return;
@@ -126,6 +126,7 @@ class QuestionCubit extends Cubit<QuestionState> {
 
     try {
       await _apiService.submitAnswers(answers: currentState.answers);
+
       emit(
         currentState.copyWith(
           isSubmitting: false,
@@ -151,5 +152,9 @@ class QuestionCubit extends Cubit<QuestionState> {
     }
 
     return message;
+  }
+
+  void reset() {
+    emit(const QuestionLoading());
   }
 }

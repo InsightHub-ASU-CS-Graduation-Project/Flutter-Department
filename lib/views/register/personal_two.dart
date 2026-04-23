@@ -120,7 +120,7 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
               SwitchListTile(
                 title: const Text("I am employed", style: TextStyle(fontWeight: FontWeight.w500)),
                 value: _isEmployed,
-                activeColor: Colors.blue,
+                activeThumbColor: Colors.blue,
                 onChanged: (val) => setState(() => _isEmployed = val),
                 contentPadding: EdgeInsets.zero,
               ),

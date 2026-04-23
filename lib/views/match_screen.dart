@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
+import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
 import 'package:insight_hub/model/match_model.dart';
 import 'package:insight_hub/widget/bottom_nav.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -43,6 +45,11 @@ class _MatchScreenState extends State<MatchScreen>
       }
 
       context.read<MatchCubit>().getMatch();
+
+      // If data is already loaded, ensure the animation starts
+      if (context.read<MatchCubit>().state is MatchLoaded) {
+        _controller.forward(from: 0);
+      }
     });
   }
 
@@ -76,7 +83,7 @@ class _MatchScreenState extends State<MatchScreen>
             }
           },
           builder: (context, state) {
-            if (state is MatchLoading) {
+            if (state is MatchLoading || state is MatchInitial) {
               return const Center(child: CircularProgressIndicator());
             }
 
@@ -235,6 +242,30 @@ class _MatchScreenState extends State<MatchScreen>
                                         .toList(),
                               ),
                             ),
+                            const SizedBox(height: 24),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  context.read<MatchCubit>().reset();
+                                  context.read<QuestionCubit>().reset();
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    Routes.questionScreen,
+                                  );
+                                },
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('Retake Survey'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryBlue,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -246,9 +277,13 @@ class _MatchScreenState extends State<MatchScreen>
           },
         ),
       ),
-      bottomNavigationBar: const BottomNav(currentIndex: 0),
+      bottomNavigationBar: const BottomNav(
+        currentIndex: 2,
+      ),
     );
   }
+
+
 }
 
 class _ScoreCard extends StatelessWidget {

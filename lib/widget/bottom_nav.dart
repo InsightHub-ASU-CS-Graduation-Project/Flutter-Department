@@ -33,7 +33,7 @@ class BottomNav extends StatelessWidget {
         children: [
           _buildNavItem(context, 0, Icons.home, 'Home'),
           _buildNavItem(context, 1, Icons.search, 'Search'),
-          _buildNavItem(context, 2, Icons.interests, 'Intersted'),
+          _buildNavItem(context, 2, Icons.interests, 'Survey'),
           _buildNavItem(context, 3, Icons.person, 'Profile'),
         ],
       ),
@@ -48,26 +48,28 @@ class BottomNav extends StatelessWidget {
   ) {
     final isActive = currentIndex == index;
 
-    return InkWell(
-      onTap: () => _handleTap(context, index),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? AppColors.primaryBlue : Colors.grey,
-            size: 24,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
+    return Expanded(
+      child: InkWell(
+        onTap: () => _handleTap(context, index),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
               color: isActive ? AppColors.primaryBlue : Colors.grey,
-              fontSize: 12,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              size: 24,
             ),
-          ),
-        ],
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isActive ? AppColors.primaryBlue : Colors.grey,
+                fontSize: 12,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -79,15 +81,18 @@ class BottomNav extends StatelessWidget {
 
     switch (index) {
       case 0:
-        Navigator.pushReplacementNamed(context, Routes.questionScreen);
+        Navigator.pushReplacementNamed(context, Routes.homeScreen);
         return;
       case 3:
         Navigator.pushReplacementNamed(context, Routes.profileScreen);
         return;
+      case 2:
+        Navigator.pushReplacementNamed(context, Routes.surveyMenuScreen);
+        return;
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('This section is not available yet.'),
+            content: Text('This section is not available now.'),
           ),
         );
     }

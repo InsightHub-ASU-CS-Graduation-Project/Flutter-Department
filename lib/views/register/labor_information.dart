@@ -99,7 +99,7 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
                       const SizedBox(height: 8),
 
                       DropdownButtonFormField<int>(
-                        value: selectedJob,
+                        initialValue: selectedJob,
                         decoration: InputDecoration(
                           hintText: "Select job",
                           border: OutlineInputBorder(
@@ -128,7 +128,7 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<int>(
-                        value: selectedExperience,
+                        initialValue: selectedExperience,
                         decoration: InputDecoration(
                           hintText: "Select years",
                           border: OutlineInputBorder(

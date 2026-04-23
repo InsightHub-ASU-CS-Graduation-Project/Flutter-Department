@@ -104,7 +104,7 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
                       CardContainer(children: [
                         _label("Gender"),
                         DropdownButtonFormField<String>(
-                          value: _selectedGender,
+                          initialValue: _selectedGender,
                           decoration: _inputDecoration("Select gender"),
                           items: ['Male', 'Female']
                               .map(
