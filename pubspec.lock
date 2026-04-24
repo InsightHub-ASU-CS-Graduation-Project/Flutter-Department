@@ -533,6 +533,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "33.2.3"
+  syncfusion_flutter_treemap:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_treemap
+      sha256: cf6ac368dc4bd656636e665f07a81a88087c0fe90628f459c8358ccc26bbcaa5
+      url: "https://pub.dev"
+    source: hosted
+    version: "33.2.3"
   term_glyph:
     dependency: transitive
     description:

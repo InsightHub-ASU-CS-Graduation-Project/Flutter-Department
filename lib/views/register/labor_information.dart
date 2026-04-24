@@ -5,8 +5,6 @@ import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/widget/card_container.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
-import 'package:insight_hub/model/jop_year.dart';
-
 class LaborInformationScreen extends StatefulWidget {
 const LaborInformationScreen({super.key});
 static const String routeName = '/laborInformationScreen';
@@ -28,8 +26,7 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
 
   void _handleNext() {
     if (isValid) {
-      final selectedJobs = [SelectedJob(jobId: selectedJob!, yearsExperience: selectedExperience!)];
-      context.read<RegisterCubit>().saveJobs(selectedJobs);
+      context.read<RegisterCubit>().saveLaborInfo(selectedJob!, selectedExperience!);
       context.read<RegisterCubit>().submitRegister();
     }
   }

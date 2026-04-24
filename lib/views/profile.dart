@@ -43,15 +43,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   List<Map<String, String>> _profileItems(ProfileModel profile) {
-    final jobs = profile.jobs
-        .where((job) => job.jobName.trim().isNotEmpty)
-        .map((job) {
-          final years = job.yearsExperience;
-          if (years == null) return job.jobName;
-          final suffix = years == 1 ? 'year' : 'years';
-          return '${job.jobName} ($years $suffix)';
-        })
-        .join(', ');
+    String jobText = profile.trackName.trim();
+    if (jobText.isNotEmpty && profile.yearsExperience != null) {
+       final suffix = profile.yearsExperience == 1 ? 'year' : 'years';
+       jobText = '$jobText (${profile.yearsExperience} $suffix)';
+    }
 
     return [
       {
@@ -66,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'label': 'Employment Status',
         'value': profile.isEmployed ? 'Employed' : 'Not Employed',
       },
-      {'label': 'Jobs', 'value': jobs.isEmpty ? 'Not set' : jobs},
+      {'label': 'Job', 'value': jobText.isEmpty ? 'Not set' : jobText},
     ];
   }
 
@@ -389,7 +385,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return LucideIcons.graduationCap;
       case 'Employment Status':
         return LucideIcons.award;
-      case 'Jobs':
+      case 'Job':
         return LucideIcons.briefcase;
       default:
         return LucideIcons.user;

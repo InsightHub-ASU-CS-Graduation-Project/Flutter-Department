@@ -5,7 +5,6 @@ import 'package:insight_hub/services/api_service.dart';
 import 'package:insight_hub/services/secure_storege.dart';
 import 'package:meta/meta.dart';
 import 'package:insight_hub/model/register_model.dart';
-import 'package:insight_hub/model/jop_year.dart';
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
@@ -22,7 +21,8 @@ class RegisterCubit extends Cubit<RegisterState> {
   String? email;
   String? password;
   String? confirmPassword;
-  List<SelectedJob> selectedJobs = [];
+  int? trackId;
+  int? yearsExperience;
 
   /// Save Email
   void saveEmail(String value) {
@@ -61,9 +61,10 @@ class RegisterCubit extends Cubit<RegisterState> {
     isEmployed = value;
   }
 
-  /// Save Selected Jobs
-  void saveJobs(List<SelectedJob> jobs) {
-    selectedJobs = jobs;
+  /// Save Labor Info
+  void saveLaborInfo(int track, int exp) {
+    trackId = track;
+    yearsExperience = exp;
   }
 
 
@@ -107,7 +108,8 @@ class RegisterCubit extends Cubit<RegisterState> {
       email: email!,
       password: password!,
       confirmPassword: confirmPassword!,
-      selectedJobs: selectedJobs,
+      trackId: trackId ?? 0,
+      yearsExperience: yearsExperience ?? 0,
     );
   }
 }

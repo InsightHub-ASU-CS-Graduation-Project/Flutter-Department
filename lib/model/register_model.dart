@@ -1,5 +1,3 @@
-import 'package:insight_hub/model/jop_year.dart';
-
 class RegisterModel {
   final String firstName;
   final String lastName;
@@ -10,7 +8,8 @@ class RegisterModel {
   final String email;
   final String password;
   final String confirmPassword;
-  final List<SelectedJob> selectedJobs;
+  final int trackId;
+  final int yearsExperience;
 
   const RegisterModel({
     required this.firstName,
@@ -22,7 +21,8 @@ class RegisterModel {
     required this.email,
     required this.password,
     required this.confirmPassword,
-    required this.selectedJobs,
+    required this.trackId,
+    required this.yearsExperience,
   });
 
   Map<String, dynamic> toJson() {
@@ -36,7 +36,8 @@ class RegisterModel {
       "email": email,
       "password": password,
       "confirmPassword": confirmPassword,
-      "selectedJobs": selectedJobs.map((e) => e.toJson()).toList(),
+      "trackId": trackId,
+      "yearsExperience": yearsExperience,
     };
   }
 
@@ -50,10 +51,9 @@ class RegisterModel {
       isEmployed: json["isEmployed"],
       email: json["email"],
       password: json["password"],
-      selectedJobs: (json["selectedJobs"] as List)
-          .map((e) => SelectedJob.fromJson(e))
-          .toList(), confirmPassword: '',
-    
+      confirmPassword: json["confirmPassword"] ?? '',
+      trackId: json["trackId"] ?? 0,
+      yearsExperience: json["yearsExperience"] ?? 0,
     );
   }
 }

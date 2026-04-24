@@ -26,6 +26,7 @@ import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
+import 'package:insight_hub/cuibt/cubit/dashboard_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,6 +81,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => MatchCubit()),
         BlocProvider(create: (context) => QuestionCubit()),
+        BlocProvider(create: (context) => DashboardCubit()),
       ],
       child: MaterialApp(
         navigatorKey: _navigatorKey,

@@ -43,6 +43,7 @@ dependencies:
   shimmer: ^3.0.0
   syncfusion_flutter_charts: ^33.2.3
   syncfusion_flutter_maps: ^33.2.3
+  syncfusion_flutter_treemap: ^33.2.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0

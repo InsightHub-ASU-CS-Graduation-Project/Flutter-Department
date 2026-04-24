@@ -9,4 +9,8 @@ class Endpoints {
   static const String questions = '/Survey/questions';
   static const String answers = '/Survey/submit';
   static const String match = '/Matching/find-match';
+
+  // Analysis Proxy Endpoints
+  static const String analysisHome = '/AnalysisProxy/home';
+  static const String analysisExplore = '/AnalysisProxy/explore';
 }

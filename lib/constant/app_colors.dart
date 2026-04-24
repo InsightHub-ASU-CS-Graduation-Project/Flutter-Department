@@ -8,7 +8,7 @@ class AppColors {
   // Background Colors
   static const Color bgLightBlue = Color(0xFFEFF6FF);
   static const Color bgLightGreen = Color(0xFFF0FDF4);
-  static const Color bgLightGray = Color(0xFFF9FAFB);
+  static const Color bgLightGray = Color(0xFFF3F4F6);
   static const Color bgWhite = Color(0xFFFFFFFF);
 
   // Text Colors
