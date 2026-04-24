@@ -35,7 +35,8 @@ final class QuestionLoaded extends QuestionState {
   bool isAnswered(int questionId) => answers.containsKey(questionId);
 
   bool get canSubmit =>
-      questions.isNotEmpty && questions.every((question) => isAnswered(question.id));
+      questions.isNotEmpty &&
+      questions.every((question) => isAnswered(question.id));
 
   QuestionLoaded copyWith({
     List<QuestionModel>? questions,
@@ -61,8 +62,8 @@ class QuestionCubit extends Cubit<QuestionState> {
   final ApiService _apiService;
 
   QuestionCubit({ApiService? apiService})
-      : _apiService = apiService ?? ApiService(),
-        super(const QuestionLoading());
+    : _apiService = apiService ?? ApiService(),
+      super(const QuestionLoading());
 
   Future<void> fetchQuestions(String target) async {
     emit(const QuestionLoading());
@@ -82,7 +83,7 @@ class QuestionCubit extends Cubit<QuestionState> {
   }
 
   void answerQuestion(int questionId, dynamic value) {
-      print("Q:$questionId → value:$value");
+    print("Q:$questionId → value:$value");
     final currentState = state;
     if (currentState is! QuestionLoaded) {
       return;

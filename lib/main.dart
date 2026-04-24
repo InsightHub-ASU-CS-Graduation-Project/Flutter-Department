@@ -20,6 +20,7 @@ import 'package:insight_hub/views/profile.dart';
 import 'package:insight_hub/views/question_screen.dart';
 import 'package:insight_hub/views/match_screen.dart';
 import 'package:insight_hub/views/survey_menu_screen.dart';
+import 'package:insight_hub/views/survey_thank_you_screen.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
@@ -100,6 +101,7 @@ class _MyAppState extends State<MyApp> {
           Routes.matchScreen: (_) => const MatchScreen(),
           Routes.profileScreen: (_) => const ProfileScreen(),
           Routes.surveyMenuScreen: (_) => const SurveyMenuScreen(),
+          Routes.surveyThankYouScreen: (_) => const SurveyThankYouScreen(),
         },
       ),
     );

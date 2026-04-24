@@ -27,4 +27,6 @@ class Routes {
 
   static const String surveyMenuScreen = '/surveyMenuScreen';
 
+  static const String surveyThankYouScreen = '/surveyThankYouScreen';
+
 }

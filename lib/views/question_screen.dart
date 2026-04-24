@@ -106,12 +106,25 @@ class _QuestionScreenState extends State<QuestionScreen> {
         BlocListener<QuestionCubit, QuestionState>(
           listener: (context, state) {
             if (state is QuestionLoaded && state.didSubmitSucceed) {
-              // Invalidate cached match result so a fresh fetch is forced
-              context.read<MatchCubit>().reset();
-              Navigator.pushReplacementNamed(
-                context,
-                Routes.matchScreen,
-              );
+              final profileState = context.read<ProfileCubit>().state;
+              final isEmployed = profileState is ProfileSuccess
+                  ? profileState.profile.isEmployed
+                  : false;
+
+              if (isEmployed) {
+                // Employed users: skip match API, show thank-you
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.surveyThankYouScreen,
+                );
+              } else {
+                // Unemployed users: invalidate cache and show match result
+                context.read<MatchCubit>().reset();
+                Navigator.pushReplacementNamed(
+                  context,
+                  Routes.matchScreen,
+                );
+              }
             }
           },
         ),

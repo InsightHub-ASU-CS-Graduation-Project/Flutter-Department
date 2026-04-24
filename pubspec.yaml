@@ -41,6 +41,8 @@ dependencies:
   meta: ^1.16.0
   shared_preferences: ^2.5.5
   shimmer: ^3.0.0
+  syncfusion_flutter_charts: ^33.2.3
+  syncfusion_flutter_maps: ^33.2.3
 
 dev_dependencies:
   flutter_lints: ^5.0.0

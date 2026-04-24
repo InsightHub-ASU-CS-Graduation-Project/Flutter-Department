@@ -216,6 +216,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
   http_parser:
     dependency: transitive
     description:
@@ -501,6 +509,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      sha256: ed491bd31ef2ab3549982920c24d54b1e3aa8f83f5e70c9e565f31318f650e26
+      url: "https://pub.dev"
+    source: hosted
+    version: "33.2.3"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "799dd6683b0902491b4b194cfaa5b5a100f87205db083923dbb5f77ff6f509e4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "33.2.3"
+  syncfusion_flutter_maps:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_maps
+      sha256: "74345d2c586e02c6f10c661032f9b87f6f5e906c022f915c8b5231daae28d9c3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "33.2.3"
   term_glyph:
     dependency: transitive
     description:
@@ -575,4 +607,4 @@ packages:
     version: "6.6.1"
 sdks:
   dart: ">=3.9.2 <4.0.0"
-  flutter: ">=3.35.0"
+  flutter: ">=3.35.1"
