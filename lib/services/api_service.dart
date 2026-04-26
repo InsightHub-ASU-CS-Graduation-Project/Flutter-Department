@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:insight_hub/constant/labor_list.dart';
 import 'package:insight_hub/model/app_error.dart';
 import 'package:insight_hub/model/match_model.dart';
+import 'package:insight_hub/model/career_quiz_result_model.dart';
 import 'package:insight_hub/model/question_model.dart';
 import 'package:insight_hub/services/endpoints.dart';
 import 'package:insight_hub/services/secure_storege.dart';
@@ -84,7 +85,9 @@ class ApiService {
         requestPath == Endpoints.login.toLowerCase() ||
         requestPath == Endpoints.register.toLowerCase();
 
-    if (statusCode != 401 || !hasAuthHeader || isAuthRequest) {
+    final isSessionError = statusCode == 401;
+
+    if (!isSessionError || !hasAuthHeader || isAuthRequest) {
       return;
     }
 
@@ -148,6 +151,7 @@ class ApiService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) {
+    print("ApiService: GET request to $endpoint, params: $queryParameters");
     return _handleRequest(
       _dio.get(endpoint, queryParameters: queryParameters, options: options),
     );
@@ -201,11 +205,19 @@ class ApiService {
     );
   }
 
-  Future<List<QuestionModel>> fetchQuestions({required String target}) async {
+  Future<List<QuestionModel>> fetchQuestions({required bool isEmployed}) async {
+    final endpoint = isEmployed ? Endpoints.questions : Endpoints.careerQuizQuestions;
+    
+    print("ApiService: fetchQuestions called for ${isEmployed ? 'employed' : 'non-employed'} using endpoint: $endpoint");
+
+    // For the existing employee flow, we keep the 'target' query parameter if it was used.
+    // For the new career quiz flow, we hit the endpoint directly.
     final result = await get(
-      Endpoints.questions,
-      queryParameters: {'target': target},
+      endpoint,
+      queryParameters: isEmployed ? {'target': 'employed'} : null,
     );
+
+    print("ApiService: fetchQuestions result success: ${result['success']}");
 
     if (result['success'] != true) {
       throw Exception(result['error']?.toString() ?? 'Failed to load questions.');
@@ -218,9 +230,10 @@ class ApiService {
         .toList();
   }
 
-  Future<void> submitAnswers({required Map<int, dynamic> answers}) async {
-       
-   
+  Future<dynamic> submitAnswers({
+    required Map<int, dynamic> answers,
+    required bool isEmployed,
+  }) async {
     final payload = {
       'answers': answers.entries
           .map(
@@ -233,14 +246,21 @@ class ApiService {
           )
           .toList(),
     };
-    print("=== PAYLOAD SENT ===");
-print(payload);
 
-    final result = await post(Endpoints.answers, data: payload);
+    final endpoint = isEmployed ? Endpoints.answers : Endpoints.careerQuizFullMatch;
+    final result = await post(endpoint, data: payload);
 
     if (result['success'] != true) {
       throw Exception(result['error']?.toString() ?? 'Failed to submit answers.');
     }
+
+    if (!isEmployed && result['data'] != null) {
+      return CareerQuizResultModel.fromJson(
+        Map<String, dynamic>.from(result['data']),
+      );
+    }
+    
+    return null;
   }
 
   Future<MatchResultModel> findMatch() async {

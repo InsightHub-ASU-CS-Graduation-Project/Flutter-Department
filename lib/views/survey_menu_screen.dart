@@ -5,6 +5,8 @@ import 'package:insight_hub/widget/bottom_nav.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
+import 'package:insight_hub/widget/app_header.dart';
+import 'package:insight_hub/widget/app_motion.dart';
 
 class SurveyMenuScreen extends StatelessWidget {
   const SurveyMenuScreen({super.key});
@@ -13,98 +15,64 @@ class SurveyMenuScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgLightGray,
-      appBar: AppBar(
-        title: const Text(
-          'Survey Center',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.primaryBlue,
-        foregroundColor: Colors.white,
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-            decoration: const BoxDecoration(
-              color: AppColors.primaryBlue,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(32),
-                bottomRight: Radius.circular(32),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AppHeader(
+              title: 'Survey Center',
+              subtitle: 'Complete assessments to unlock personalized career insights.',
+            ),
+            Expanded(
+              child: AppMotion(
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                  children: [
+                    _buildSurveyCard(
+                      context,
+                      title: 'Career Assessment',
+                      subtitle: 'Match your personality with the ideal career path.',
+                      icon: LucideIcons.briefcase,
+                      isActive: true,
+                      onTap: () {
+                        final matchState = context.read<MatchCubit>().state;
+                        if (matchState is MatchLoaded) {
+                          Navigator.pushNamed(context, Routes.matchScreen);
+                        } else {
+                          Navigator.pushNamed(context, Routes.questionScreen);
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSurveyCard(
+                      context,
+                      title: 'Skill Analysis',
+                      subtitle: 'Evaluate your technical and soft skills.',
+                      icon: LucideIcons.clipboardCheck,
+                      isActive: false,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSurveyCard(
+                      context,
+                      title: 'Workplace Culture',
+                      subtitle: 'Find environments where you will thrive.',
+                      icon: LucideIcons.home,
+                      isActive: false,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildSurveyCard(
+                      context,
+                      title: 'Interest Profiler',
+                      subtitle: 'Explore industries that excite you most.',
+                      icon: LucideIcons.heart,
+                      isActive: false,
+                    ),
+                  ],
+                ),
               ),
             ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Choose a Survey',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Complete assessments to unlock personalized career insights.',
-                  style: TextStyle(
-                    color: Color(0xFFBFDBFE),
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-              children: [
-                _buildSurveyCard(
-                  context,
-                  title: 'Career Assessment',
-                  subtitle: 'Match your personality with the ideal career path.',
-                  icon: LucideIcons.briefcase,
-                  isActive: true,
-                  onTap: () {
-                    final matchState = context.read<MatchCubit>().state;
-                    if (matchState is MatchLoaded) {
-                      Navigator.pushReplacementNamed(context, Routes.matchScreen, arguments: 2);
-                    } else {
-                      Navigator.pushReplacementNamed(context, Routes.questionScreen, arguments: 2);
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                _buildSurveyCard(
-                  context,
-                  title: 'Skill Analysis',
-                  subtitle: 'Evaluate your technical and soft skills.',
-                  icon: LucideIcons.clipboardCheck,
-                  isActive: false,
-                ),
-                const SizedBox(height: 16),
-                _buildSurveyCard(
-                  context,
-                  title: 'Workplace Culture',
-                  subtitle: 'Find environments where you will thrive.',
-                  icon: LucideIcons.home,
-                  isActive: false,
-                ),
-                const SizedBox(height: 16),
-                _buildSurveyCard(
-                  context,
-                  title: 'Interest Profiler',
-                  subtitle: 'Explore industries that excite you most.',
-                  icon: LucideIcons.heart,
-                  isActive: false,
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: const BottomNav(currentIndex: 2),
     );

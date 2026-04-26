@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: _navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Insight Hub',
-        home: const SplashScreen(),
+        home: const  SplashScreen(),
         routes: {
           Routes.onboardingScreen: (_) => const OnboardingScreen(),
           Routes.welcomeScreen: (_) => const WelcomeScreen(),

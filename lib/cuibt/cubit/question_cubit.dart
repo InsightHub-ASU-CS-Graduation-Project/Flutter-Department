@@ -8,6 +8,10 @@ sealed class QuestionState {
   const QuestionState();
 }
 
+final class QuestionInitial extends QuestionState {
+  const QuestionInitial();
+}
+
 final class QuestionLoading extends QuestionState {
   const QuestionLoading();
 }
@@ -24,12 +28,16 @@ final class QuestionLoaded extends QuestionState {
   final bool isSubmitting;
   final bool didSubmitSucceed;
   final String? validationMessage;
+  final dynamic submissionResult;
+  final bool isEmployed;
   const QuestionLoaded({
     required this.questions,
+    required this.isEmployed,
     this.answers = const {},
     this.isSubmitting = false,
     this.didSubmitSucceed = false,
     this.validationMessage,
+    this.submissionResult,
   });
 
   bool isAnswered(int questionId) => answers.containsKey(questionId);
@@ -44,16 +52,20 @@ final class QuestionLoaded extends QuestionState {
     bool? isSubmitting,
     bool? didSubmitSucceed,
     String? validationMessage,
+    dynamic submissionResult,
+    bool? isEmployed,
     bool clearValidationMessage = false,
   }) {
     return QuestionLoaded(
       questions: questions ?? this.questions,
+      isEmployed: isEmployed ?? this.isEmployed,
       answers: answers ?? this.answers,
       isSubmitting: isSubmitting ?? this.isSubmitting,
       didSubmitSucceed: didSubmitSucceed ?? this.didSubmitSucceed,
       validationMessage: clearValidationMessage
           ? null
           : validationMessage ?? this.validationMessage,
+      submissionResult: submissionResult ?? this.submissionResult,
     );
   }
 }
@@ -63,20 +75,25 @@ class QuestionCubit extends Cubit<QuestionState> {
 
   QuestionCubit({ApiService? apiService})
     : _apiService = apiService ?? ApiService(),
-      super(const QuestionLoading());
+      super(const QuestionInitial());
 
-  Future<void> fetchQuestions(String target) async {
+  Future<void> fetchQuestions({required bool isEmployed}) async {
+    print("QuestionCubit: fetchQuestions called (isEmployed: $isEmployed), current state: $state");
+    if (state is QuestionLoading) {
+      print("QuestionCubit: Already loading, skipping request.");
+      return;
+    }
     emit(const QuestionLoading());
 
     try {
-      final questions = await _apiService.fetchQuestions(target: target);
+      final questions = await _apiService.fetchQuestions(isEmployed: isEmployed);
 
       if (questions.isEmpty) {
         emit(const QuestionError('No questions are available right now.'));
         return;
       }
 
-      emit(QuestionLoaded(questions: questions));
+      emit(QuestionLoaded(questions: questions, isEmployed: isEmployed));
     } catch (error) {
       emit(QuestionError(_messageFrom(error)));
     }
@@ -107,6 +124,10 @@ class QuestionCubit extends Cubit<QuestionState> {
       return;
     }
 
+    if (currentState.isSubmitting) {
+      return;
+    }
+
     if (!currentState.canSubmit) {
       emit(
         currentState.copyWith(
@@ -126,13 +147,17 @@ class QuestionCubit extends Cubit<QuestionState> {
     );
 
     try {
-      await _apiService.submitAnswers(answers: currentState.answers);
+      final result = await _apiService.submitAnswers(
+        answers: currentState.answers,
+        isEmployed: currentState.isEmployed,
+      );
 
       emit(
         currentState.copyWith(
           isSubmitting: false,
           didSubmitSucceed: true,
           clearValidationMessage: true,
+          submissionResult: result,
         ),
       );
     } catch (error) {
@@ -156,6 +181,6 @@ class QuestionCubit extends Cubit<QuestionState> {
   }
 
   void reset() {
-    emit(const QuestionLoading());
+    emit(const QuestionInitial());
   }
 }

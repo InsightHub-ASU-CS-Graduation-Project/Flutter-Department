@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:insight_hub/model/career_quiz_result_model.dart';
 import 'package:insight_hub/model/match_model.dart';
 import 'package:insight_hub/services/api_service.dart';
 import 'package:meta/meta.dart';
@@ -17,7 +18,7 @@ final class MatchLoading extends MatchState {
 }
 
 final class MatchLoaded extends MatchState {
-  final MatchResultModel result;
+  final dynamic result;
 
   const MatchLoaded(this.result);
 }
@@ -37,7 +38,7 @@ class MatchCubit extends Cubit<MatchState> {
 
   Future<void> getMatch() async {
     // Persistent behavior: If already loaded, don't fetch again
-    if (state is MatchLoaded) {
+    if (state is MatchLoaded || state is MatchLoading) {
       return;
     }
 
@@ -55,7 +56,7 @@ class MatchCubit extends Cubit<MatchState> {
     emit(const MatchInitial());
   }
 
-  void emitResult(MatchResultModel result) {
+  void emitResult(dynamic result) {
     emit(MatchLoaded(result));
   }
 

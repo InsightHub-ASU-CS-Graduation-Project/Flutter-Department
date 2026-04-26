@@ -1,3 +1,5 @@
+import 'package:insight_hub/utils/safe_parser.dart';
+
 class ProfileModel {
   final String email;
   final String userName;
@@ -23,19 +25,17 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      email: (json['email'] ?? '').toString(),
-      userName: (json['userName'] ?? '').toString(),
-      firstName: (json['firstName'] ?? '').toString(),
-      lastName: (json['lastName'] ?? '').toString(),
-      gender: json['gender'] is int
-          ? json['gender'] as int
-          : int.tryParse('${json['gender']}'),
-      collage: (json['collage'] ?? '').toString(),
-      isEmployed: json['isEmployed'] == true,
-      yearsExperience: json['yearsExperience'] is int
-          ? json['yearsExperience'] as int
-          : int.tryParse('${json['yearsExperience']}'),
-      trackName: (json['trackName'] ?? '').toString(),
+      email: SafeParser.getString(json, 'email'),
+      userName: SafeParser.getString(json, 'userName'),
+      firstName: SafeParser.getString(json, 'firstName'),
+      lastName: SafeParser.getString(json, 'lastName'),
+      gender: SafeParser.getInt(json, 'gender'),
+      collage: SafeParser.getString(json, 'collage'),
+      isEmployed: SafeParser.getBool(json, 'isEmployed'),
+      yearsExperience: SafeParser.getInt(json, 'yearsExperience'),
+      trackName: SafeParser.getString(json, 'trackName'),
     );
   }
 }
+
+

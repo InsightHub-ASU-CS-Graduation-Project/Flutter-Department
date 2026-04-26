@@ -234,15 +234,21 @@ class ChartBuilders {
                     return SafeParser.getString(rawData[index], 'x');
                   },
                   colorValueMapper: (TreemapTile tile) {
-                    final double ratio =
-                        (tile.weight / maxWeight).clamp(0.0, 1.0);
+                    final double ratio = (tile.weight / maxWeight).clamp(
+                      0.0,
+                      1.0,
+                    );
 
                     // Interpolate across multiple colors
                     if (ratio < 0.5) {
                       return Color.lerp(palette[0], palette[1], ratio * 2) ??
                           palette[0];
                     } else {
-                      return Color.lerp(palette[1], palette[2], (ratio - 0.5) * 2) ??
+                      return Color.lerp(
+                            palette[1],
+                            palette[2],
+                            (ratio - 0.5) * 2,
+                          ) ??
                           palette[1];
                     }
                   },
@@ -332,7 +338,7 @@ class ChartBuilders {
                   labelStyle: TextStyle(color: Colors.transparent, fontSize: 0),
                   axisLine: AxisLine(width: 0),
                   majorGridLines: MajorGridLines(width: 0),
-                )
+                ),
               ],
               legend: const Legend(
                 isVisible: true,
@@ -342,54 +348,65 @@ class ChartBuilders {
               ),
               tooltipBehavior: TooltipBehavior(
                 enable: true,
-                builder: (dynamic data, dynamic point, dynamic series,
-                    int pointIndex, int seriesIndex) {
-                  final Map<String, dynamic> item =
-                      Map<String, dynamic>.from(data);
-                  final company = SafeParser.getString(item, 'x');
-                  final jobs =
-                      SafeParser.getDouble(item, 'y_jobs_count').toInt();
-                  final salary = SafeParser.getDouble(item, 'y_total_salary');
+                builder:
+                    (
+                      dynamic data,
+                      dynamic point,
+                      dynamic series,
+                      int pointIndex,
+                      int seriesIndex,
+                    ) {
+                      final Map<String, dynamic> item =
+                          Map<String, dynamic>.from(data);
+                      final company = SafeParser.getString(item, 'x');
+                      final jobs = SafeParser.getDouble(
+                        item,
+                        'y_jobs_count',
+                      ).toInt();
+                      final salary = SafeParser.getDouble(
+                        item,
+                        'y_total_salary',
+                      );
 
-                  return Container(
-                    padding: const EdgeInsets.all(8.0),
-                    constraints: const BoxConstraints(maxWidth: 160),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                      Text(
-                        company,
-                        style: const TextStyle(
-                          color: AppColors.bgWhite,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
+                      return Container(
+                        padding: const EdgeInsets.all(8.0),
+                        constraints: const BoxConstraints(maxWidth: 160),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        softWrap: true,
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'Jobs: $jobs',
-                        style: const TextStyle(
-                          color: AppColors.bgWhite,
-                          fontSize: 10,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              company,
+                              style: const TextStyle(
+                                color: AppColors.bgWhite,
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              softWrap: true,
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'Jobs: $jobs',
+                              style: const TextStyle(
+                                color: AppColors.bgWhite,
+                                fontSize: 10,
+                              ),
+                            ),
+                            Text(
+                              'Salary: \$${(salary / 1000).toStringAsFixed(1)}k',
+                              style: const TextStyle(
+                                color: AppColors.bgWhite,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Text(
-                        'Salary: \$${(salary / 1000).toStringAsFixed(1)}k',
-                        style: const TextStyle(
-                          color: AppColors.bgWhite,
-                          fontSize: 10,
-                        ),
-                      ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    },
               ),
               series: <CartesianSeries<Map<String, dynamic>, String>>[
                 BarSeries<Map<String, dynamic>, String>(

@@ -40,6 +40,7 @@ Future<List<Map<String, dynamic>>> fetchDashboardData(String endpoint) async {
         'title': value['title'] ?? entry.key,
         'type': value['type'] ?? 'unknown',
         'objective': value['objective'] ?? '',
+        'description': value['description'] ?? '',
         'data': value, // 🔥 pass full map
       };
     }).where((e) => e.isNotEmpty).toList();

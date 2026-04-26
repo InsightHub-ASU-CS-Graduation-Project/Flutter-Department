@@ -3,6 +3,7 @@ class DashboardItem {
   final String type;
   final String title;
   final String objective;
+  final String description;
   final dynamic data;
 
   const DashboardItem({
@@ -10,6 +11,7 @@ class DashboardItem {
     required this.type,
     required this.title,
     required this.objective,
+    required this.description,
     required this.data,
   });
 
@@ -27,6 +29,7 @@ class DashboardItem {
         type: _normalizeType(rawType),
         title: json['title']?.toString() ?? 'Untitled',
         objective: json['objective']?.toString() ?? '',
+        description: json['description']?.toString() ?? '',
         data: json['data'],
       );
     } catch (_) {
@@ -53,6 +56,7 @@ class DashboardItem {
       type: 'unknown',
       title: 'Invalid Item',
       objective: '',
+      description: '',
       data: [],
     );
   }

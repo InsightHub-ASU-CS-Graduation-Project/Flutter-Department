@@ -7,6 +7,8 @@ import 'package:insight_hub/widget/bottom_nav.dart';
 import 'package:insight_hub/widget/widget_factory.dart';
 import 'package:insight_hub/cuibt/cubit/dashboard_cubit.dart';
 import 'package:insight_hub/widget/safe_error_widget.dart';
+import 'package:insight_hub/widget/app_header.dart';
+import 'package:insight_hub/widget/app_motion.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -51,148 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return false;
   }
 
-  /// Safely extract the display value from a DashboardItem's data
-  String _extractValue(DashboardItem item) {
-    final d = item.data;
-    if (d is Map<String, dynamic>) {
-      return d['data']?.toString() ?? '0';
-    }
-    return d?.toString() ?? '0';
-  }
-
-  /// Safely extract the suffix (e.g. "Jobs") from a DashboardItem's data
-  String _extractSuffix(DashboardItem item) {
-    final d = item.data;
-    if (d is Map<String, dynamic>) {
-      return d['suffix']?.toString() ?? 'Jobs';
-    }
-    return 'Jobs';
-  }
-
-  // ─── Header Card ───────────────────────────────────────────────
-
-  Widget _buildHeaderCard({DashboardItem? jobsItem}) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.only(bottom: 12.0, top: 8.0),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primaryBlue,
-            AppColors.primaryBlue.withOpacity(0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Home',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: AppColors.bgWhite,
-            ),
-          ),
-
-          /// If we have a jobs metric → show it right under the title
-          if (jobsItem != null) ...[
-            const SizedBox(height: 4.0),
-            Text(
-              'Posted Lately',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.bgWhite.withOpacity(0.85),
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  _extractValue(jobsItem),
-                  style: const TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.bgWhite,
-                  ),
-                ),
-                const SizedBox(width: 8.0),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6.0),
-                  child: Text(
-                    _extractSuffix(jobsItem),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.bgWhite.withOpacity(0.85),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ] else ...[
-            const SizedBox(height: 8.0),
-            Text(
-              'Overview of your daily insights and metrics',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.bgWhite.withOpacity(0.9),
-              ),
-            ),
-          ],
-
-          const SizedBox(height: 24.0),
-
-          /// Mini cards row
-          Row(
-            children: [
-              Expanded(child: _buildMiniCard('Active', 'Tasks')),
-              const SizedBox(width: 16.0),
-              Expanded(child: _buildMiniCard('Matches', 'Found')),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMiniCard(String title, String subtitle) {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: AppColors.bgWhite.withOpacity(0.15),
-        border: Border.all(color: AppColors.bgWhite.withOpacity(0.3)),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppColors.bgWhite,
-            ),
-          ),
-          const SizedBox(height: 4.0),
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 12,
-              color: AppColors.bgWhite.withOpacity(0.8),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // ─── Build ─────────────────────────────────────────────────────
 
   @override
@@ -207,13 +67,23 @@ class _HomeScreenState extends State<HomeScreen> {
             }
 
             if (state is DashboardFailure) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SafeErrorWidget(
-                  message: state.errorMessage,
-                  onRetry: () =>
-                      context.read<DashboardCubit>().fetchHomeDashboard(),
-                ),
+              return Column(
+                children: [
+                  const AppHeader(
+                    title: 'Home',
+                    subtitle: 'Overview of your daily insights',
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SafeErrorWidget(
+                        message: state.errorMessage,
+                        onRetry: () =>
+                            context.read<DashboardCubit>().fetchHomeDashboard(),
+                      ),
+                    ),
+                  ),
+                ],
               );
             }
 
@@ -231,28 +101,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   .where((item) => jobsItem == null || item.id != jobsItem.id)
                   .toList();
 
-              return ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              return Column(
                 children: [
-                  _buildHeaderCard(jobsItem: jobsItem),
-                  if (remainingItems.isEmpty)
-                    const Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(32.0),
-                        child: Text(
-                          'No analysis data available right now.',
-                          style: TextStyle(color: AppColors.textGray),
-                        ),
+                  const AppHeader(
+                    title: 'Home',
+                    subtitle: 'Overview of your daily insights and metrics',
+                  ),
+                  Expanded(
+                    child: AppMotion(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                        children: [
+                          if (jobsItem != null)
+                            JobsSummaryCard(item: jobsItem),
+                          if (remainingItems.isEmpty && jobsItem == null)
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(32.0),
+                                child: Text(
+                                  'No analysis data available right now.',
+                                  style: TextStyle(color: AppColors.textGray),
+                                ),
+                              ),
+                            )
+                          else
+                            ...remainingItems.map((item) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: BaseContainer(
+                                  title: item.title,
+                                  objective: item.objective,
+                                  description: item.description,
+                                  child: WidgetFactory.build(item.type, item.data),
+                                ),
+                              );
+                            }),
+                        ],
                       ),
-                    )
-                  else
-                    ...remainingItems.map((item) {
-                      return BaseContainer(
-                        title: item.title,
-                        objective: item.objective,
-                        child: WidgetFactory.build(item.type, item.data),
-                      );
-                    }),
+                    ),
+                  ),
                 ],
               );
             }
@@ -262,6 +149,105 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       bottomNavigationBar: const BottomNav(currentIndex: 0),
+    );
+  }
+}
+
+class JobsSummaryCard extends StatelessWidget {
+  final DashboardItem item;
+
+  const JobsSummaryCard({super.key, required this.item});
+
+  String _extractValue(DashboardItem item) {
+    final d = item.data;
+    if (d is Map<String, dynamic>) {
+      return d['data']?.toString() ?? '0';
+    }
+    return d?.toString() ?? '0';
+  }
+
+  String _extractSuffix(DashboardItem item) {
+    final d = item.data;
+    if (d is Map<String, dynamic>) {
+      return d['suffix']?.toString() ?? 'Jobs';
+    }
+    return 'Jobs';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: AppColors.borderLight),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBlue.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.work_outline,
+                  color: AppColors.primaryBlue,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'Posted Lately',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textDark,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                _extractValue(item),
+                style: const TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.primaryBlue,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  _extractSuffix(item),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.textGray,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
