@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:insight_hub/model/career_quiz_result_model.dart';
-import 'package:insight_hub/model/match_model.dart';
+
 import 'package:insight_hub/services/api_service.dart';
 import 'package:meta/meta.dart';
 

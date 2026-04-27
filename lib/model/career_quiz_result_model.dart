@@ -1,4 +1,3 @@
-import 'package:insight_hub/model/question_model.dart';
 
 class CareerQuizResultModel {
   final List<TrackMatch> topTracks;

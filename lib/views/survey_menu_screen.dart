@@ -49,7 +49,10 @@ class SurveyMenuScreen extends StatelessWidget {
                       title: 'Skill Analysis',
                       subtitle: 'Evaluate your technical and soft skills.',
                       icon: LucideIcons.clipboardCheck,
-                      isActive: false,
+                      isActive: true,
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.newsScreen);
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildSurveyCard(

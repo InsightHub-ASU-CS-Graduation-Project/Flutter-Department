@@ -6,7 +6,6 @@ import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
 import 'package:insight_hub/model/career_quiz_result_model.dart';
 import 'package:insight_hub/model/match_model.dart';
-import 'package:insight_hub/widget/bottom_nav.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class MatchScreen extends StatefulWidget {

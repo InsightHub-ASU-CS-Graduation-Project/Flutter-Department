@@ -21,4 +21,7 @@ class Endpoints {
 
   static const String analysisHome = '/AnalysisProxy/home';
   static const String analysisExplore = '/AnalysisProxy/explore';
+
+  // News/Jobs Endpoint
+  static const String relatedJobs = '/news/News';
 }

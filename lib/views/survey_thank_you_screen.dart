@@ -4,7 +4,6 @@ import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
-import 'package:insight_hub/widget/bottom_nav.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/widget/app_header.dart';
 import 'package:insight_hub/widget/app_motion.dart';

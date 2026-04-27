@@ -73,7 +73,7 @@ class ConfirmationScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, Routes.questionScreen),
+                  onPressed: () => Navigator.pushReplacementNamed(context, Routes.profileScreen),
                   style: ElevatedButton.styleFrom(
                     backgroundColor:  AppColors.primaryBlue, // blue-600
                     shape: RoundedRectangleBorder(
