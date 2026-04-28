@@ -31,4 +31,6 @@ class Routes {
 
   static const String newsScreen = '/newsScreen';
 
+  static const String jobScreen = '/jobScreen';
+
 }

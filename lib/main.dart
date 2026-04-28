@@ -22,6 +22,7 @@ import 'package:insight_hub/views/match_screen.dart';
 import 'package:insight_hub/views/survey_menu_screen.dart';
 import 'package:insight_hub/views/survey_thank_you_screen.dart';
 import 'package:insight_hub/views/news_screen.dart';
+import 'package:insight_hub/views/jobs_screen.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
@@ -29,6 +30,7 @@ import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/dashboard_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/news_cubit.dart';
+import 'package:insight_hub/cuibt/cubit/jobs_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,6 +87,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => QuestionCubit()),
         BlocProvider(create: (context) => DashboardCubit()),
         BlocProvider(create: (context) => NewsCubit()),
+        BlocProvider(create: (context) => JobsCubit()),
       ],
       child: MaterialApp(
         navigatorKey: _navigatorKey,
@@ -108,6 +111,7 @@ class _MyAppState extends State<MyApp> {
           Routes.surveyMenuScreen: (_) => const SurveyMenuScreen(),
           Routes.surveyThankYouScreen: (_) => const SurveyThankYouScreen(),
           Routes.newsScreen: (_) => const NewsScreen(),
+          Routes.jobScreen: (_) => const JobsScreen(),
         },
       ),
     );

@@ -33,7 +33,7 @@ class BottomNav extends StatelessWidget {
         children: [
           _buildNavItem(context, 0, Icons.home, 'Home'),
           _buildNavItem(context, 1, Icons.search, 'Search'),
-          _buildNavItem(context, 2, Icons.interests, 'Survey'),
+          _buildNavItem(context, 2, Icons.interests, 'Services'),
           _buildNavItem(context, 3, Icons.person, 'Profile'),
         ],
       ),

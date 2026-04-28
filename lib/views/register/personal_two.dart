@@ -27,7 +27,16 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
       context.read<RegisterCubit>().saveBirthDate(_birthdate!);
       context.read<RegisterCubit>().saveCollage(_collegeController.text);
       context.read<RegisterCubit>().saveEmployment(_isEmployed);
-      Navigator.pushNamed(context, Routes.laborInformationScreen);
+      
+      // Skip labor information page if not employed
+      if (_isEmployed) {
+        Navigator.pushNamed(context, Routes.laborInformationScreen);
+      } else {
+        // For non-employees, set null values and go directly to confirmation
+        context.read<RegisterCubit>().saveLaborInfo(0, 0);
+        context.read<RegisterCubit>().submitRegister();
+        Navigator.pushNamed(context, Routes.confirmationScreen);
+      }
     }
   }
 

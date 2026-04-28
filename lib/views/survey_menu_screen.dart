@@ -20,8 +20,8 @@ class SurveyMenuScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const AppHeader(
-              title: 'Survey Center',
-              subtitle: 'Complete assessments to unlock personalized career insights.',
+              title: 'Services Hub',
+              subtitle: 'Empowering your next professional breakthrough.',
             ),
             Expanded(
               child: AppMotion(
@@ -46,8 +46,8 @@ class SurveyMenuScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     _buildSurveyCard(
                       context,
-                      title: 'Skill Analysis',
-                      subtitle: 'Evaluate your technical and soft skills.',
+                      title: 'News ',
+                      subtitle: 'Tech news tailored to your career interests.',
                       icon: LucideIcons.clipboardCheck,
                       isActive: true,
                       onTap: () {
@@ -57,10 +57,13 @@ class SurveyMenuScreen extends StatelessWidget {
                     const SizedBox(height: 16),
                     _buildSurveyCard(
                       context,
-                      title: 'Workplace Culture',
-                      subtitle: 'Find environments where you will thrive.',
+                      title: 'Job  ',
+                      subtitle: ' Discover job ',
                       icon: LucideIcons.home,
-                      isActive: false,
+                      isActive: true,
+                      onTap: () {
+                        Navigator.pushNamed(context, Routes.jobScreen);
+                      },
                     ),
                     const SizedBox(height: 16),
                     _buildSurveyCard(

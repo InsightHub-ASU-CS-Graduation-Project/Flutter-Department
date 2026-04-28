@@ -10,8 +10,8 @@ class RegisterModel {
   final String email;
   final String password;
   final String confirmPassword;
-  final int trackId;
-  final int yearsExperience;
+  final int? trackId;
+  final int? yearsExperience;
 
   const RegisterModel({
     required this.firstName,
@@ -23,8 +23,8 @@ class RegisterModel {
     required this.email,
     required this.password,
     required this.confirmPassword,
-    required this.trackId,
-    required this.yearsExperience,
+    this.trackId,
+    this.yearsExperience,
   });
 
   Map<String, dynamic> toJson() {

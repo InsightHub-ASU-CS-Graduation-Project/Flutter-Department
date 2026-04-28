@@ -24,4 +24,5 @@ class Endpoints {
 
   // News/Jobs Endpoint
   static const String relatedJobs = '/news/News';
+  static const String jobs = '/jobs/RelatedJobs';
 }

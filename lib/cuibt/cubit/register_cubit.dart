@@ -108,8 +108,8 @@ class RegisterCubit extends Cubit<RegisterState> {
       email: email!,
       password: password!,
       confirmPassword: confirmPassword!,
-      trackId: trackId ?? 0,
-      yearsExperience: yearsExperience ?? 0,
+      trackId: trackId,
+      yearsExperience: yearsExperience,
     );
   }
 }

@@ -52,7 +52,7 @@ class _NewsScreenState extends State<NewsScreen> {
           children: [
             const AppHeader(
               title: 'News',
-              subtitle: 'Latest tech updates',
+            
               showBackButton: true,
             ),
 

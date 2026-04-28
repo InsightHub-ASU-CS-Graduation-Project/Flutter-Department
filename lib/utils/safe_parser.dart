@@ -1,118 +1,117 @@
 class SafeParser {
-  /// Extracts a String safely from a Map.
-  static String getString(
-    Map<String, dynamic>? data,
-    String key, {
-    String defaultValue = '',
-  }) {
+  /// Internal helper to get value safely
+  static dynamic _getValue(Map<String, dynamic>? data, String key) {
+    if (data == null) return null;
+
+    dynamic value = data[key];
+
+    // Handle PascalCase fallback (used in getBool before)
+    if (value == null && key.isNotEmpty) {
+      final pascalKey = key[0].toUpperCase() + key.substring(1);
+      value = data[pascalKey];
+    }
+
+    return value;
+  }
+
+  /// Internal helper for safe execution
+  static T _safe<T>(T Function() fn, T defaultValue) {
     try {
-      if (data == null || !data.containsKey(key) || data[key] == null) {
-        return defaultValue;
-      }
-      return data[key].toString();
-    } catch (e) {
+      return fn();
+    } catch (_) {
       return defaultValue;
     }
   }
 
-  /// Extracts a double safely from a Map.
+  /// Internal helper to convert to num
+  static num? _toNum(dynamic value) {
+    if (value is num) return value;
+    if (value is String) return num.tryParse(value);
+    return null;
+  }
+
+  /// Extract String
+  static String getString(
+    Map<String, dynamic>? data,
+    String key, {
+    String defaultValue = 'unknown',
+  }) {
+    return _safe(() {
+      final value = _getValue(data, key);
+      if (value == null) return defaultValue;
+      return value.toString();
+    }, defaultValue);
+  }
+
+  /// Extract double
   static double getDouble(
     Map<String, dynamic>? data,
     String key, {
     double defaultValue = 0.0,
   }) {
-    try {
-      if (data == null || !data.containsKey(key) || data[key] == null) {
-        return defaultValue;
-      }
-      final value = data[key];
-      if (value is double) return value;
-      if (value is int) return value.toDouble();
-      if (value is String) return double.tryParse(value) ?? defaultValue;
-      return defaultValue;
-    } catch (e) {
-      return defaultValue;
-    }
+    return _safe(() {
+      final value = _getValue(data, key);
+      if (value == null) return defaultValue;
+
+      final n = _toNum(value);
+      return n?.toDouble() ?? defaultValue;
+    }, defaultValue);
   }
 
-  /// Extracts an int safely from a Map.
+  /// Extract int
   static int getInt(
     Map<String, dynamic>? data,
     String key, {
     int defaultValue = 0,
   }) {
-    try {
-      if (data == null || !data.containsKey(key) || data[key] == null) {
-        return defaultValue;
-      }
-      final value = data[key];
-      if (value is int) return value;
-      if (value is double) return value.toInt();
-      if (value is String) return int.tryParse(value) ?? defaultValue;
-      return defaultValue;
-    } catch (e) {
-      return defaultValue;
-    }
+    return _safe(() {
+      final value = _getValue(data, key);
+      if (value == null) return defaultValue;
+
+      final n = _toNum(value);
+      return n?.toInt() ?? defaultValue;
+    }, defaultValue);
   }
 
-  /// Extracts a List safely from a Map.
+  /// Extract List
   static List<dynamic> getList(
     Map<String, dynamic>? data,
     String key, {
     List<dynamic> defaultValue = const [],
   }) {
-    try {
-      if (data == null || !data.containsKey(key) || data[key] == null) {
-        return defaultValue;
-      }
-      final value = data[key];
+    return _safe(() {
+      final value = _getValue(data, key);
       if (value is List) return value;
       return defaultValue;
-    } catch (e) {
-      return defaultValue;
-    }
+    }, defaultValue);
   }
 
-  /// Extracts a Map safely from a Map.
+  /// Extract Map
   static Map<String, dynamic> getMap(
     Map<String, dynamic>? data,
     String key, {
     Map<String, dynamic> defaultValue = const {},
   }) {
-    try {
-      if (data == null || !data.containsKey(key) || data[key] == null) {
-        return defaultValue;
-      }
-      final value = data[key];
+    return _safe(() {
+      final value = _getValue(data, key);
       if (value is Map<String, dynamic>) return value;
       if (value is Map) return Map<String, dynamic>.from(value);
       return defaultValue;
-    } catch (e) {
-      return defaultValue;
-    }
+    }, defaultValue);
   }
 
-  /// Extracts a bool safely from a Map.
+  /// Extract bool
   static bool getBool(
     Map<String, dynamic>? data,
     String key, {
     bool defaultValue = false,
   }) {
-    try {
-      if (data == null) return defaultValue;
-
-      // Try exact key first
-      dynamic value = data[key];
-
-      // If null, try PascalCase version (e.g., isEmployed -> IsEmployed)
-      if (value == null && key.isNotEmpty) {
-        final pascalKey = key[0].toUpperCase() + key.substring(1);
-        value = data[pascalKey];
-      }
-
+    return _safe(() {
+      final value = _getValue(data, key);
       if (value == null) return defaultValue;
 
       if (value is bool) return value;
+
       if (value is String) {
         final lower = value.toLowerCase().trim();
         return lower == 'true' ||
@@ -120,10 +119,10 @@ class SafeParser {
             lower == 'yes' ||
             lower == 'on';
       }
+
       if (value is int) return value == 1;
+
       return defaultValue;
-    } catch (e) {
-      return defaultValue;
-    }
+    }, defaultValue);
   }
 }
