@@ -26,27 +26,33 @@ class _MatchScreenState extends State<MatchScreen>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700),
     );
+
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.06),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
     _fadeAnimation = CurvedAnimation(
       parent: _controller,
       curve: Curves.easeOut,
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) {
-        return;
+      if (!mounted) return;
+
+      final cubit = context.read<MatchCubit>();
+
+      /// ✅ FIX: متعملش fetch لو عندك result بالفعل
+      if (cubit.state is! MatchLoaded) {
+        cubit.fetchResult();
       }
 
-      context.read<MatchCubit>().getMatch();
-
-      if (context.read<MatchCubit>().state is MatchLoaded) {
+      if (cubit.state is MatchLoaded) {
         _controller.forward(from: 0);
       }
     });
@@ -59,12 +65,8 @@ class _MatchScreenState extends State<MatchScreen>
   }
 
   Color _scoreColor(double score) {
-    if (score > 80) {
-      return const Color(0xFF16A34A);
-    }
-    if (score >= 50) {
-      return const Color(0xFFF97316);
-    }
+    if (score > 80) return const Color(0xFF16A34A);
+    if (score >= 50) return const Color(0xFFF97316);
     return const Color(0xFFDC2626);
   }
 
@@ -80,23 +82,34 @@ class _MatchScreenState extends State<MatchScreen>
             }
           },
           builder: (context, state) {
+            /// ✅ Loading
             if (state is MatchLoading || state is MatchInitial) {
               return const Center(child: CircularProgressIndicator());
             }
 
+            /// ✅ Error
             if (state is MatchError) {
               return _MatchErrorView(
                 message: state.message,
-                onRetry: () => context.read<MatchCubit>().getMatch(),
+                onRetry: () {
+                  // context.read<MatchCubit>().reset(); // 🔥 Don't reset result here
+                  context.read<QuestionCubit>().reset();
+                  Navigator.pushReplacementNamed(
+                    context,
+                    Routes.questionScreen,
+                  );
+                },
               );
             }
 
+            /// ❗ مهم جدًا: ما ترجعش شاشة فاضية
             if (state is! MatchLoaded) {
-              return const SizedBox.shrink();
+              return const Center(child: CircularProgressIndicator());
             }
 
             final result = state.result;
 
+            /// ===== Career Quiz Result =====
             if (result is CareerQuizResultModel) {
               return _CareerQuizResultView(
                 result: result,
@@ -105,6 +118,7 @@ class _MatchScreenState extends State<MatchScreen>
               );
             }
 
+            /// ===== Matching Result =====
             final matchResult = result as MatchResultModel;
             final scoreColor = _scoreColor(matchResult.similarityScore);
 
@@ -120,12 +134,7 @@ class _MatchScreenState extends State<MatchScreen>
                         padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.primaryBlue,
-                              Color(0xFF1D4ED8),
-                            ],
+                            colors: [AppColors.primaryBlue, Color(0xFF1D4ED8)],
                           ),
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(30),
@@ -147,7 +156,10 @@ class _MatchScreenState extends State<MatchScreen>
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.close, color: Colors.white),
+                                  icon: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                  ),
                                   onPressed: () {
                                     Navigator.pushNamedAndRemoveUntil(
                                       context,
@@ -169,14 +181,6 @@ class _MatchScreenState extends State<MatchScreen>
                                 color: Colors.white.withOpacity(0.96),
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'A high-confidence professional match based on your survey answers.',
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.82),
-                                height: 1.5,
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -184,135 +188,143 @@ class _MatchScreenState extends State<MatchScreen>
                     SliverPadding(
                       padding: const EdgeInsets.fromLTRB(24, 24, 24, 100),
                       sliver: SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            _ScoreCard(
-                              score: matchResult.similarityScore,
-                              scoreColor: scoreColor,
-                            ),
-                            const SizedBox(height: 18),
-                            _InfoCard(
-                              title: 'Matched User',
-                              icon: Icons.person_outline_rounded,
-                              child: Text(
-                                matchResult.matchedUserName.isEmpty
-                                    ? 'Unknown user'
-                                    : matchResult.matchedUserName,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFF0F172A),
-                                ),
+                        delegate: SliverChildListDelegate([
+                          _ScoreCard(
+                            score: matchResult.similarityScore,
+                            scoreColor: scoreColor,
+                          ),
+                          const SizedBox(height: 18),
+                          _InfoCard(
+                            title: 'Matched User',
+                            icon: Icons.person_outline_rounded,
+                            child: Text(
+                              matchResult.matchedUserName.isEmpty
+                                  ? 'Unknown user'
+                                  : matchResult.matchedUserName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Color(0xFF0F172A),
                               ),
                             ),
-                            const SizedBox(height: 18),
-                            _InfoCard(
-                              title: 'Experience',
-                              icon: Icons.work_outline_rounded,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${matchResult.totalYearsExperience} years total experience',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xFF0F172A),
-                                    ),
+                          ),
+                          const SizedBox(height: 18),
+                          _InfoCard(
+                            title: 'Experience',
+                            icon: Icons.work_outline_rounded,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${matchResult.totalYearsExperience} years total experience',
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF0F172A),
                                   ),
-                                  const SizedBox(height: 14),
-                                  Wrap(
-                                    spacing: 10,
-                                    runSpacing: 10,
-                                    children: matchResult.jobs.isEmpty
-                                        ? [
-                                            _TagChip(
-                                              label: 'No jobs available',
-                                              backgroundColor: const Color(0xFFF1F5F9),
-                                              textColor: const Color(0xFF475569),
+                                ),
+                                const SizedBox(height: 14),
+                                Wrap(
+                                  spacing: 10,
+                                  runSpacing: 10,
+                                  children: matchResult.jobs.isEmpty
+                                      ? [
+                                          _TagChip(
+                                            label: 'No jobs available',
+                                            backgroundColor: const Color(
+                                              0xFFF1F5F9,
                                             ),
-                                          ]
-                                        : matchResult.jobs
+                                            textColor: const Color(0xFF475569),
+                                          ),
+                                        ]
+                                      : matchResult.jobs
                                             .map(
                                               (job) => _TagChip(
                                                 label: job,
-                                                backgroundColor: const Color(0xFFDBEAFE),
-                                                textColor: const Color(0xFF1D4ED8),
+                                                backgroundColor: const Color(
+                                                  0xFFDBEAFE,
+                                                ),
+                                                textColor: const Color(
+                                                  0xFF1D4ED8,
+                                                ),
                                               ),
                                             )
                                             .toList(),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 18),
-                            _InfoCard(
-                              title: 'Matched Answers',
-                              icon: Icons.quiz_outlined,
-                              child: Column(
-                                children: matchResult.employedAnswers.isEmpty
-                                    ? const [
-                                        _EmptyAnswersView(),
-                                      ]
-                                    : matchResult.employedAnswers
+                          ),
+                          const SizedBox(height: 18),
+                          _InfoCard(
+                            title: 'Matched Answers',
+                            icon: Icons.quiz_outlined,
+                            child: Column(
+                              children: matchResult.employedAnswers.isEmpty
+                                  ? const [_EmptyAnswersView()]
+                                  : matchResult.employedAnswers
                                         .map(
                                           (answer) => Padding(
-                                            padding: const EdgeInsets.only(bottom: 14),
+                                            padding: const EdgeInsets.only(
+                                              bottom: 14,
+                                            ),
                                             child: _AnswerCard(answer: answer),
                                           ),
                                         )
                                         .toList(),
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: OutlinedButton.icon(
+                                  onPressed: () {
+                                    // context.read<MatchCubit>().reset(); // 🔥 Don't reset result here
+                                    context.read<QuestionCubit>().reset();
+                                    Navigator.pushReplacementNamed(
+                                      context,
+                                      Routes.questionScreen,
+                                    );
+                                  },
+                                  icon: const Icon(Icons.refresh),
+                                  label: const Text('Retake'),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 24),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: () {
-                                      context.read<MatchCubit>().reset();
-                                      context.read<QuestionCubit>().reset();
-                                      Navigator.pushReplacementNamed(
-                                        context,
-                                        Routes.questionScreen,
-                                      );
-                                    },
-                                    icon: const Icon(Icons.refresh),
-                                    label: const Text('Retake'),
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      Routes.homeScreen,
+                                      (route) => false,
+                                    );
+                                  },
+                                  icon: const Icon(Icons.check),
+                                  label: const Text('Finish'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryBlue,
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      Navigator.pushNamedAndRemoveUntil(
-                                        context,
-                                        Routes.homeScreen,
-                                        (route) => false,
-                                      );
-                                    },
-                                    icon: const Icon(Icons.check),
-                                    label: const Text('Finish'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primaryBlue,
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ]),
                       ),
                     ),
                   ],
@@ -403,19 +415,16 @@ class _CareerQuizResultView extends StatelessWidget {
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
               sliver: SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final trackMatch = result.topTracks[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      child: _TrackMatchCard(
-                        trackMatch: trackMatch,
-                        rank: index + 1,
-                      ),
-                    );
-                  },
-                  childCount: result.topTracks.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final trackMatch = result.topTracks[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    child: _TrackMatchCard(
+                      trackMatch: trackMatch,
+                      rank: index + 1,
+                    ),
+                  );
+                }, childCount: result.topTracks.length),
               ),
             ),
             SliverToBoxAdapter(
@@ -426,7 +435,7 @@ class _CareerQuizResultView extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () {
-                          context.read<MatchCubit>().reset();
+                          // context.read<MatchCubit>().reset(); // 🔥 Don't reset result here
                           context.read<QuestionCubit>().reset();
                           Navigator.pushReplacementNamed(
                             context,
@@ -504,7 +513,9 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF0F172A).withOpacity(_isExpanded ? 0.12 : 0.06),
+              color: const Color(
+                0xFF0F172A,
+              ).withOpacity(_isExpanded ? 0.12 : 0.06),
               blurRadius: _isExpanded ? 30 : 20,
               offset: Offset(0, _isExpanded ? 15 : 10),
             ),
@@ -529,7 +540,10 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.primaryBlue,
                       borderRadius: BorderRadius.circular(10),
@@ -579,7 +593,9 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                   Text(
                     track.description,
                     maxLines: _isExpanded ? null : 2,
-                    overflow: _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                    overflow: _isExpanded
+                        ? TextOverflow.visible
+                        : TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 15,
                       color: Colors.blueGrey.shade700,
@@ -605,21 +621,27 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                     children: track.requiredSkills
                         .split(',')
                         .take(_isExpanded ? 100 : 3)
-                        .map((skill) => _TagChip(
-                              label: skill.trim(),
-                              backgroundColor: const Color(0xFFEFF6FF),
-                              textColor: const Color(0xFF1D4ED8),
-                            ))
+                        .map(
+                          (skill) => _TagChip(
+                            label: skill.trim(),
+                            backgroundColor: const Color(0xFFEFF6FF),
+                            textColor: const Color(0xFF1D4ED8),
+                          ),
+                        )
                         .toList(),
                   ),
 
                   if (_isExpanded) ...[
                     const Divider(height: 40),
-                    
+
                     // Performance Metrics Section
                     const Row(
                       children: [
-                        Icon(LucideIcons.barChart2, size: 18, color: AppColors.primaryBlue),
+                        Icon(
+                          LucideIcons.barChart2,
+                          size: 18,
+                          color: AppColors.primaryBlue,
+                        ),
                         SizedBox(width: 8),
                         Text(
                           'Performance Metrics',
@@ -632,22 +654,53 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _SkillProgressBar(label: 'Technical Level', value: insights.avgTechnicalLevel),
-                    _SkillProgressBar(label: 'Problem Solving', value: insights.avgProblemSolving),
-                    _SkillProgressBar(label: 'Communication', value: insights.avgCommunication),
-                    _SkillProgressBar(label: 'Soft Skills', value: insights.avgSoftSkills),
-                    _SkillProgressBar(label: 'Adaptability', value: insights.avgAdaptability),
-                    _SkillProgressBar(label: 'Teamwork', value: insights.avgTeamwork),
-                    _SkillProgressBar(label: 'Learning Proactivity', value: insights.avgLearningProactivity),
-                    _SkillProgressBar(label: 'Resilience', value: insights.avgResilience),
-                    _SkillProgressBar(label: 'Ownership', value: insights.avgOwnership),
-                    
+                    _SkillProgressBar(
+                      label: 'Technical Level',
+                      value: insights.avgTechnicalLevel,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Problem Solving',
+                      value: insights.avgProblemSolving,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Communication',
+                      value: insights.avgCommunication,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Soft Skills',
+                      value: insights.avgSoftSkills,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Adaptability',
+                      value: insights.avgAdaptability,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Teamwork',
+                      value: insights.avgTeamwork,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Learning Proactivity',
+                      value: insights.avgLearningProactivity,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Resilience',
+                      value: insights.avgResilience,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Ownership',
+                      value: insights.avgOwnership,
+                    ),
+
                     const Divider(height: 40),
 
                     // Market Deep Dive Section
                     const Row(
                       children: [
-                        Icon(LucideIcons.trendingUp, size: 18, color: AppColors.primaryBlue),
+                        Icon(
+                          LucideIcons.trendingUp,
+                          size: 18,
+                          color: AppColors.primaryBlue,
+                        ),
                         SizedBox(width: 8),
                         Text(
                           'Market Deep Dive',
@@ -669,7 +722,8 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                     _InsightStatRow(
                       icon: Icons.history,
                       label: 'Average Experience',
-                      value: '${insights.avgYearsExperience.toStringAsFixed(1)} yrs',
+                      value:
+                          '${insights.avgYearsExperience.toStringAsFixed(1)} yrs',
                     ),
                     const SizedBox(height: 12),
                     _InsightStatRow(
@@ -684,8 +738,14 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                       value: insights.mostCommonEnvironment,
                     ),
                     const SizedBox(height: 12),
-                    _SkillProgressBar(label: 'Salary Satisfaction', value: insights.avgSalarySatisfaction),
-                    _SkillProgressBar(label: 'Work-Life Balance', value: insights.avgWorkLifeBalance),
+                    _SkillProgressBar(
+                      label: 'Salary Satisfaction',
+                      value: insights.avgSalarySatisfaction,
+                    ),
+                    _SkillProgressBar(
+                      label: 'Work-Life Balance',
+                      value: insights.avgWorkLifeBalance,
+                    ),
                   ] else ...[
                     const SizedBox(height: 12),
                     Row(
@@ -700,7 +760,11 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        Icon(Icons.keyboard_arrow_down, size: 14, color: AppColors.primaryBlue.withOpacity(0.7)),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          size: 14,
+                          color: AppColors.primaryBlue.withOpacity(0.7),
+                        ),
                       ],
                     ),
                   ],
@@ -723,7 +787,7 @@ class _SkillProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = (value / 5.0).clamp(0.0, 1.0);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -796,10 +860,7 @@ class _InsightStatRow extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color(0xFF64748B),
-          ),
+          style: const TextStyle(fontSize: 14, color: Color(0xFF64748B)),
         ),
         const Spacer(),
         Text(
@@ -819,10 +880,7 @@ class _ScoreCard extends StatelessWidget {
   final double score;
   final Color scoreColor;
 
-  const _ScoreCard({
-    required this.score,
-    required this.scoreColor,
-  });
+  const _ScoreCard({required this.score, required this.scoreColor});
 
   @override
   Widget build(BuildContext context) {
@@ -938,11 +996,7 @@ class _InfoCard extends StatelessWidget {
                   color: const Color(0xFFEFF6FF),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Icon(
-                  icon,
-                  color: AppColors.primaryBlue,
-                  size: 20,
-                ),
+                child: Icon(icon, color: AppColors.primaryBlue, size: 20),
               ),
               const SizedBox(width: 12),
               Text(
@@ -982,7 +1036,9 @@ class _AnswerCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            answer.question.isEmpty ? 'Question not available' : answer.question,
+            answer.question.isEmpty
+                ? 'Question not available'
+                : answer.question,
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
@@ -1034,10 +1090,7 @@ class _TagChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: TextStyle(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -1058,10 +1111,7 @@ class _EmptyAnswersView extends StatelessWidget {
       ),
       child: const Text(
         'No matched answers are available yet.',
-        style: TextStyle(
-          fontSize: 15,
-          color: Color(0xFF475569),
-        ),
+        style: TextStyle(fontSize: 15, color: Color(0xFF475569)),
       ),
     );
   }
@@ -1071,10 +1121,7 @@ class _MatchErrorView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
 
-  const _MatchErrorView({
-    required this.message,
-    required this.onRetry,
-  });
+  const _MatchErrorView({required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {
@@ -1093,10 +1140,7 @@ class _MatchErrorView extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Color(0xFF0F172A),
-              ),
+              style: const TextStyle(fontSize: 16, color: Color(0xFF0F172A)),
             ),
             const SizedBox(height: 18),
             ElevatedButton(

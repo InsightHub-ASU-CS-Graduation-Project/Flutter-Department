@@ -155,6 +155,9 @@ class _RegisterNameScreenState extends State<RegisterNameScreen> {
   /// INPUT DECORATION
   InputDecoration _inputDecoration(String hint) => InputDecoration(
         hintText: hint,
+        hintStyle:   TextStyle(
+    color: AppColors.textGray.withOpacity(0.4),
+  ),
         filled: true,
         fillColor: Colors.white,
         contentPadding:

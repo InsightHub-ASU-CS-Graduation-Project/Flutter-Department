@@ -6,7 +6,7 @@ import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class ConfirmationScreen extends StatelessWidget {
-//make routname
+  //make routname
   static const String routeName = '/confirmationScreen';
 
   const ConfirmationScreen({super.key});
@@ -15,7 +15,6 @@ class ConfirmationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<RegisterCubit>();
     final firstName = cubit.firstName ?? 'User';
-  
 
     return Scaffold(
       body: Container(
@@ -36,16 +35,16 @@ class ConfirmationScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              
+
               // Success Icon
               const Icon(
                 LucideIcons.checkCircle,
                 size: 96,
                 color: AppColors.primaryGreen,
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               const Text(
                 "You're All Set!",
                 textAlign: TextAlign.center,
@@ -55,15 +54,18 @@ class ConfirmationScreen extends StatelessWidget {
                   color: AppColors.textDark,
                 ),
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               Text(
                 "Welcome to InsightHub, $firstName!",
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16, color: AppColors.textLightGray),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: AppColors.textLightGray,
+                ),
               ),
-              
+
               const SizedBox(height: 32),
 
               const Spacer(),
@@ -73,9 +75,13 @@ class ConfirmationScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, Routes.profileScreen),
+                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    Routes.homeScreen,
+                    (route) => false,
+                  ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:  AppColors.primaryBlue, // blue-600
+                    backgroundColor: AppColors.primaryBlue, // blue-600
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

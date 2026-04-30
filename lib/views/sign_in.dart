@@ -17,19 +17,14 @@ class _SignInScreenState extends State<SignInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Future<void> _handleBack() async {
-    final didPop = await Navigator.maybePop(context);
-    if (!didPop && mounted) {
-      Navigator.pushReplacementNamed(context, Routes.welcomeScreen);
-    }
-  }
+
 
   void _handleContinue() {
     if (_formKey.currentState!.validate()) {
       context.read<LoginCubit>().login(
-            _emailController.text,
-            _passwordController.text,
-          );
+        _emailController.text,
+        _passwordController.text,
+      );
     }
   }
 
@@ -45,29 +40,22 @@ class _SignInScreenState extends State<SignInScreen> {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          Navigator.pushNamed(context, Routes.profileScreen);
-        } else if (state is LoginFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.error)),
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            Routes.homeScreen,
+            (route) => false,
           );
+        } else if (state is LoginFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.error)));
         }
       },
-      child: WillPopScope(
-        onWillPop: () async {
-          if (Navigator.canPop(context)) return true;
-          await _handleBack();
-          return false;
-        },
-        child: Scaffold(
+      child:
+         Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              onPressed: _handleBack,
-              icon: const Icon(Icons.arrow_back),
-              color: Colors.black87,
-            ),
+           automaticallyImplyLeading: false,
           ),
           body: SafeArea(
             child: Padding(
@@ -152,7 +140,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                           color: Colors.blue,
                                           decoration: TextDecoration.underline,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -187,7 +175,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }

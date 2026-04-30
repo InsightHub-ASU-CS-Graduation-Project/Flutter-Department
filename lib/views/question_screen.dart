@@ -42,7 +42,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
   }
 
   void _loadQuestions(ProfileModel profile) {
-    print("QuestionScreen: _loadQuestions triggered (isEmployed: ${profile.isEmployed}), requested: $_requestedQuestions");
+    print(
+      "QuestionScreen: _loadQuestions triggered (isEmployed: ${profile.isEmployed}), requested: $_requestedQuestions",
+    );
     if (_requestedQuestions) {
       return;
     }
@@ -51,7 +53,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
       _currentIndex = 0;
     });
     _requestedQuestions = true;
-    context.read<QuestionCubit>().fetchQuestions(isEmployed: profile.isEmployed);
+    context.read<QuestionCubit>().fetchQuestions(
+      isEmployed: profile.isEmployed,
+    );
   }
 
   void _retry() {
@@ -103,10 +107,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
-                child: const Text(
-                  'Exit',
-                  style: TextStyle(color: Colors.red),
-                ),
+                child: const Text('Exit', style: TextStyle(color: Colors.red)),
               ),
             ],
           ),
@@ -140,9 +141,8 @@ class _QuestionScreenState extends State<QuestionScreen> {
                 );
               } else {
                 // Unemployed users: Use the result from submission and show match result
-                context.read<MatchCubit>().reset();
                 if (state.submissionResult != null) {
-                  context.read<MatchCubit>().emitResult(state.submissionResult!);
+                  context.read<MatchCubit>().emitResult(state.submissionResult);
                 }
                 Navigator.pushReplacementNamed(context, Routes.matchScreen);
               }
@@ -204,7 +204,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
                   children: [
                     AppHeader(
                       title: 'Question Flow',
-                      subtitle: 'Answer a few quick questions so we can personalize your experience.',
                       showBackButton: true,
                       leadingIcon: Icons.close,
                       onBackPress: () async {
@@ -266,12 +265,15 @@ class _QuestionScreenState extends State<QuestionScreen> {
                                 child: _QuestionCard(
                                   key: ValueKey(currentQuestion.id),
                                   question: currentQuestion,
-                                  answer: questionState.answers[currentQuestion.id],
+                                  answer:
+                                      questionState.answers[currentQuestion.id],
                                   onChanged: (value) {
-                                    context.read<QuestionCubit>().answerQuestion(
-                                      currentQuestion.id,
-                                      value,
-                                    );
+                                    context
+                                        .read<QuestionCubit>()
+                                        .answerQuestion(
+                                          currentQuestion.id,
+                                          value,
+                                        );
                                   },
                                 ),
                               ),
@@ -524,10 +526,14 @@ class _ChoiceTile extends StatelessWidget {
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFEFF6FF) : const Color(0xFFF8FAFC),
+            color: isSelected
+                ? const Color(0xFFEFF6FF)
+                : const Color(0xFFF8FAFC),
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: isSelected ? AppColors.primaryBlue : const Color(0xFFE2E8F0),
+              color: isSelected
+                  ? AppColors.primaryBlue
+                  : const Color(0xFFE2E8F0),
               width: isSelected ? 1.4 : 1,
             ),
           ),
@@ -565,10 +571,7 @@ class _YesNoInput extends StatelessWidget {
   final int? value;
   final ValueChanged<int> onChanged;
 
-  const _YesNoInput({
-    required this.value,
-    required this.onChanged,
-  });
+  const _YesNoInput({required this.value, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -627,7 +630,9 @@ class _YesNoButton extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: isSelected ? AppColors.primaryBlue : const Color(0xFF334155),
+              color: isSelected
+                  ? AppColors.primaryBlue
+                  : const Color(0xFF334155),
             ),
           ),
         ),

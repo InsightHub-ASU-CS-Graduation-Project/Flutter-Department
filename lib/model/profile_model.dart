@@ -10,6 +10,7 @@ class ProfileModel {
   final bool isEmployed;
   final int? yearsExperience;
   final String trackName;
+  final bool hasCompletedAssessment;
 
   const ProfileModel({
     required this.email,
@@ -21,6 +22,7 @@ class ProfileModel {
     required this.isEmployed,
     required this.yearsExperience,
     required this.trackName,
+    required this.hasCompletedAssessment,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,7 @@ class ProfileModel {
       isEmployed: SafeParser.getBool(json, 'isEmployed'),
       yearsExperience: SafeParser.getInt(json, 'yearsExperience'),
       trackName: SafeParser.getString(json, 'trackName'),
+      hasCompletedAssessment: SafeParser.getBool(json, 'hasCompletedAssessment'),
     );
   }
 }

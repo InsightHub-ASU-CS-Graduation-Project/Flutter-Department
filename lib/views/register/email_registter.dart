@@ -85,6 +85,9 @@ void handleNext() {
                         ],
                         decoration: InputDecoration(
                           hintText: "you@example.com",
+                          hintStyle: TextStyle(
+                            color: Colors.grey.withOpacity(0.4),
+                          ),
                           contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 16,

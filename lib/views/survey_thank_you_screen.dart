@@ -85,7 +85,7 @@ class SurveyThankYouScreen extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              context.read<MatchCubit>().reset();
+                              // context.read<MatchCubit>().reset(); // 🔥 Don't reset result here
                               context.read<QuestionCubit>().reset();
                               Navigator.pushReplacementNamed(
                                 context,

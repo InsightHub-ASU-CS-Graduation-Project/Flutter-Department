@@ -1,32 +1,51 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Colors
-  static const Color primaryBlue = Color(0xFF2563EB);
-  static const Color primaryGreen = Color(0xFF16A34A);
+  // ===== New System (Clean) =====
 
-  // Background Colors
-  static const Color bgLightBlue = Color(0xFFEFF6FF);
-  static const Color bgLightGreen = Color(0xFFF0FDF4);
-  static const Color bgLightGray = Color(0xFFF3F4F6);
-  static const Color bgWhite = Color(0xFFFFFFFF);
+  static const primary = Color(0xFF2563EB);
+  static const primaryDark = Color(0xFF1D4ED8);
+  static const success = Color(0xFF16A34A);
 
-  // Text Colors
-  static const Color textDark = Color(0xFF111827);
-  static const Color textGray = Color(0xFF6B7280);
-  static const Color textLightGray = Color(0xFF4B5563);
-  static const Color textDarkGray = Color(0xFF374151);
+  static const scaffoldBg = Color(0xFFF3F4F6);
+  static const cardBg = Color(0xFFFFFFFF);
+  static const softBlue = Color(0xFFEFF6FF);
+  static const softGreen = Color(0xFFF0FDF4);
 
-  // Border Colors
-  static const Color borderLight = Color(0xFFE5E7EB);
-  static const Color borderMedium = Color(0xFFD1D5DB);
+  static const textPrimary = Color(0xFF111827);
+  static const textSecondary = Color(0xFF6B7280);
+  static const textMuted = Color(0xFF4B5563);
 
-  // Blue Accent Colors
-  static const Color accentLightBlue = Color(0xFFDBEAFE);
+  static const border = Color(0xFFE5E7EB);
 
-  // Disabled Colors
-  static const Color disabledButton = Color(0xFFD1D5DB);
-  //logo colors
-  static const Color logoBlue = Color(0xFF2563EB);
-  static const Color logoGreen = Color(0xFF16A34A);
+  static const chipBorder = Color(0xFFD1D5DB);
+
+  static const disabled = Color(0xFFD1D5DB);
+
+  // ===== OLD NAMES (Compatibility Layer) =====
+  // 👇 ده اللي هيصلح التطبيق كله بدون ما تكسر أي حاجة
+
+  static const primaryBlue = primary;
+  static const primaryGreen = success;
+  static const shadowblue =  Color(0xFFDBEAFE);
+
+  static const bgLightBlue = softBlue;
+  static const bgLightGreen = softGreen;
+  static const bgLightGray = scaffoldBg;
+  static const bgWhite = cardBg;
+
+  static const textDark = textPrimary;
+  static const textGray = textSecondary;
+  static const textLightGray = textMuted;
+  static const textDarkGray = textPrimary;
+
+  static const borderLight = border;
+  static const borderMedium = chipBorder;
+
+  static const accentLightBlue = softBlue;
+
+  static const disabledButton = disabled;
+
+  static const logoBlue = primary;
+  static const logoGreen = success;
 }

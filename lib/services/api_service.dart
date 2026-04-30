@@ -263,20 +263,22 @@ class ApiService {
     return null;
   }
 
-  Future<MatchResultModel> findMatch() async {
-    final result = await post(Endpoints.match);
+  Future<CareerQuizResultModel?> fetchCareerQuizResult() async {
+    final result = await get(Endpoints.careerQuizResult);
 
     if (result['success'] != true) {
-      throw Exception(result['error']?.toString() ?? 'Failed to load match result.');
+      throw Exception(result['error']?.toString() ?? 'Failed to load result.');
     }
 
-    final data = result['data'];
-    if (data is! Map<String, dynamic>) {
-      throw Exception('Invalid match response.');
+    if (result['data'] == null) {
+      return null;
     }
 
-    return MatchResultModel.fromJson(data);
+    return CareerQuizResultModel.fromJson(
+      Map<String, dynamic>.from(result['data']),
+    );
   }
+
 
   List<Map<String, dynamic>> _extractQuestionList(dynamic data) {
     if (data is List) {

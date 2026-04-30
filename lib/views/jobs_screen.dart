@@ -6,12 +6,10 @@ import 'package:insight_hub/cuibt/cubit/jobs_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/jobs_state.dart';
 import 'package:insight_hub/model/job_model.dart';
 import 'package:insight_hub/widget/app_header.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class JobsScreen extends StatefulWidget {
   const JobsScreen({super.key});
-
   static const String routeName = '/jobScreen';
 
   @override
@@ -20,15 +18,22 @@ class JobsScreen extends StatefulWidget {
 
 class _JobsScreenState extends State<JobsScreen> {
   final ScrollController _scrollController = ScrollController();
+  bool isLoadingMore = false;
 
   @override
   void initState() {
     super.initState();
 
+    /// Pagination
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        context.read<JobsCubit>().loadMore();
+        if (!isLoadingMore) {
+          isLoadingMore = true;
+          context.read<JobsCubit>().loadMore().then((_) {
+            isLoadingMore = false;
+          });
+        }
       }
     });
 
@@ -43,19 +48,21 @@ class _JobsScreenState extends State<JobsScreen> {
     super.dispose();
   }
 
+  // ================= UI =================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgLightGray,
+      backgroundColor: AppColors.scaffoldBg,
       body: SafeArea(
         child: Column(
           children: [
             const AppHeader(
               title: 'Jobs',
-              subtitle: 'Find your next opportunity',
+              subtitle: 'Updated Daily',
               showBackButton: true,
             ),
-
+const SizedBox(height: 12), // 👈 ده المهمconst SizedBox(height: 12), // 👈 ده المهم
             _buildCategoryBar(),
             const SizedBox(height: 10),
 
@@ -67,25 +74,24 @@ class _JobsScreenState extends State<JobsScreen> {
                   }
 
                   if (state is JobsError) {
-                    return Center(child: Text(state.message));
+                    return _errorView(state.message);
                   }
 
                   if (state is JobsLoaded) {
                     if (state.jobList.isEmpty) {
-                      return const Center(child: Text('No jobs available'));
+                      return _emptyView();
                     }
 
                     return ListView.builder(
                       controller: _scrollController,
                       padding: const EdgeInsets.all(16),
-                      itemCount: state.jobList.length +
-                          (state.hasMorePages ? 1 : 0),
+                      itemCount:
+                          state.jobList.length + (state.hasMorePages ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index >= state.jobList.length) {
                           return const Padding(
                             padding: EdgeInsets.all(16),
-                            child: Center(
-                                child: CircularProgressIndicator()),
+                            child: Center(child: CircularProgressIndicator()),
                           );
                         }
 
@@ -106,123 +112,125 @@ class _JobsScreenState extends State<JobsScreen> {
 
   // ================= CATEGORY =================
 
-  Widget _buildCategoryBar() {
-    return BlocBuilder<JobsCubit, JobsState>(
-      builder: (context, state) {
-        final cubit = context.read<JobsCubit>();
-        final selected = cubit.selectedCategories;
+Widget _buildCategoryBar() {
+  return BlocBuilder<JobsCubit, JobsState>(
+    builder: (context, state) {
+      final cubit = context.read<JobsCubit>();
+      final selected = cubit.selectedCategories;
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  const Text(
-                    'Categories',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  const Spacer(),
-                  if (selected.isNotEmpty)
-                    TextButton(
-                      onPressed: () => cubit.setCategories([]),
-                      child: const Text('Clear All'),
-                    ),
-                ],
-              ),
-            ),
+      final width = MediaQuery.of(context).size.width;
+      final isTablet = width > 600;
 
-            SizedBox(
-              height: 50,
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                scrollDirection: Axis.horizontal,
-                itemCount: JobsCubit.categories.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemBuilder: (context, index) {
-                  final category = JobsCubit.categories[index];
-                  final isSelected = selected.contains(category);
+      final height = isTablet ? 42.0 : 36.0;
+      final fontSize = isTablet ? 13.0 : 11.0;
+      final iconSize = isTablet ? 14.0 : 12.0;
+      final padding = isTablet ? 12.0 : 10.0;
 
-                  return GestureDetector(
-                    onTap: () {
-                      final updated = List<String>.from(selected);
+      return SizedBox(
+        height: height,
+        child: ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: JobsCubit.categories.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 6),
+          itemBuilder: (context, index) {
+            final category = JobsCubit.categories[index];
+            final isSelected = selected.contains(category);
 
-                      if (isSelected) {
-                        updated.remove(category);
-                      } else {
-                        updated.add(category);
-                      }
+            return Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(18),
+                onTap: () {
+                  final updated = List<String>.from(selected);
 
-                      cubit.setCategories(updated);
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.primaryBlue
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(25),
-                        border: Border.all(
-                          color: isSelected
-                              ? AppColors.primaryBlue
-                              : Colors.grey.shade300,
-                        ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        children: [
-                          Text(
-                            category,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: isSelected
-                                  ? Colors.white
-                                  : Colors.black87,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          if (isSelected) ...[
-                            const SizedBox(width: 6),
-                            const Icon(Icons.check,
-                                size: 14, color: Colors.white),
-                          ]
-                        ],
-                      ),
-                    ),
-                  );
+                  /// toggle
+                  if (isSelected) {
+                    updated.remove(category);
+                  } else {
+                    updated.add(category);
+                  }
+
+                  cubit.setCategories(updated);
+                  cubit.loadJobs(reset: true);
                 },
+                child: AnimatedScale(
+                  duration: const Duration(milliseconds: 120),
+                  scale: isSelected ? 1.05 : 1.0,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: EdgeInsets.symmetric(horizontal: padding),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primary
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primary
+                            : AppColors.border,
+                      ),
+                      boxShadow: isSelected
+                          ? [
+                              BoxShadow(
+                                color: AppColors.primary.withOpacity(0.25),
+                                blurRadius: 6,
+                              )
+                            ]
+                          : [],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          _getCategoryIcon(category),
+                          size: iconSize,
+                          color: isSelected
+                              ? Colors.white
+                              : AppColors.textPrimary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          category,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // ================= CARD =================
+            );
+          },
+        ),
+      );
+    },
+  );
+}
+  // ================= CARD (LinkedIn Style) =================
 
   Widget _buildCard(JobModel job) {
-    final salary = _extractSalary(job.description);
-    final jobType = _extractJobType(job.description);
+    final description = job.description ?? '';
+    final salary = _extractSalary(description);
+    final jobType = _extractJobType(description);
 
     return GestureDetector(
-      onTap: () {
-        if (job.redirectUrl != null && job.redirectUrl!.isNotEmpty) {
-          _openUrl(job.redirectUrl!);
-        }
-      },
+      onTap: () => _openUrl(job.redirectUrl),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 14),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          color: AppColors.cardBg,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border.withOpacity(0.5)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 8,
             ),
           ],
         ),
@@ -230,16 +238,14 @@ class _JobsScreenState extends State<JobsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // 🔥 HEADER (LOGO + TITLE)
+            /// HEADER
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 🏢 LOGO
                 Container(
-                  height: 45,
-                  width: 45,
+                  height: 44,
+                  width: 44,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryBlue.withOpacity(0.1),
+                    color: AppColors.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -248,15 +254,13 @@ class _JobsScreenState extends State<JobsScreen> {
                           ? job.companyName[0].toUpperCase()
                           : '?',
                       style: const TextStyle(
-                        fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primaryBlue,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
                 ),
-
-                const SizedBox(width: 12),
+                const SizedBox(width: 10),
 
                 Expanded(
                   child: Column(
@@ -267,16 +271,16 @@ class _JobsScreenState extends State<JobsScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 2),
                       Text(
                         job.companyName,
                         style: const TextStyle(
-                          fontSize: 13,
-                          color: Colors.black87,
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -287,91 +291,68 @@ class _JobsScreenState extends State<JobsScreen> {
 
             const SizedBox(height: 10),
 
-            // 📍 LOCATION
+            /// LOCATION
             if (job.location.isNotEmpty)
               Row(
                 children: [
-                  const Icon(LucideIcons.mapPin,
+                  const Icon(Icons.location_on,
                       size: 14, color: Colors.grey),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 4),
                   Expanded(
                     child: Text(
                       job.location,
                       style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
                       ),
                     ),
                   ),
                 ],
               ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
 
-            // 🏷 BADGES
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
+            /// BADGES
+            Row(
               children: [
-                if (salary != null)
-                  _buildBadge(salary, Colors.green),
-
-                if (jobType != null)
-                  _buildBadge(jobType, Colors.blue),
+                if (salary != null) _badge(salary, Colors.green),
+                if (jobType != null) ...[
+                  const SizedBox(width: 6),
+                  _badge(jobType, AppColors.primary),
+                ]
               ],
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
 
-            // 📝 DESCRIPTION
-            if (job.description != null)
+            /// DESCRIPTION
+            if (description.isNotEmpty)
               Text(
-                job.description!,
+                description,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
-                  color: Colors.grey.shade600,
+                  color: AppColors.textMuted,
                 ),
               ),
-
-            const SizedBox(height: 10),
-
-            // ⏱ DATE
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Icon(LucideIcons.clock,
-                    size: 12, color: Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  _formatDate(job.createdDate),
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
     );
   }
 
-  // ================= BADGE =================
-
-  Widget _buildBadge(String text, Color color) {
+  Widget _badge(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: FontWeight.w600,
           color: color,
         ),
@@ -379,30 +360,25 @@ class _JobsScreenState extends State<JobsScreen> {
     );
   }
 
+  // ================= STATES =================
+
+  Widget _emptyView() {
+    return const Center(child: Text('No jobs available'));
+  }
+
+  Widget _errorView(String message) {
+    return Center(child: Text(message));
+  }
+
   // ================= HELPERS =================
 
-  String _formatDate(DateTime? date) {
-    if (date == null) return '';
-
-    final diff = DateTime.now().difference(date);
-
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m';
-    if (diff.inHours < 24) return '${diff.inHours}h';
-
-    return '${diff.inDays}d';
+  String? _extractSalary(String text) {
+    final regex = RegExp(r'[\$£€]\s?[\d,]+');
+    return regex.firstMatch(text)?.group(0);
   }
 
-  String? _extractSalary(String? description) {
-    if (description == null) return null;
-
-    final regex = RegExp(r'£[\d,]+\s?-\s?[\d,]+');
-    return regex.firstMatch(description)?.group(0);
-  }
-
-  String? _extractJobType(String? description) {
-    if (description == null) return null;
-
-    final text = description.toLowerCase();
+  String? _extractJobType(String text) {
+    text = text.toLowerCase();
 
     if (text.contains('remote')) return 'Remote';
     if (text.contains('hybrid')) return 'Hybrid';
@@ -412,8 +388,22 @@ class _JobsScreenState extends State<JobsScreen> {
     return null;
   }
 
-  Future<void> _openUrl(String url) async {
+  Future<void> _openUrl(String? url) async {
+    if (url == null || url.isEmpty) return;
+
     final uri = Uri.parse(url);
-    await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+    }
   }
+}IconData _getCategoryIcon(String category) {
+  final value = category.toLowerCase();
+
+  if (value.contains('back')) return Icons.storage;
+  if (value.contains('front')) return Icons.web;
+  if (value.contains('full')) return Icons.layers;
+  if (value.contains('mobile')) return Icons.phone_android;
+  if (value.contains('data')) return Icons.bar_chart;
+
+  return Icons.work;
 }

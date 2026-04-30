@@ -52,7 +52,7 @@ class _NewsScreenState extends State<NewsScreen> {
           children: [
             const AppHeader(
               title: 'News',
-            
+            subtitle: 'Updated every 12 hours',
               showBackButton: true,
             ),
 
@@ -81,13 +81,13 @@ class _NewsScreenState extends State<NewsScreen> {
 
                     return ListView.builder(
                       controller: _scrollController,
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(12),
                       itemCount: state.newsList.length +
                           (state.hasMorePages ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index >= state.newsList.length) {
                           return const Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: EdgeInsets.all(12),
                             child: Center(
                                 child: CircularProgressIndicator()),
                           );

@@ -69,14 +69,18 @@ class _SplashScreenState extends State<SplashScreen>
     final onboardingSeen = prefs.getBool(onboardingSeenKey) ?? false;
 
     final nextRoute = token != null && token.isNotEmpty
-        ? Routes.profileScreen
+        ? Routes.homeScreen
         : onboardingSeen
             ? Routes.welcomeScreen
             : Routes.onboardingScreen;
 
     if (!mounted) return;
 
-    Navigator.pushReplacementNamed(context, nextRoute);
+Navigator.pushNamedAndRemoveUntil(
+  context,
+  nextRoute,
+  (route) => false,
+);
   }
 
   @override

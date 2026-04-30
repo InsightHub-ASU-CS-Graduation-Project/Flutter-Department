@@ -118,7 +118,10 @@ class _RegisterEducationScreenState extends State<RegisterEducationScreen> {
                     controller: _collegeController,
                     onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
-                      hintText: "University name",
+                      hintText: "College name",
+                      hintStyle:TextStyle(
+    color: AppColors.textGray.withOpacity(0.4),
+  ), 
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),

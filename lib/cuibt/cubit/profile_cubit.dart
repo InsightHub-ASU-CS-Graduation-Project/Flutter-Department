@@ -35,12 +35,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     }
   }
 
-  Future<Map<String, dynamic>> _loadProfile() async {
-    final getResult = await _apiService.get(Endpoints.profile);
-    if (getResult['statusCode'] != 405) {
-      return getResult;
-    }
-
-    return _apiService.post(Endpoints.profile);
-  }
+Future<Map<String, dynamic>> _loadProfile() async {
+  return await _apiService.post(Endpoints.profile);
+}
 }

@@ -26,17 +26,28 @@ class SurveyMenuScreen extends StatelessWidget {
             Expanded(
               child: AppMotion(
                 child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 24,
+                  ),
                   children: [
                     _buildSurveyCard(
                       context,
                       title: 'Career Assessment',
-                      subtitle: 'Match your personality with the ideal career path.',
+                      subtitle:
+                          'Match your personality with the ideal career path.',
                       icon: LucideIcons.briefcase,
                       isActive: true,
-                      onTap: () {
-                        final matchState = context.read<MatchCubit>().state;
-                        if (matchState is MatchLoaded) {
+                      onTap: () async {
+                        final cubit = context.read<MatchCubit>();
+
+                        // Show a simple loading indicator (can be improved with a dialog)
+                        // For now, we'll just await the fetch
+                        final hasResult = await cubit.fetchResult();
+
+                        if (!context.mounted) return;
+
+                        if (hasResult) {
                           Navigator.pushNamed(context, Routes.matchScreen);
                         } else {
                           Navigator.pushNamed(context, Routes.questionScreen);
@@ -80,7 +91,7 @@ class SurveyMenuScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BottomNav(currentIndex: 2),
+      // bottomNavigationBar: const BottomNav(currentIndex: 2),
     );
   }
 
@@ -122,11 +133,7 @@ class SurveyMenuScreen extends StatelessWidget {
                       color: const Color(0xFFEFF6FF),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: Icon(
-                      icon,
-                      color: AppColors.primaryBlue,
-                      size: 26,
-                    ),
+                    child: Icon(icon, color: AppColors.primaryBlue, size: 26),
                   ),
                   const SizedBox(width: 16),
                   Expanded(

@@ -27,9 +27,10 @@ class AppHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
+
+      /// 🎨 الشكل
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
@@ -37,59 +38,87 @@ class AppHeader extends StatelessWidget {
             Color(0xFF1D4ED8),
           ],
         ),
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(28),
           bottomRight: Radius.circular(28),
         ),
+
+        /// 👇 shadow خفيف يفصل الهيدر
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+
+      /// 🔥 يمنع تداخل مع status bar
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          /// 👇 padding متوازن (مش كبير من تحت)
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              if (leading != null) ...[
-                leading!,
-                const SizedBox(width: 12),
-              ] else if (showBackButton) ...[
-                IconButton(
-                  icon: Icon(leadingIcon ?? Icons.arrow_back, color: Colors.white),
-                  onPressed: onBackPress ?? () => Navigator.of(context).pop(),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
-                ),
-                const SizedBox(width: 12),
-              ],
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
+
+              /// ===== Row =====
+              Row(
+                children: [
+                  if (leading != null) ...[
+                    leading!,
+                    const SizedBox(width: 10),
+                  ] else if (showBackButton) ...[
+                    IconButton(
+                      icon: Icon(
+                        leadingIcon ?? Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      onPressed:
+                          onBackPress ?? () => Navigator.of(context).pop(),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 24, // 👈 أصغر شوية
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+
+                  if (trailing != null) trailing!,
+                ],
+              ),
+
+              /// ===== Subtitle =====
+              if (subtitle != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  subtitle!,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.85),
+                    fontSize: 14,
                   ),
                 ),
-              ),
-              if (trailing != null) trailing!,
+              ],
+
+              /// ===== Extra =====
+              if (extra != null) ...[
+                const SizedBox(height: 14),
+                extra!,
+              ],
             ],
           ),
-          if (subtitle != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              subtitle!,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.85),
-                fontSize: 15,
-                height: 1.4,
-              ),
-            ),
-          ],
-          if (extra != null) ...[
-            const SizedBox(height: 20),
-            extra!,
-          ],
-        ],
+        ),
       ),
     );
   }
