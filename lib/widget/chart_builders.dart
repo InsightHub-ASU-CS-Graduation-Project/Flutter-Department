@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/core/constant/app_colors.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_treemap/treemap.dart';
-import 'package:insight_hub/utils/safe_parser.dart';
+import 'package:insight_hub/core/utils/safe_parser.dart';
 import 'package:insight_hub/widget/safe_error_widget.dart';
 
 class ChartBuilders {

@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:insight_hub/model/profile_model.dart';
-import 'package:insight_hub/services/api_service.dart';
-import 'package:insight_hub/services/endpoints.dart';
+import 'package:insight_hub/core/services/api_service.dart';
+import 'package:insight_hub/core/services/endpoints.dart';
 import 'package:meta/meta.dart';
 
 part 'profile_state.dart';

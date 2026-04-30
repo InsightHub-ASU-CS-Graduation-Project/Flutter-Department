@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:insight_hub/constant/labor_list.dart';
+import 'package:insight_hub/core/constant/labor_list.dart';
 import 'package:insight_hub/model/app_error.dart';
 import 'package:insight_hub/model/match_model.dart';
 import 'package:insight_hub/model/career_quiz_result_model.dart';
 import 'package:insight_hub/model/question_model.dart';
-import 'package:insight_hub/services/endpoints.dart';
-import 'package:insight_hub/services/secure_storege.dart';
+import 'package:insight_hub/core/services/endpoints.dart';
+import 'package:insight_hub/core/services/secure_storege.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();

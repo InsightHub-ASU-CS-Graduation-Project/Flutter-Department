@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
-import 'package:insight_hub/constant/app_colors.dart';
-import 'package:insight_hub/constant/labor_list.dart';
-import 'package:insight_hub/constant/routes.dart';
-import 'package:insight_hub/constant/storage_keys.dart';
-import 'package:insight_hub/services/secure_storege.dart';
+import 'package:insight_hub/core/constant/app_colors.dart';
+import 'package:insight_hub/core/constant/labor_list.dart';
+import 'package:insight_hub/core/constant/routes.dart';
+import 'package:insight_hub/core/constant/storage_keys.dart';
+import 'package:insight_hub/core/services/secure_storege.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

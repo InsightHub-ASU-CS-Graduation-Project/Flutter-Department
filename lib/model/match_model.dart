@@ -1,4 +1,4 @@
-import 'package:insight_hub/utils/safe_parser.dart';
+import 'package:insight_hub/core/utils/safe_parser.dart';
 
 class AnswerModel {
   final String question;

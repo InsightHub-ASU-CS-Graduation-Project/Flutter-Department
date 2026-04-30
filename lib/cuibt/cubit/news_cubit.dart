@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/cuibt/cubit/news_state.dart';
 import 'package:insight_hub/model/news_model.dart';
-import 'package:insight_hub/services/api_service.dart';
-import 'package:insight_hub/services/endpoints.dart';
+import 'package:insight_hub/core/services/api_service.dart';
+import 'package:insight_hub/core/services/endpoints.dart';
 
 class NewsCubit extends Cubit<NewsState> {
   final ApiService _apiService = ApiService();

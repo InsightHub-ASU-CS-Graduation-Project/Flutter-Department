@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:insight_hub/widget/chart_builders.dart';
 import 'package:insight_hub/widget/safe_error_widget.dart';
-import 'package:insight_hub/utils/safe_parser.dart';
+import 'package:insight_hub/core/utils/safe_parser.dart';
 
 class DynamicCard extends StatelessWidget {
   final Map<String, dynamic>? data;

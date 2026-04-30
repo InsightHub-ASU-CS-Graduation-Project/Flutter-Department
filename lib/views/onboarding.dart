@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/constant/app_colors.dart';
-import 'package:insight_hub/constant/routes.dart';
-import 'package:insight_hub/constant/storage_keys.dart';
+import 'package:insight_hub/core/constant/app_colors.dart';
+import 'package:insight_hub/core/constant/routes.dart';
+import 'package:insight_hub/core/constant/storage_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingScreen extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/constant/routes.dart';
+import 'package:insight_hub/core/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:insight_hub/widget/card_container.dart';

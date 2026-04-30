@@ -1,4 +1,4 @@
-import 'package:insight_hub/constant/app_strings.dart';
+import 'package:insight_hub/core/constant/app_strings.dart';
 
 class Validators {
   // 🔹 Email (common)

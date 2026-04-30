@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:insight_hub/services/dashboard_api.dart';
-import 'package:insight_hub/services/endpoints.dart';
+import 'package:insight_hub/core/services/dashboard_api.dart';
+import 'package:insight_hub/core/services/endpoints.dart';
 import 'package:insight_hub/model/dashboard_item.dart';
 
 part 'dashboard_state.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/core/constant/app_colors.dart';
 import 'package:insight_hub/cuibt/cubit/dashboard_cubit.dart';
 import 'package:insight_hub/model/dashboard_item.dart';
 import 'package:insight_hub/views/jobs_summary_card.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/core/constant/app_colors.dart';
 import 'package:insight_hub/cuibt/cubit/jobs_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/jobs_state.dart';
 import 'package:insight_hub/model/job_model.dart';

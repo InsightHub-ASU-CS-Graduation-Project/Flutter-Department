@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:insight_hub/constant/labor_list.dart';
-import 'package:insight_hub/services/endpoints.dart';
-import 'package:insight_hub/services/api_service.dart';
-import 'package:insight_hub/services/secure_storege.dart';
+import 'package:insight_hub/core/constant/labor_list.dart';
+import 'package:insight_hub/core/services/endpoints.dart';
+import 'package:insight_hub/core/services/api_service.dart';
+import 'package:insight_hub/core/services/secure_storege.dart';
 import 'package:meta/meta.dart';
 import 'package:insight_hub/model/register_model.dart';
 part 'register_state.dart';
