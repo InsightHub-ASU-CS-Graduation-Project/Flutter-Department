@@ -11,31 +11,43 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   final ApiService _apiService = ApiService();
 
-  Future<void> fetchProfile() async {
-    emit(ProfileLoading());
+Future<void> fetchProfile({bool forceRefresh = false}) async {
+  /// ✅ 1. منع duplicate لو already عندك data
+  if (!forceRefresh && state is ProfileSuccess) return;
 
-    try {
-      final result = await _loadProfile();
+  /// ✅ 2. منع double request لو شغال حاليًا
+  if (state is ProfileLoading) return;
 
-      if (result['success'] == true && result['data'] is Map<String, dynamic>) {
-        final profile = ProfileModel.fromJson(
-          result['data'] as Map<String, dynamic>,
-        );
-        emit(ProfileSuccess(profile));
-        return;
-      }
+  emit(ProfileLoading());
 
-      emit(
-        ProfileFailure(
-          result['error']?.toString() ?? 'Failed to load profile.',
-        ),
+  try {
+    final result = await _loadProfile();
+
+    if (result['success'] == true &&
+        result['data'] is Map<String, dynamic>) {
+      final profile = ProfileModel.fromJson(
+        result['data'] as Map<String, dynamic>,
       );
-    } catch (_) {
-      emit(const ProfileFailure('Failed to load profile.'));
+
+      emit(ProfileSuccess(profile));
+      return;
     }
+
+    emit(
+      ProfileFailure(
+        result['error']?.toString() ?? 'Failed to load profile.',
+      ),
+    );
+  } catch (_) {
+    emit(const ProfileFailure('Failed to load profile.'));
   }
+}
 
 Future<Map<String, dynamic>> _loadProfile() async {
   return await _apiService.post(Endpoints.profile);
+}
+
+void reset() {
+  emit(ProfileInitial());
 }
 }

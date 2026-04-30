@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/constant/routes.dart';
-import 'package:insight_hub/widget/bottom_nav.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
@@ -41,16 +40,28 @@ class SurveyMenuScreen extends StatelessWidget {
                       onTap: () async {
                         final cubit = context.read<MatchCubit>();
 
-                        // Show a simple loading indicator (can be improved with a dialog)
-                        // For now, we'll just await the fetch
-                        final hasResult = await cubit.fetchResult();
+                        try {
+                          final target = await cubit.decideNavigation();
 
-                        if (!context.mounted) return;
+                          if (!context.mounted) return;
 
-                        if (hasResult) {
-                          Navigator.pushNamed(context, Routes.matchScreen);
-                        } else {
-                          Navigator.pushNamed(context, Routes.questionScreen);
+                          switch (target) {
+                            case NavigationTarget.questions:
+                              Navigator.pushNamed(context, Routes.questionScreen);
+                              break;
+                            case NavigationTarget.result:
+                              Navigator.pushNamed(context, Routes.matchScreen);
+                              break;
+                            case NavigationTarget.thankYou:
+                              Navigator.pushNamed(context, Routes.surveyThankYouScreen);
+                              break;
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())),
+                            );
+                          }
                         }
                       },
                     ),

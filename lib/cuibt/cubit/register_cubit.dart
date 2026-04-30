@@ -112,6 +112,21 @@ class RegisterCubit extends Cubit<RegisterState> {
       yearsExperience: yearsExperience,
     );
   }
+
+  void reset() {
+    firstName = null;
+    lastName = null;
+    gender = null;
+    birthDate = null;
+    collage = null;
+    isEmployed = null;
+    email = null;
+    password = null;
+    confirmPassword = null;
+    trackId = null;
+    yearsExperience = null;
+    emit(RegisterInitial());
+  }
 }
 
 

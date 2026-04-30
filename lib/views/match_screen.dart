@@ -47,10 +47,8 @@ class _MatchScreenState extends State<MatchScreen>
 
       final cubit = context.read<MatchCubit>();
 
-      /// ✅ FIX: متعملش fetch لو عندك result بالفعل
-      if (cubit.state is! MatchLoaded) {
-        cubit.fetchResult();
-      }
+      /// Orchestration is now handled by SurveyMenuScreen via decideNavigation().
+      /// We don't fetch directly from MatchScreen anymore.
 
       if (cubit.state is MatchLoaded) {
         _controller.forward(from: 0);

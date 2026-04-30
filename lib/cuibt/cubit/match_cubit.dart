@@ -1,7 +1,14 @@
 import 'package:bloc/bloc.dart';
-
 import 'package:insight_hub/services/api_service.dart';
+import 'package:insight_hub/services/endpoints.dart';
+import 'package:insight_hub/model/profile_model.dart';
 import 'package:meta/meta.dart';
+
+enum NavigationTarget {
+  questions,
+  result,
+  thankYou,
+}
 
 @immutable
 sealed class MatchState {
@@ -43,25 +50,39 @@ class MatchCubit extends Cubit<MatchState> {
     emit(MatchLoaded(result));
   }
 
-  Future<bool> fetchResult({bool forceRefresh = false}) async {
-    if (state is MatchLoading) return false;
-    if (!forceRefresh && state is MatchLoaded) return true;
-
+  Future<NavigationTarget> decideNavigation() async {
     emit(const MatchLoading());
 
     try {
-      final result = await _apiService.fetchCareerQuizResult();
-
-      if (result == null) {
-        emit(const MatchError('No results found. Please complete the quiz.'));
-        return false;
+      final profileResult = await _apiService.post(Endpoints.profile);
+      
+      if (profileResult['success'] != true || profileResult['data'] == null) {
+        throw Exception(profileResult['error']?.toString() ?? 'Failed to load profile.');
       }
 
-      emit(MatchLoaded(result));
-      return true;
+      final profile = ProfileModel.fromJson(profileResult['data'] as Map<String, dynamic>);
+
+      if (!profile.hasCompletedAssessment) {
+        emit(const MatchInitial());
+        return NavigationTarget.questions;
+      } else {
+        if (profile.isEmployed) {
+          emit(const MatchInitial());
+          return NavigationTarget.thankYou;
+        } else {
+          final result = await _apiService.fetchCareerQuizResult();
+          
+          if (result == null) {
+            throw Exception('No results found. Please complete the quiz.');
+          }
+          
+          emit(MatchLoaded(result));
+          return NavigationTarget.result;
+        }
+      }
     } catch (error) {
       emit(MatchError(_errorMessage(error)));
-      return false;
+      rethrow;
     }
   }
 

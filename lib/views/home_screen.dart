@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/app_colors.dart';
+import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 
 import 'package:insight_hub/views/profile.dart';
 import 'package:insight_hub/views/search_screen.dart';
@@ -18,10 +20,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  /// Keywords that identify the "total jobs" metric
+  int selectedIndex = 0;
 
 
- int selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {

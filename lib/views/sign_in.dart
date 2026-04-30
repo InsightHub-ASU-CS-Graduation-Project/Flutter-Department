@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
+import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:insight_hub/widget/card_container.dart';
 import 'package:insight_hub/widget/validatores.dart';
 
@@ -38,8 +39,12 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is LoginSuccess) {
+          // Fetch profile after successful login
+          await context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+          
+          if (!context.mounted) return;
           Navigator.pushNamedAndRemoveUntil(
             context,
             Routes.homeScreen,

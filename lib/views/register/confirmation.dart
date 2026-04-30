@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
+import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class ConfirmationScreen extends StatelessWidget {
@@ -75,11 +76,17 @@ class ConfirmationScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 56,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    Routes.homeScreen,
-                    (route) => false,
-                  ),
+                  onPressed: () async {
+                    // Fetch profile after successful registration
+                    await context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+                    
+                    if (!context.mounted) return;
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      Routes.homeScreen,
+                      (route) => false,
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryBlue, // blue-600
                     shape: RoundedRectangleBorder(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/constant/labor_list.dart';
 import 'package:insight_hub/constant/routes.dart';
@@ -68,19 +70,30 @@ class _SplashScreenState extends State<SplashScreen>
     final prefs = await SharedPreferences.getInstance();
     final onboardingSeen = prefs.getBool(onboardingSeenKey) ?? false;
 
-    final nextRoute = token != null && token.isNotEmpty
-        ? Routes.homeScreen
-        : onboardingSeen
-            ? Routes.welcomeScreen
-            : Routes.onboardingScreen;
-
     if (!mounted) return;
 
-Navigator.pushNamedAndRemoveUntil(
-  context,
-  nextRoute,
-  (route) => false,
-);
+    if (token != null && token.isNotEmpty) {
+      // YES -> fetchProfile() (إجباري)
+      await context.read<ProfileCubit>().fetchProfile(forceRefresh: true);
+      
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Routes.homeScreen,
+        (route) => false,
+      );
+    } else {
+      // NO -> Login/Register
+      final nextRoute = onboardingSeen
+          ? Routes.welcomeScreen
+          : Routes.onboardingScreen;
+          
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        nextRoute,
+        (route) => false,
+      );
+    }
   }
 
   @override

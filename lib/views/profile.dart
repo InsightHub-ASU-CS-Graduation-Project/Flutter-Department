@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
+import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
+import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
+import 'package:insight_hub/widget/app_header.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/constant/app_colors.dart';
 import 'package:insight_hub/constant/routes.dart';
@@ -21,10 +25,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      context.read<ProfileCubit>().fetchProfile();
-    });
+   final cubit = context.read<ProfileCubit>();
+
+if (cubit.state is! ProfileSuccess) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (!mounted) return;
+    cubit.fetchProfile();
+  });
+}
   }
 
   String _initialFrom(String value) {
@@ -74,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       {
         'icon': LucideIcons.refreshCw,
         'label': 'Refresh Profile',
-        'action': () => context.read<ProfileCubit>().fetchProfile(),
+        'action': () => context.read<ProfileCubit>().fetchProfile(forceRefresh: true),
         'isDestructive': false,
       },
       {
@@ -90,6 +98,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         BlocListener<LogoutCubit, LogoutState>(
           listener: (context, state) {
             if (state is LogoutSuccess) {
+              // Reset the profile state so stale data is not reused for the next login
+              context.read<ProfileCubit>().reset();
+              context.read<MatchCubit>().reset();
+              context.read<QuestionCubit>().reset();
+              context.read<RegisterCubit>().reset();
+              
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 Routes.signInScreen,
@@ -117,34 +131,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.fromLTRB(24, 32, 24, 48),
-                decoration: const BoxDecoration(
-                  color: AppColors.primaryBlue,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24),
-                  ),
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Profile',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Manage your account information',
-                      style: TextStyle(color: Color(0xFFBFDBFE), fontSize: 14),
-                    ),
-                  ],
-                ),
+              AppHeader(
+               title: "Profile",
+               subtitle: "Manage your account information",
               ),
               Expanded(
                 child: BlocBuilder<ProfileCubit, ProfileState>(
