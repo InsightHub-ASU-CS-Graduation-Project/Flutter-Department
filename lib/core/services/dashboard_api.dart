@@ -12,7 +12,7 @@ class DashboardApi {
   /// Always returns a safe List<Map<String, dynamic>> (never null).
 Future<List<Map<String, dynamic>>> fetchDashboardData(String endpoint) async {
   try {
-    final response = await _apiService.post(endpoint);
+    final response = await _apiService.get(endpoint);
 
     if (response['success'] != true) {
       final errorData = response['data'];

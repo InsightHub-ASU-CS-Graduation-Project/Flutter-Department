@@ -1,11 +1,14 @@
+import 'package:insight_hub/core/constant/api_constants.dart';
+
 class Endpoints {
-  static const String baseUrl =
-      'https://saccharinely-hormonal-annelle.ngrok-free.dev/api';
+  static String baseUrl = ApiConstants.baseUrl;
 
   static const String login = '/account/login';
   static const String register = '/Account/register';
-  static const String logout = '/account/logout';
-  static const String profile = '/account/profile';
+  static const String logout = '/Account/logout';
+  static const String profile = '/Account/profile';
+  static const String deleteAccount = '/Account/DeleteAccount';
+  static const String updateProfile = '/Account/UpdateProfile';
 
   // Employee Survey Flow
   static const String questions = '/Survey/questions';
@@ -15,6 +18,7 @@ class Endpoints {
   static const String careerQuizQuestions = '/CareerQuiz/questions';
   static const String careerQuizFullMatch = '/CareerQuiz/full-match';
   static const String careerQuizResult = '/CareerQuiz/result';
+  static const String navigationStatus = '/UserSubmission/EmploymentStatus';
 
   // Analysis Proxy Endpoints
 
@@ -22,6 +26,10 @@ class Endpoints {
   static const String analysisExplore = '/AnalysisProxy/explore';
 
   // News/Jobs Endpoint
-  static const String relatedJobs = '/news/News';
-  static const String jobs = '/jobs/RelatedJobs';
+  static const String relatedJobs = '/News';
+  static const String jobs = '/JobsOffers';
+
+  // Human Resources Endpoints
+  static const String hrCategories = '/InterviewQuiz/Questions';
+  static const String hrQuizSubmit = '/InterviewQuiz/Submit';
 }

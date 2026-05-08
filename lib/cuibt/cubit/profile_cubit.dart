@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:insight_hub/model/profile_model.dart';
 import 'package:insight_hub/core/services/api_service.dart';
 import 'package:insight_hub/core/services/endpoints.dart';
+import 'package:insight_hub/model/profile_model.dart';
 import 'package:meta/meta.dart';
 
 part 'profile_state.dart';
@@ -11,43 +11,93 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   final ApiService _apiService = ApiService();
 
-Future<void> fetchProfile({bool forceRefresh = false}) async {
-  /// ✅ 1. منع duplicate لو already عندك data
-  if (!forceRefresh && state is ProfileSuccess) return;
+  Future<void> fetchProfile({bool forceRefresh = false}) async {
+    if (!forceRefresh && state is ProfileSuccess) return;
+    if (state is ProfileLoading) return;
 
-  /// ✅ 2. منع double request لو شغال حاليًا
-  if (state is ProfileLoading) return;
+    emit(ProfileLoading());
 
-  emit(ProfileLoading());
+    try {
+      final result = await _loadProfile();
 
-  try {
-    final result = await _loadProfile();
+      if (result['success'] == true &&
+          result['data'] is Map<String, dynamic>) {
+        final profile = ProfileModel.fromJson(
+          result['data'] as Map<String, dynamic>,
+        );
 
-    if (result['success'] == true &&
-        result['data'] is Map<String, dynamic>) {
-      final profile = ProfileModel.fromJson(
-        result['data'] as Map<String, dynamic>,
+        emit(ProfileSuccess(profile));
+        return;
+      }
+
+      emit(
+        ProfileFailure(
+          result['error']?.toString() ?? 'Failed to load profile.',
+        ),
       );
+    } catch (_) {
+      emit(const ProfileFailure('Failed to load profile.'));
+    }
+  }
 
+  Future<void> updateProfile({
+    required Map<String, dynamic> profileJson,
+  }) async {
+    if (state is ProfileUpdateLoading) return;
+
+    final currentProfile = _currentProfile();
+    if (currentProfile == null) return;
+
+    emit(ProfileUpdateLoading(currentProfile));
+
+    final result = await _apiService.put(
+      Endpoints.updateProfile,
+      data: profileJson,
+    );
+
+    if (result['success'] != true) {
+      emit(
+        ProfileUpdateFailure(
+          profile: currentProfile,
+          message: result['error']?.toString() ?? 'Failed to update profile.',
+        ),
+      );
+      return;
+    }
+
+    final refreshed = await _loadProfile();
+
+    if (refreshed['success'] == true &&
+        refreshed['data'] is Map<String, dynamic>) {
+      final profile = ProfileModel.fromJson(
+        refreshed['data'] as Map<String, dynamic>,
+      );
+      emit(ProfileUpdateSuccess(profile));
       emit(ProfileSuccess(profile));
       return;
     }
 
     emit(
-      ProfileFailure(
-        result['error']?.toString() ?? 'Failed to load profile.',
+      ProfileUpdateFailure(
+        profile: currentProfile,
+        message: refreshed['error']?.toString() ?? 'Failed to refresh profile.',
       ),
     );
-  } catch (_) {
-    emit(const ProfileFailure('Failed to load profile.'));
   }
-}
 
-Future<Map<String, dynamic>> _loadProfile() async {
-  return await _apiService.post(Endpoints.profile);
-}
+  Future<Map<String, dynamic>> _loadProfile() async {
+    return await _apiService.get(Endpoints.profile);
+  }
 
-void reset() {
-  emit(ProfileInitial());
-}
+  ProfileModel? _currentProfile() {
+    final currentState = state;
+    if (currentState is ProfileSuccess) return currentState.profile;
+    if (currentState is ProfileUpdateFailure) return currentState.profile;
+    if (currentState is ProfileUpdateSuccess) return currentState.profile;
+    return null;
+  }
+
+  void reset() {
+    emit(ProfileInitial());
+  }
 }

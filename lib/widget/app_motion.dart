@@ -7,10 +7,11 @@ class AppMotion extends StatefulWidget {
   final double slideOffset;
 
   const AppMotion({
+
     super.key,
     required this.child,
     this.enabled = true,
-    this.duration = const Duration(milliseconds: 400),
+    this.duration = const Duration(milliseconds: 1200),
     this.slideOffset = 20.0,
   });
 

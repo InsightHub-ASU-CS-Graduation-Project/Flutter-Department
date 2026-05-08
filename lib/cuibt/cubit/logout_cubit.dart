@@ -25,4 +25,35 @@ class LogoutCubit extends Cubit<LogoutState> {
       emit(LogoutSuccess());
     }
   }
+
+  Future<void> deleteAccount() async {
+    if (state is DeleteAccountLoading) {
+      return;
+    }
+
+    emit(DeleteAccountLoading());
+
+    try {
+      final result = await _apiService.delete(Endpoints.deleteAccount);
+
+      if (result['success'] == true) {
+        await SecureStorage.deleteAllData();
+        emit(DeleteAccountSuccess());
+        return;
+      }
+
+      emit(
+        DeleteAccountFailure(
+          result['error']?.toString() ??
+              'Could not delete your account. Please try again.',
+        ),
+      );
+    } catch (_) {
+      emit(
+        DeleteAccountFailure(
+          'Could not delete your account. Please try again.',
+        ),
+      );
+    }
+  }
 }

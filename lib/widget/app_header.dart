@@ -29,29 +29,9 @@ class AppHeader extends StatelessWidget {
       width: double.infinity,
 
       /// 🎨 الشكل
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primaryBlue,
-            Color(0xFF1D4ED8),
-          ],
-        ),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-
-        /// 👇 shadow خفيف يفصل الهيدر
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+     decoration: BoxDecoration(
+  color: Colors.transparent,
+),
 
       /// 🔥 يمنع تداخل مع status bar
       child: SafeArea(

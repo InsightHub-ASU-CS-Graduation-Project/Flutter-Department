@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
-import 'package:insight_hub/widget/app_header.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:insight_hub/core/constant/app_colors.dart';
 import 'package:insight_hub/core/constant/routes.dart';
 import 'package:insight_hub/cuibt/cubit/logout_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
+import 'package:insight_hub/feature/auth/cubit/login_cubit.dart';
+import 'package:insight_hub/feature/auth/cubit/register_cubit.dart';
+import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/match_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/cubit/hr_question_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/jobs_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/news_cubit.dart';
 import 'package:insight_hub/model/profile_model.dart';
-import 'package:insight_hub/widget/bottom_nav.dart';
+import 'package:insight_hub/widget/app_header.dart';
+import 'package:intl/intl.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -25,14 +30,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-   final cubit = context.read<ProfileCubit>();
+    final cubit = context.read<ProfileCubit>();
 
-if (cubit.state is! ProfileSuccess) {
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (!mounted) return;
-    cubit.fetchProfile();
-  });
-}
+    if (cubit.state is! ProfileSuccess) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        cubit.fetchProfile();
+      });
+    }
   }
 
   String _initialFrom(String value) {
@@ -50,21 +55,76 @@ if (cubit.state is! ProfileSuccess) {
     return profile.email.trim().isEmpty ? 'No email available' : profile.email;
   }
 
+  void _clearSessionState() {
+    context.read<ProfileCubit>().reset();
+    context.read<MatchCubit>().reset();
+    context.read<QuestionCubit>().reset();
+    context.read<HrQuestionCubit>().reset();
+    context.read<LoginCubit>().reset();
+    context.read<RegisterCubit>().reset();
+    context.read<DashboardCubit>().reset();
+    context.read<NewsCubit>().reset();
+    context.read<JobsCubit>().reset();
+  }
+
+  void _goToSignIn() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      Routes.signInScreen,
+      (route) => false,
+    );
+  }
+
+  Future<void> _confirmDeleteAccount() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Delete account?'),
+          content: const Text(
+            'This permanently deletes your account and signs you out of this device.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Delete Account'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (shouldDelete == true && mounted) {
+      context.read<LogoutCubit>().deleteAccount();
+    }
+  }
+
   List<Map<String, String>> _profileItems(ProfileModel profile) {
     String jobText = profile.trackName.trim();
     if (jobText.isNotEmpty && profile.yearsExperience != null) {
-       final suffix = profile.yearsExperience == 1 ? 'year' : 'years';
-       jobText = '$jobText (${profile.yearsExperience} $suffix)';
+      final suffix = profile.yearsExperience == 1 ? 'year' : 'years';
+      jobText = '$jobText (${profile.yearsExperience} $suffix)';
     }
 
     return [
       {
-        'label': 'Username',
-        'value': profile.userName.trim().isEmpty ? 'Not set' : profile.userName,
-      },
-      {
         'label': 'College',
         'value': profile.collage.trim().isEmpty ? 'Not set' : profile.collage,
+      },
+      {
+        'label': 'Birthdate',
+        'value': profile.birthDate == null
+            ? 'Not set'
+            : DateFormat('MMMM dd, yyyy').format(profile.birthDate!),
       },
       {
         'label': 'Employment Status',
@@ -78,38 +138,18 @@ if (cubit.state is! ProfileSuccess) {
   Widget build(BuildContext context) {
     final logoutCubit = context.read<LogoutCubit>();
 
-    final settingsItems = [
-      {
-        'icon': LucideIcons.refreshCw,
-        'label': 'Refresh Profile',
-        'action': () => context.read<ProfileCubit>().fetchProfile(forceRefresh: true),
-        'isDestructive': false,
-      },
-      {
-        'icon': LucideIcons.logOut,
-        'label': 'Log Out',
-        'action': () => logoutCubit.logout(),
-        'isDestructive': true,
-      },
-    ];
-
     return MultiBlocListener(
       listeners: [
         BlocListener<LogoutCubit, LogoutState>(
           listener: (context, state) {
-            if (state is LogoutSuccess) {
-              // Reset the profile state so stale data is not reused for the next login
-              context.read<ProfileCubit>().reset();
-              context.read<MatchCubit>().reset();
-              context.read<QuestionCubit>().reset();
-              context.read<RegisterCubit>().reset();
-              
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                Routes.signInScreen,
-                (route) => false,
-              );
+            if (state is LogoutSuccess || state is DeleteAccountSuccess) {
+              _clearSessionState();
+              _goToSignIn();
             } else if (state is LogoutFailure) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+            } else if (state is DeleteAccountFailure) {
               ScaffoldMessenger.of(
                 context,
               ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
@@ -128,237 +168,310 @@ if (cubit.state is! ProfileSuccess) {
       ],
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
-        body: SafeArea(
-          child: Column(
-            children: [
-              AppHeader(
-               title: "Profile",
-               subtitle: "Manage your account information",
-              ),
-              Expanded(
-                child: BlocBuilder<ProfileCubit, ProfileState>(
-                  builder: (context, state) {
-                    if (state is ProfileLoading || state is ProfileInitial) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: AppColors.bgGradient, // 👈 هنا
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                AppHeader(
+                  title: "Profile",
+                  subtitle: "Manage your account information",
+                ),
+                Expanded(
+                  child: BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      if (state is ProfileLoading || state is ProfileInitial) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                    if (state is! ProfileSuccess) {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text(
-                                'Unable to load profile right now.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFF111827),
+                      if (state is! ProfileSuccess) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text(
+                                  'Unable to load profile right now.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFF111827),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    context.read<ProfileCubit>().fetchProfile();
+                                  },
+                                  child: const Text('Try Again'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      final profile = state.profile;
+                      final fullName = _fullName(profile);
+                      final email = _email(profile);
+                      final avatarInitials =
+                          '${_initialFrom(profile.firstName)}${_initialFrom(profile.lastName)}';
+                      final profileItems = _profileItems(profile);
+
+                      return SingleChildScrollView(
+                        padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(0xFFE5E7EB),
                                 ),
                               ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () {
-                                  context.read<ProfileCubit>().fetchProfile();
-                                },
-                                child: const Text('Try Again'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                    final profile = state.profile;
-                    final fullName = _fullName(profile);
-                    final email = _email(profile);
-                    final avatarInitials =
-                        '${_initialFrom(profile.firstName)}${_initialFrom(profile.lastName)}';
-                    final profileItems = _profileItems(profile);
-
-                    return SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-                      child: Column(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: const Color(0xFFE5E7EB),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: const BoxDecoration(
-                                    color: AppColors.primaryBlue,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      avatarInitials,
-                                      style: const TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 80,
+                                    height: 80,
+                                    decoration: const BoxDecoration(
+                                      color: AppColors.primaryBlue,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        avatarInitials,
+                                        style: const TextStyle(
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  fullName,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF111827),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    fullName,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF111827),
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  email,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color(0xFF6B7280),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    email,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xFF6B7280),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: const Color(0xFFE5E7EB),
+                                ],
                               ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Personal Information',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xFF111827),
-                                  ),
+                            const SizedBox(height: 16),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: const Color(0xFFE5E7EB),
                                 ),
-                                const SizedBox(height: 16),
-                                ...profileItems.map(
-                                  (item) => _buildInfoRow(
-                                    icon: _iconForLabel(item['label']!),
-                                    label: item['label']!,
-                                    value: item['value']!,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Personal Information',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF111827),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: const Color(0xFFE5E7EB),
+                                  const SizedBox(height: 16),
+                                  ...profileItems.map(
+                                    (item) => _buildInfoRow(
+                                      icon: _iconForLabel(item['label']!),
+                                      label: item['label']!,
+                                      value: item['value']!,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            child: Column(
-                              children: settingsItems.map((item) {
-                                final index = settingsItems.indexOf(item);
-                                final icon = item['icon'] as IconData;
-                                final label = item['label'] as String;
-                                final action = item['action'] as VoidCallback;
-                                final isDestructive =
-                                    item['isDestructive'] as bool;
+                            const SizedBox(height: 16),
+                            BlocBuilder<LogoutCubit, LogoutState>(
+                              builder: (context, logoutState) {
+                                final isDeleting =
+                                    logoutState is DeleteAccountLoading;
+                                final isLoggingOut =
+                                    logoutState is LogoutLoading;
 
-                                return InkWell(
-                                  onTap: action,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      border: index != settingsItems.length - 1
-                                          ? const Border(
-                                              bottom: BorderSide(
-                                                color: Color(0xFFF3F4F6),
-                                              ),
-                                            )
-                                          : null,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          icon,
-                                          size: 20,
-                                          color: isDestructive
-                                              ? Colors.red
-                                              : const Color(0xFF111827),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Text(
-                                            label,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: isDestructive
-                                                  ? Colors.red
-                                                  : const Color(0xFF111827),
-                                              fontWeight: FontWeight.w500,
+                                final settingsItems = [
+                                  _SettingsItem(
+                                    icon: LucideIcons.refreshCw,
+                                    label: 'Refresh Profile',
+                                    action: isDeleting || isLoggingOut
+                                        ? null
+                                        : () => context
+                                            .read<ProfileCubit>()
+                                            .fetchProfile(forceRefresh: true),
+                                  ),
+                                  _SettingsItem(
+                                    icon: LucideIcons.edit3,
+                                    label: 'Edit Profile',
+                                    action: isDeleting || isLoggingOut
+                                        ? null
+                                        : () => Navigator.pushNamed(
+                                              context,
+                                              Routes.editProfileScreen,
                                             ),
-                                          ),
-                                        ),
-                                        const Icon(
-                                          LucideIcons.chevronRight,
-                                          size: 20,
-                                          color: Color(0xFF9CA3AF),
-                                        ),
-                                      ],
+                                  ),
+                                  _SettingsItem(
+                                    icon: LucideIcons.trash2,
+                                    label: isDeleting
+                                        ? 'Deleting Account...'
+                                        : 'Delete Account',
+                                    action: isDeleting
+                                        ? null
+                                        : _confirmDeleteAccount,
+                                    isDestructive: true,
+                                    isLoading: isDeleting,
+                                  ),
+                                  _SettingsItem(
+                                    icon: LucideIcons.logOut,
+                                    label:
+                                        isLoggingOut ? 'Logging Out...' : 'Log Out',
+                                    action: isDeleting || isLoggingOut
+                                        ? null
+                                        : () => logoutCubit.logout(),
+                                    isDestructive: true,
+                                    isLoading: isLoggingOut,
+                                  ),
+                                ];
+
+                                return Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: const Color(0xFFE5E7EB),
                                     ),
+                                  ),
+                                  child: Column(
+                                    children: settingsItems
+                                        .asMap()
+                                        .entries
+                                        .map(
+                                          (entry) => _buildSettingsRow(
+                                            item: entry.value,
+                                            showDivider: entry.key !=
+                                                settingsItems.length - 1,
+                                          ),
+                                        )
+                                        .toList(),
                                   ),
                                 );
-                              }).toList(),
+                              },
                             ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 24),
-                            child: Column(
-                              children: [
-                                Text(
-                                  'InsightHub v1.0.0',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Color(0xFF6B7280),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 24),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'InsightHub v1.0.0',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Color(0xFF6B7280),
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Copyright 2026 InsightHub. All rights reserved.',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF9CA3AF),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Copyright 2026 InsightHub. All rights reserved.',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF9CA3AF),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsRow({
+    required _SettingsItem item,
+    required bool showDivider,
+  }) {
+    final itemColor =
+        item.isDestructive ? Colors.red : const Color(0xFF111827);
+    final disabled = item.action == null;
+
+    return InkWell(
+      onTap: item.action,
+      child: Opacity(
+        opacity: disabled && !item.isLoading ? 0.55 : 1,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            border: showDivider
+                ? const Border(
+                    bottom: BorderSide(
+                      color: Color(0xFFF3F4F6),
+                    ),
+                  )
+                : null,
+          ),
+          child: Row(
+            children: [
+              Icon(item.icon, size: 20, color: itemColor),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  item.label,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: itemColor,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-            
+              if (item.isLoading)
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: itemColor,
+                  ),
+                )
+              else
+                const Icon(
+                  LucideIcons.chevronRight,
+                  size: 20,
+                  color: Color(0xFF9CA3AF),
+                ),
             ],
           ),
         ),
@@ -372,6 +485,8 @@ if (cubit.state is! ProfileSuccess) {
         return LucideIcons.atSign;
       case 'College':
         return LucideIcons.graduationCap;
+      case 'Birthdate':
+        return LucideIcons.calendar;
       case 'Employment Status':
         return LucideIcons.award;
       case 'Job':
@@ -427,4 +542,20 @@ if (cubit.state is! ProfileSuccess) {
       ),
     );
   }
+}
+
+class _SettingsItem {
+  final IconData icon;
+  final String label;
+  final VoidCallback? action;
+  final bool isDestructive;
+  final bool isLoading;
+
+  const _SettingsItem({
+    required this.icon,
+    required this.label,
+    this.action,
+    this.isDestructive = false,
+    this.isLoading = false,
+  });
 }

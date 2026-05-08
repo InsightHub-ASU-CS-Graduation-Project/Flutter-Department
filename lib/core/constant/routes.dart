@@ -25,6 +25,8 @@ class Routes {
 
   static const String profileScreen = '/profileScreen';
 
+  static const String editProfileScreen = '/editProfileScreen';
+
   static const String surveyMenuScreen = '/surveyMenuScreen';
 
   static const String surveyThankYouScreen = '/surveyThankYouScreen';
@@ -32,5 +34,7 @@ class Routes {
   static const String newsScreen = '/newsScreen';
 
   static const String jobScreen = '/jobScreen';
+   
+   static const String menuHrCategoriesScreen = '/menuHrCategoriesScreen';
 
 }

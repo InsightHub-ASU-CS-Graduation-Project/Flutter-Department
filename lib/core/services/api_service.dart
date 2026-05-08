@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:insight_hub/core/constant/labor_list.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/model/navigation_career_model.dart';
 import 'package:insight_hub/model/app_error.dart';
-import 'package:insight_hub/model/match_model.dart';
-import 'package:insight_hub/model/career_quiz_result_model.dart';
-import 'package:insight_hub/model/question_model.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/model/question_model.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/model/hr_question_model.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/model/hr_quiz_result_model.dart';
 import 'package:insight_hub/core/services/endpoints.dart';
 import 'package:insight_hub/core/services/secure_storege.dart';
 
@@ -34,8 +36,11 @@ class ApiService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await SecureStorage.readData(key: tokenKey);
+            print("🔥 TOKEN FROM STORAGE: $token"); // 👈 هنا
+
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
+              print("🔥 Added Authorization header to request: Bear  ""$token"); // 👈 هنا
           }
           return handler.next(options);
         },
@@ -99,6 +104,7 @@ class ApiService {
 
     try {
       await SecureStorage.deleteData(key: tokenKey);
+      print("🔥 Unauthorized detected. Token cleared from storage."); // 👈 هنا
       unauthorizedNotifier.value++;
     } finally {
       _isHandlingUnauthorized = false;
@@ -149,18 +155,16 @@ class ApiService {
   Future<Map<String, dynamic>> get(
     String endpoint, {
     Map<String, dynamic>? queryParameters,
-    Options? options,
   }) {
     print("ApiService: GET request to $endpoint, params: $queryParameters");
     return _handleRequest(
-      _dio.get(endpoint, queryParameters: queryParameters, options: options),
+      _dio.get(endpoint, queryParameters: queryParameters),
     );
   }
 
   Future<Map<String, dynamic>> post(
     String endpoint, {
     dynamic data,
-    Options? options,
     Map<String, dynamic>? queryParameters,
   }) {
     return _handleRequest(
@@ -168,7 +172,6 @@ class ApiService {
         endpoint,
         data: data,
         queryParameters: queryParameters,
-        options: options,
       ),
     );
   }
@@ -184,7 +187,6 @@ class ApiService {
         endpoint,
         data: data,
         queryParameters: queryParameters,
-        options: options,
       ),
     );
   }
@@ -192,7 +194,6 @@ class ApiService {
   Future<Map<String, dynamic>> delete(
     String endpoint, {
     dynamic data,
-    Options? options,
     Map<String, dynamic>? queryParameters,
   }) {
     return _handleRequest(
@@ -200,7 +201,7 @@ class ApiService {
         endpoint,
         data: data,
         queryParameters: queryParameters,
-        options: options,
+        
       ),
     );
   }
@@ -277,6 +278,71 @@ class ApiService {
     return CareerQuizResultModel.fromJson(
       Map<String, dynamic>.from(result['data']),
     );
+  }
+
+  Future<List<HrQuestionModel>> fetchHrQuestions({
+    required String category,
+  }) async {
+    final result = await post(
+      Endpoints.hrCategories,
+      data: {'TrackName': category},
+    );
+
+    if (result['success'] != true) {
+      throw Exception(
+        result['error']?.toString() ?? 'Failed to load HR questions.',
+      );
+    }
+
+    final items = _extractQuestionList(result['data']);
+
+    return items
+        .map(
+          (item) => HrQuestionModel.fromJson(Map<String, dynamic>.from(item)),
+        )
+        .toList();
+  }
+  Future<NavigationStatus> fetchNavigationStatus() async {
+
+  final res = await get(Endpoints.navigationStatus);
+
+  if (res['success'] != true || res['data'] == null) {
+    throw Exception(res['error']?.toString() ?? 'Failed to load navigation status');
+  }
+
+  return NavigationStatus.fromJson(
+    Map<String, dynamic>.from(res['data']),
+  );
+}
+
+  Future<HrQuizResultModel> submitHrAnswers({
+    required Map<int, int> answers,
+  }) async {
+    final payload = {
+      'answers': answers.entries
+          .map(
+            (entry) => {
+              'id': entry.value,
+              'questionId': entry.key,
+            },
+          )
+          .toList(),
+    };
+
+    final result = await post(Endpoints.hrQuizSubmit, data: payload);
+
+    if (result['success'] != true) {
+      throw Exception(
+        result['error']?.toString() ?? 'Failed to submit HR answers.',
+      );
+    }
+
+    final data = result['data'];
+    if (data is! Map) {
+      throw Exception('Invalid HR quiz result format.');
+    }
+
+    return HrQuizResultModel.fromJson(Map<String, dynamic>.from(data));
   }
 
 

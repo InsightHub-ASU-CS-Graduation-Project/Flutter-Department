@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:insight_hub/cuibt/cubit/logout_cubit.dart';
 import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:insight_hub/core/services/api_service.dart';
 import 'package:insight_hub/core/services/secure_storege.dart';
-import 'package:insight_hub/views/onboarding.dart';
-import 'package:insight_hub/views/welcome.dart';
-import 'package:insight_hub/views/sign_in.dart';
-import 'package:insight_hub/views/register/email_registter.dart';
-import 'package:insight_hub/views/register/passowrd_regisster.dart';
-import 'package:insight_hub/views/register/personal_one.dart';
-import 'package:insight_hub/views/register/personal_two.dart';
-import 'package:insight_hub/views/register/labor_information.dart';
-import 'package:insight_hub/views/register/confirmation.dart';
-import 'package:insight_hub/views/splash.dart';
-import 'package:insight_hub/views/home_screen.dart';
+import 'package:insight_hub/feature/auth/views/register/confirmation.dart';
+import 'package:insight_hub/feature/auth/views/register/email_registter.dart';
+import 'package:insight_hub/feature/auth/views/register/labor_information.dart';
+import 'package:insight_hub/feature/auth/views/register/personal_one.dart';
+import 'package:insight_hub/feature/auth/views/register/personal_two.dart';
+import 'package:insight_hub/feature/app_start/views/onboarding.dart';
+import 'package:insight_hub/feature/app_start/views/welcome.dart';
+import 'package:insight_hub/feature/auth/views/sign_in.dart';
+import 'package:insight_hub/feature/app_start/views/splash.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/cubit/hr_question_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/view/menu_hr_categories_screen.dart';
+import 'package:insight_hub/feature/home_and_explore/view/home_screen.dart';
+import 'package:insight_hub/views/edit_profile.dart';
 import 'package:insight_hub/views/profile.dart';
-import 'package:insight_hub/views/question_screen.dart';
-import 'package:insight_hub/views/match_screen.dart';
-import 'package:insight_hub/views/survey_menu_screen.dart';
-import 'package:insight_hub/views/survey_thank_you_screen.dart';
-import 'package:insight_hub/views/news_screen.dart';
-import 'package:insight_hub/views/jobs_screen.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/views/question_screen.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/views/match_screen.dart';
+import 'package:insight_hub/feature/menu_Services/survey_menu_screen.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/views/survey_thank_you_screen.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/views/news_screen.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/views/jobs_screen.dart';
 import 'package:insight_hub/core/constant/routes.dart';
-import 'package:insight_hub/cuibt/cubit/login_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/match_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/question_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/register_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/dashboard_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/news_cubit.dart';
-import 'package:insight_hub/cuibt/cubit/jobs_cubit.dart';
+import 'package:insight_hub/feature/auth/cubit/login_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/match_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
+import 'package:insight_hub/feature/auth/cubit/register_cubit.dart';
+import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/news_cubit.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/jobs_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +41,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await dotenv.load(fileName: ".env");
   SecureStorage.init();
 
   runApp(const MyApp());
@@ -85,6 +89,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => ProfileCubit()),
         BlocProvider(create: (context) => MatchCubit()),
         BlocProvider(create: (context) => QuestionCubit()),
+        BlocProvider(create: (context) => HrQuestionCubit()),
         BlocProvider(create: (context) => DashboardCubit()),
         BlocProvider(create: (context) => NewsCubit()),
         BlocProvider(create: (context) => JobsCubit()),
@@ -99,8 +104,7 @@ class _MyAppState extends State<MyApp> {
           Routes.welcomeScreen: (_) => const WelcomeScreen(),
           Routes.homeScreen: (_) => const HomeScreen(),
           Routes.signInScreen: (_) => const SignInScreen(),
-          Routes.registerEmailScreen: (_) => const RegisterEmailScreen(),
-          Routes.registerPasswordScreen: (_) => const RegisterPasswordScreen(),
+          Routes.registerEmailScreen: (_) => const RegisterAccountScreen(),
           Routes.registerNameScreen: (_) => const RegisterNameScreen(),
           Routes.registerEducationScreen: (_) => const RegisterEducationScreen(),
           Routes.laborInformationScreen: (_) => const LaborInformationScreen(),
@@ -108,10 +112,12 @@ class _MyAppState extends State<MyApp> {
           Routes.questionScreen: (_) => const QuestionScreen(),
           Routes.matchScreen: (_) => const MatchScreen(),
           Routes.profileScreen: (_) => const ProfileScreen(),
+          Routes.editProfileScreen: (_) => const EditProfileScreen(),
           Routes.surveyMenuScreen: (_) => const SurveyMenuScreen(),
           Routes.surveyThankYouScreen: (_) => const SurveyThankYouScreen(),
           Routes.newsScreen: (_) => const NewsScreen(),
           Routes.jobScreen: (_) => const JobsScreen(),
+          Routes.menuHrCategoriesScreen: (_) => const MenuHrCategoriesScreen(),
         },
       ),
     );

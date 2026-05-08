@@ -122,14 +122,13 @@ class MainNavigationBar extends StatefulWidget {
 class _MainNavigationBarState extends State<MainNavigationBar> {
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Padding(
         
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
         child: GNav(
-          rippleColor: AppColors.borderLight,
-          hoverColor: AppColors.bgLightGray,
+          rippleColor: AppColors.scaffoldBg,
+          hoverColor: AppColors.scaffoldBg,
           gap: 8,
           activeColor: AppColors.primaryBlue,
           iconSize: 24,
