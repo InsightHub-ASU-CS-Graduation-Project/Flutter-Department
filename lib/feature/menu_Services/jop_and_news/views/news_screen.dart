@@ -87,28 +87,47 @@ class _NewsScreenState extends State<NewsScreen> {
 
                     if (state is NewsLoaded) {
                       if (state.newsList.isEmpty) {
-                        return const Center(child: Text('No news available'));
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            await context
+                                .read<NewsCubit>()
+                                .loadNews(reset: true);
+                          },
+                          child: ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: const [
+                              Center(child: Text('No news available')),
+                            ],
+                          ),
+                        );
                       }
 
-                      return ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(12),
-                        itemCount:
-                            state.newsList.length +
-                            (state.hasMorePages ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index >= state.newsList.length) {
-                            return const Padding(
-                              padding: EdgeInsets.all(12),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-
-                          return NewsCard(
-                            news: state.newsList[index],
-        
-                          );
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          await context
+                              .read<NewsCubit>()
+                              .loadNews(reset: true);
                         },
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(12),
+                          itemCount:
+                              state.newsList.length +
+                              (state.hasMorePages ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index >= state.newsList.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(12),
+                                child: Center(child: CircularProgressIndicator()),
+                              );
+                            }
+
+                            return NewsCard(
+                              news: state.newsList[index],
+                            );
+                          },
+                        ),
                       );
                     }
 

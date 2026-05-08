@@ -7,6 +7,7 @@ import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
 import 'package:insight_hub/feature/auth/cubit/login_cubit.dart';
 import 'package:insight_hub/feature/auth/cubit/register_cubit.dart';
 import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:insight_hub/feature/home_and_explore/cubit/search_dashboard_cubit.dart';
 import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/match_cubit.dart';
 import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
 import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/cubit/hr_question_cubit.dart';
@@ -63,6 +64,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     context.read<LoginCubit>().reset();
     context.read<RegisterCubit>().reset();
     context.read<DashboardCubit>().reset();
+    context.read<SearchDashboardCubit>().reset();
     context.read<NewsCubit>().reset();
     context.read<JobsCubit>().reset();
   }
@@ -323,8 +325,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     action: isDeleting || isLoggingOut
                                         ? null
                                         : () => context
-                                            .read<ProfileCubit>()
-                                            .fetchProfile(forceRefresh: true),
+                                              .read<ProfileCubit>()
+                                              .fetchProfile(forceRefresh: true),
                                   ),
                                   _SettingsItem(
                                     icon: LucideIcons.edit3,
@@ -332,9 +334,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     action: isDeleting || isLoggingOut
                                         ? null
                                         : () => Navigator.pushNamed(
-                                              context,
-                                              Routes.editProfileScreen,
-                                            ),
+                                            context,
+                                            Routes.editProfileScreen,
+                                          ),
                                   ),
                                   _SettingsItem(
                                     icon: LucideIcons.trash2,
@@ -349,8 +351,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   _SettingsItem(
                                     icon: LucideIcons.logOut,
-                                    label:
-                                        isLoggingOut ? 'Logging Out...' : 'Log Out',
+                                    label: isLoggingOut
+                                        ? 'Logging Out...'
+                                        : 'Log Out',
                                     action: isDeleting || isLoggingOut
                                         ? null
                                         : () => logoutCubit.logout(),
@@ -375,7 +378,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .map(
                                           (entry) => _buildSettingsRow(
                                             item: entry.value,
-                                            showDivider: entry.key !=
+                                            showDivider:
+                                                entry.key !=
                                                 settingsItems.length - 1,
                                           ),
                                         )
@@ -424,8 +428,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required _SettingsItem item,
     required bool showDivider,
   }) {
-    final itemColor =
-        item.isDestructive ? Colors.red : const Color(0xFF111827);
+    final itemColor = item.isDestructive ? Colors.red : const Color(0xFF111827);
     final disabled = item.action == null;
 
     return InkWell(
@@ -436,11 +439,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             border: showDivider
-                ? const Border(
-                    bottom: BorderSide(
-                      color: Color(0xFFF3F4F6),
-                    ),
-                  )
+                ? const Border(bottom: BorderSide(color: Color(0xFFF3F4F6)))
                 : null,
           ),
           child: Row(

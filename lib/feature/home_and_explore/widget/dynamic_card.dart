@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:insight_hub/core/constant/app_colors.dart';
 import 'package:insight_hub/core/utils/safe_parser.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders.dart';
+import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_builders.dart';
 import 'package:insight_hub/feature/home_and_explore/widget/safe_error_widget.dart';
 
 class DynamicCard extends StatelessWidget {
@@ -41,7 +41,7 @@ class DynamicCard extends StatelessWidget {
       final trend = SafeParser.getString(data, 'trend').toLowerCase().trim();
       final hasPositiveTrend = trend == 'up';
       final hasNegativeTrend = trend == 'down';
-      
+
       final title = SafeParser.getString(data, 'title');
       final objective = SafeParser.getString(data, 'objective');
 
@@ -52,11 +52,9 @@ class DynamicCard extends StatelessWidget {
           .toList();
 
       final icon = _iconForSuffix(suffix);
-      final trendColor =
-          hasPositiveTrend ? AppColors.success : Colors.red;
+      final trendColor = hasPositiveTrend ? AppColors.success : Colors.red;
 
       return Padding(
-
         padding: const EdgeInsets.only(left: 6.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -71,9 +69,9 @@ class DynamicCard extends StatelessWidget {
               ),
               child: Icon(icon, size: 24, color: AppColors.primary),
             ),
-            
+
             const SizedBox(height: 8),
-        
+
             // ── MIDDLE: Title & Subtitle ──────────────────────────────────
             if (title.isNotEmpty)
               Text(
@@ -98,9 +96,9 @@ class DynamicCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ],
-        
+
             const SizedBox(height: 12),
-        
+
             // ── BOTTOM: Metric Value + Suffix ─────────────────────────────
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -135,7 +133,7 @@ class DynamicCard extends StatelessWidget {
                 ],
               ],
             ),
-        
+
             // ── Optional Trend Indicator ──────────────────────────────────
             if (hasPositiveTrend || hasNegativeTrend) ...[
               const SizedBox(height: 12),
@@ -169,7 +167,7 @@ class DynamicCard extends StatelessWidget {
                 ],
               ),
             ],
-        
+
             // ── Optional Sparkline Chart ──────────────────────────────────
             if (sparklineData.isNotEmpty) ...[
               const SizedBox(height: 24),

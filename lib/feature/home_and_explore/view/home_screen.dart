@@ -6,7 +6,6 @@ import 'package:insight_hub/feature/menu_Services/survey_menu_screen.dart';
 import 'package:insight_hub/widget/bottom_nav.dart';
 import 'package:insight_hub/feature/home_and_explore/widget/home_screen_body.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -18,39 +17,45 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
-
-
+  final Set<int> _visitedIndexes = {0};
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.bgLightGray,
-      body:widgetOptions.elementAt(selectedIndex),
-      bottomNavigationBar:Container(
-        decoration: 
-            BoxDecoration(
-                color:   Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 20,
-                    color: Colors.black.withOpacity(.1),
-                  ),
-                ],
-              )
-            ,
-        child:  MainNavigationBar(
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (int index) {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                },
-              )
-           
-      )
+      body: IndexedStack(
+        index: selectedIndex,
+        children: List.generate(
+          widgetOptions.length,
+          (index) => _visitedIndexes.contains(index)
+              ? widgetOptions[index]
+              : const SizedBox.shrink(),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20,
+              color: Colors.black.withValues(alpha: .1),
+            ),
+          ],
+        ),
+        child: MainNavigationBar(
+          selectedIndex: selectedIndex,
+          onDestinationSelected: (int index) {
+            setState(() {
+              selectedIndex = index;
+              _visitedIndexes.add(index);
+            });
+          },
+        ),
+      ),
     );
   }
 }
+
 final List<Widget> widgetOptions = <Widget>[
   const HomeScreenBody(),
   const SearchScreen(),

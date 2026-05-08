@@ -1,0 +1,121 @@
+import 'package:flutter/material.dart';
+import 'package:insight_hub/core/constant/app_colors.dart';
+import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_helpers.dart';
+import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_styles.dart';
+import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/widgets/custom_badge_widget.dart';
+import 'package:insight_hub/feature/home_and_explore/widget/safe_error_widget.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+
+class LineChartBuilder {
+  const LineChartBuilder._();
+
+  static Widget build(List<Map<String, dynamic>> rawData) {
+    try {
+      if (rawData.isEmpty) {
+        return const SafeErrorWidget(message: 'No data available');
+      }
+
+      return Container(
+        height: ChartStyles.compactChartHeight,
+        padding: ChartStyles.lineContainerPadding,
+        child: SfCartesianChart(
+          margin: ChartStyles.lineChartMargin,
+          plotAreaBorderWidth: 0,
+          enableAxisAnimation: true,
+          tooltipBehavior: ChartStyles.tooltipBehavior(
+            color: Colors.black87,
+            textStyle: ChartStyles.lineTooltipTextStyle,
+          ),
+          primaryXAxis: ChartStyles.categoryAxis(
+            labelStyle: ChartStyles.axisLabelStyle,
+            axisWidth: 1.2,
+          ),
+          primaryYAxis: ChartStyles.lineNumericAxis(),
+          series: [_buildAreaSeries(rawData), _buildSplineSeries(rawData)],
+        ),
+      );
+    } catch (_) {
+      return const SafeErrorWidget(message: 'Line chart failed');
+    }
+  }
+
+  static Widget buildSparkline(List<Map<String, dynamic>> rawData) {
+    try {
+      if (rawData.isEmpty) return const SizedBox.shrink();
+
+      return SfCartesianChart(
+        primaryXAxis: const CategoryAxis(isVisible: false),
+        primaryYAxis: const NumericAxis(isVisible: false),
+        plotAreaBorderWidth: 0,
+        series: [
+          LineSeries<Map<String, dynamic>, String>(
+            animationDuration: 0,
+            dataSource: rawData,
+            xValueMapper: (data, _) => ChartHelpers.label(data),
+            yValueMapper: (data, _) => ChartHelpers.value(data),
+            color: AppColors.primary,
+            width: 2,
+          ),
+        ],
+      );
+    } catch (_) {
+      return const SafeErrorWidget(message: 'Sparkline failed');
+    }
+  }
+
+  static AreaSeries<Map<String, dynamic>, String> _buildAreaSeries(
+    List<Map<String, dynamic>> rawData,
+  ) {
+    return AreaSeries<Map<String, dynamic>, String>(
+      dataSource: rawData,
+      xValueMapper: (data, _) => ChartHelpers.label(data),
+      yValueMapper: (data, _) => ChartHelpers.value(data),
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          ChartStyles.primaryChartColor.withValues(alpha: 0.30),
+          ChartStyles.primaryChartColor.withValues(alpha: 0.01),
+        ],
+      ),
+      borderWidth: 0,
+      animationDuration: 1400,
+    );
+  }
+
+  static SplineSeries<Map<String, dynamic>, String> _buildSplineSeries(
+    List<Map<String, dynamic>> rawData,
+  ) {
+    return SplineSeries<Map<String, dynamic>, String>(
+      animationDuration: 1400,
+      dataSource: rawData,
+      xValueMapper: (data, _) => ChartHelpers.label(data),
+      yValueMapper: (data, _) => ChartHelpers.value(data),
+      color: ChartStyles.primaryChartColor,
+      width: 4,
+      splineType: SplineType.monotonic,
+      enableTooltip: true,
+      markerSettings: const MarkerSettings(isVisible: false),
+      dataLabelSettings: DataLabelSettings(
+        isVisible: true,
+        labelAlignment: ChartDataLabelAlignment.top,
+        labelPosition: ChartDataLabelPosition.outside,
+        margin: const EdgeInsets.only(bottom: 15),
+        builder:
+            (
+              dynamic data,
+              dynamic point,
+              dynamic series,
+              int pointIndex,
+              int seriesIndex,
+            ) {
+              final value = ChartHelpers.value(data as Map<String, dynamic>);
+              return CustomBadgeWidget(
+                value: value.toInt().toString(),
+                color: ChartStyles.primaryChartColor,
+              );
+            },
+      ),
+    );
+  }
+}

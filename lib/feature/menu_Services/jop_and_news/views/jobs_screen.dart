@@ -95,29 +95,49 @@ class _JobsScreenState extends State<JobsScreen> {
 
                     if (state is JobsLoaded) {
                       if (state.jobList.isEmpty) {
-                        return _emptyView();
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            await context
+                                .read<JobsCubit>()
+                                .loadJobs(reset: true);
+                          },
+                          child: ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: const [
+                              Center(child: Text('No jobs available')),
+                            ],
+                          ),
+                        );
                       }
 
-                      return ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.all(16),
-                        itemCount:
-                            state.jobList.length + (state.hasMorePages ? 1 : 0),
-                        itemBuilder: (context, index) {
-                          if (index >= state.jobList.length) {
-                            return const Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-
-                          return JobCard(
-                            job: state.jobList[index],
-                            onTap: () => UrlLauncherHelper.openUrl(
-                              state.jobList[index].redirectUrl,
-                            ),
-                          );
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          await context
+                              .read<JobsCubit>()
+                              .loadJobs(reset: true);
                         },
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(16),
+                          itemCount:
+                              state.jobList.length + (state.hasMorePages ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index >= state.jobList.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Center(child: CircularProgressIndicator()),
+                              );
+                            }
+
+                            return JobCard(
+                              job: state.jobList[index],
+                              onTap: () => UrlLauncherHelper.openUrl(
+                                state.jobList[index].redirectUrl,
+                              ),
+                            );
+                          },
+                        ),
                       );
                     }
 
@@ -130,11 +150,6 @@ class _JobsScreenState extends State<JobsScreen> {
         ),
       ),
     );
-  }
-  // ================= STATES =================
-
-  Widget _emptyView() {
-    return const Center(child: Text('No jobs available'));
   }
 
   Widget _errorView(String message) {

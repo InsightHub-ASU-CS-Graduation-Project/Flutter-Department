@@ -32,6 +32,7 @@ import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/match_cubi
 import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
 import 'package:insight_hub/feature/auth/cubit/register_cubit.dart';
 import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:insight_hub/feature/home_and_explore/cubit/search_dashboard_cubit.dart';
 import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/news_cubit.dart';
 import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/jobs_cubit.dart';
 
@@ -73,10 +74,7 @@ class _MyAppState extends State<MyApp> {
     final navigator = _navigatorKey.currentState;
     if (navigator == null) return;
 
-    navigator.pushNamedAndRemoveUntil(
-      Routes.signInScreen,
-      (route) => false,
-    );
+    navigator.pushNamedAndRemoveUntil(Routes.signInScreen, (route) => false);
   }
 
   @override
@@ -91,6 +89,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => QuestionCubit()),
         BlocProvider(create: (context) => HrQuestionCubit()),
         BlocProvider(create: (context) => DashboardCubit()),
+        BlocProvider(create: (context) => SearchDashboardCubit()),
         BlocProvider(create: (context) => NewsCubit()),
         BlocProvider(create: (context) => JobsCubit()),
       ],
@@ -98,7 +97,7 @@ class _MyAppState extends State<MyApp> {
         navigatorKey: _navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Insight Hub',
-        home: const  SplashScreen(),
+        home: const SplashScreen(),
         routes: {
           Routes.onboardingScreen: (_) => const OnboardingScreen(),
           Routes.welcomeScreen: (_) => const WelcomeScreen(),
@@ -106,7 +105,8 @@ class _MyAppState extends State<MyApp> {
           Routes.signInScreen: (_) => const SignInScreen(),
           Routes.registerEmailScreen: (_) => const RegisterAccountScreen(),
           Routes.registerNameScreen: (_) => const RegisterNameScreen(),
-          Routes.registerEducationScreen: (_) => const RegisterEducationScreen(),
+          Routes.registerEducationScreen: (_) =>
+              const RegisterEducationScreen(),
           Routes.laborInformationScreen: (_) => const LaborInformationScreen(),
           Routes.confirmationScreen: (_) => ConfirmationScreen(),
           Routes.questionScreen: (_) => const QuestionScreen(),
