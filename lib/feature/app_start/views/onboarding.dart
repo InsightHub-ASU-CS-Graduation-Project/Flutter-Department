@@ -1,3 +1,4 @@
+import 'package:InsightHub/feature/auth/widget/logo.dart';
 import 'package:flutter/material.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/core/constant/routes.dart';
@@ -180,10 +181,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 isLastPage
                     ? 'Your account journey starts on the next screen.'
                     : 'Swipe or tap next to keep going.',
-                style: const TextStyle(
-                  color: AppColors.textGray,
-                  fontSize: 14,
-                ),
+                style: const TextStyle(color: AppColors.textGray, fontSize: 14),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -195,10 +193,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 }
 
 class _OnboardingPage extends StatelessWidget {
-  const _OnboardingPage({
-    required this.data,
-    required this.isActive,
-  });
+  const _OnboardingPage({required this.data, required this.isActive});
 
   final _OnboardingPageData data;
   final bool isActive;
@@ -219,10 +214,7 @@ class _OnboardingPage extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [
-                    data.surfaceColor,
-                    Colors.white,
-                  ],
+                  colors: [data.surfaceColor, Colors.white],
                 ),
                 borderRadius: BorderRadius.circular(32),
               ),
@@ -243,11 +235,7 @@ class _OnboardingPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Icon(
-                      data.icon,
-                      color: Colors.white,
-                      size: 36,
-                    ),
+                    child: Icon(data.icon, color: Colors.white, size: 36),
                   ),
                   const SizedBox(height: 28),
                   Wrap(
@@ -308,17 +296,19 @@ class _OnboardingPage extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          height: 88,
-                          width: 88,
+                          padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                            color: data.accentColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.auto_graph_rounded,
                             color: Colors.white,
-                            size: 40,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: data.accentColor.withOpacity(0.12),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
                           ),
+                          child: const AnalyticsLogo(size: 72),
                         ),
                       ],
                     ),
@@ -383,10 +373,7 @@ class _MetricCard extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: AppColors.textGray,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: AppColors.textGray, fontSize: 12),
           ),
           const SizedBox(height: 4),
           Text(

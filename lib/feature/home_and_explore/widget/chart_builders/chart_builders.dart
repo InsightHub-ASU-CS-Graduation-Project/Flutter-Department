@@ -33,7 +33,5 @@ class ChartBuilders {
     return TreemapChartBuilder.build(rawData);
   }
 
-  static Widget buildSparklineChart(List<Map<String, dynamic>> rawData) {
-    return LineChartBuilder.buildSparkline(rawData);
-  }
+ 
 }

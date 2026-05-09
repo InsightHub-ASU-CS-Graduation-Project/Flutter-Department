@@ -25,8 +25,28 @@ class BarChartBuilder {
               tooltipBehavior: ChartStyles.tooltipBehavior(
                 format: 'point.x : point.y',
               ),
-              primaryXAxis: ChartStyles.categoryAxis(),
-              primaryYAxis: ChartStyles.hiddenNumericAxis(),
+              
+              primaryXAxis: CategoryAxis(
+                isInversed: true,
+                majorGridLines: const MajorGridLines(width: 0),
+                majorTickLines: const MajorTickLines(size: 0),
+                axisLine: const AxisLine(width: .5, color: Color(0xFFE5E7EB)),
+                labelRotation: -45,
+                labelIntersectAction: AxisLabelIntersectAction.rotate45,
+                maximumLabelWidth: 80,
+                labelStyle: const TextStyle(
+                  fontSize: 11,
+                  color: Color(0xFF1F2937),
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+
+              primaryYAxis: const NumericAxis(
+                isVisible: false,
+                majorGridLines: MajorGridLines(width: 0),
+                rangePadding: ChartRangePadding.normal,
+              ),
+
               series: [
                 _buildSeries(
                   rawData,
@@ -51,7 +71,7 @@ class BarChartBuilder {
     ValueChanged<int?> onSelectionChanged,
   ) {
     return BarSeries<Map<String, dynamic>, String>(
-      animationDuration: 900,
+      animationDuration: 1000,
       borderRadius: const BorderRadius.horizontal(
         right: Radius.circular(ChartStyles.roundedBarRadius),
       ),

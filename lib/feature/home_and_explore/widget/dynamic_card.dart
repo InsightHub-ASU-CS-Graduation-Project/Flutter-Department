@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/core/utils/safe_parser.dart';
-import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_builders.dart';
 import 'package:InsightHub/feature/home_and_explore/widget/safe_error_widget.dart';
 
 class DynamicCard extends StatelessWidget {
@@ -45,11 +44,7 @@ class DynamicCard extends StatelessWidget {
       final title = SafeParser.getString(data, 'title');
       final objective = SafeParser.getString(data, 'objective');
 
-      final rawSparkline = SafeParser.getList(data, 'sparkline_data');
-      final sparklineData = rawSparkline
-          .whereType<Map>()
-          .map((e) => Map<String, dynamic>.from(e))
-          .toList();
+    
 
       final icon = _iconForSuffix(suffix);
       final trendColor = hasPositiveTrend ? AppColors.success : Colors.red;
@@ -168,14 +163,6 @@ class DynamicCard extends StatelessWidget {
               ),
             ],
 
-            // ── Optional Sparkline Chart ──────────────────────────────────
-            if (sparklineData.isNotEmpty) ...[
-              const SizedBox(height: 24),
-              SizedBox(
-                height: 48,
-                child: ChartBuilders.buildSparklineChart(sparklineData),
-              ),
-            ],
           ],
         ),
       );

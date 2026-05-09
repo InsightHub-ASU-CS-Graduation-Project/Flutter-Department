@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_helpers.dart';
 import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_styles.dart';
 import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/widgets/custom_badge_widget.dart';
@@ -39,30 +38,7 @@ class LineChartBuilder {
     }
   }
 
-  static Widget buildSparkline(List<Map<String, dynamic>> rawData) {
-    try {
-      if (rawData.isEmpty) return const SizedBox.shrink();
-
-      return SfCartesianChart(
-        primaryXAxis: const CategoryAxis(isVisible: false),
-        primaryYAxis: const NumericAxis(isVisible: false),
-        plotAreaBorderWidth: 0,
-        series: [
-          LineSeries<Map<String, dynamic>, String>(
-            animationDuration: 0,
-            dataSource: rawData,
-            xValueMapper: (data, _) => ChartHelpers.label(data),
-            yValueMapper: (data, _) => ChartHelpers.value(data),
-            color: AppColors.primary,
-            width: 2,
-          ),
-        ],
-      );
-    } catch (_) {
-      return const SafeErrorWidget(message: 'Sparkline failed');
-    }
-  }
-
+ 
   static AreaSeries<Map<String, dynamic>, String> _buildAreaSeries(
     List<Map<String, dynamic>> rawData,
   ) {
@@ -111,7 +87,9 @@ class LineChartBuilder {
             ) {
               final value = ChartHelpers.value(data as Map<String, dynamic>);
               return CustomBadgeWidget(
-                value: value.toInt().toString(),
+                value: value % 1 == 0
+                    ? value.toInt().toString()
+                    : value.toString(),
                 color: ChartStyles.primaryChartColor,
               );
             },
