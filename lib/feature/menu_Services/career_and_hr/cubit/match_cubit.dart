@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:insight_hub/core/services/api_service.dart';
+import 'package:InsightHub/core/services/api_service.dart';
 import 'package:meta/meta.dart';
 
 @immutable

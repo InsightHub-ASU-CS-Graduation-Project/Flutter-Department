@@ -103,7 +103,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
 
 class MainNavigationBar extends StatefulWidget {
   const MainNavigationBar({

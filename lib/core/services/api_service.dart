@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:insight_hub/core/constant/labor_list.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/model/navigation_career_model.dart';
-import 'package:insight_hub/model/app_error.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/model/question_model.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/model/hr_question_model.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/model/hr_quiz_result_model.dart';
-import 'package:insight_hub/core/services/endpoints.dart';
-import 'package:insight_hub/core/services/secure_storege.dart';
+import 'package:InsightHub/core/constant/labor_list.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/navigation_career_model.dart';
+import 'package:InsightHub/model/app_error.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/question_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_question_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_quiz_result_model.dart';
+import 'package:InsightHub/core/services/endpoints.dart';
+import 'package:InsightHub/core/services/secure_storege.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();

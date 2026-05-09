@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/dynamic_card.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_builders.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/safe_error_widget.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/dynamic_card.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_builders.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/safe_error_widget.dart';
 
 typedef WidgetBuilderFn = Widget Function(dynamic data);
 

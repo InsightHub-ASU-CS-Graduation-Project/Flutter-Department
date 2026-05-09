@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/core/utils/safe_parser.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_builders.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/safe_error_widget.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/utils/safe_parser.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_builders.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/safe_error_widget.dart';
 
 class DynamicCard extends StatelessWidget {
   final Map<String, dynamic>? data;

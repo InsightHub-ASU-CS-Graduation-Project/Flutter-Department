@@ -1,8 +1,8 @@
 // job_card.dart
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/core/constant/app_shadow.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/models/job_model.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/app_shadow.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/models/job_model.dart';
 class JobCard extends StatelessWidget {
   final JobModel job;
   final VoidCallback? onTap;

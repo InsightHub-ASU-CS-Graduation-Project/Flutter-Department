@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/core/constant/labor_list.dart';
-import 'package:insight_hub/cuibt/cubit/profile_cubit.dart';
-import 'package:insight_hub/feature/auth/widget/auth_input_decoration.dart';
-import 'package:insight_hub/feature/auth/widget/auth_layout.dart';
-import 'package:insight_hub/feature/auth/widget/birth_date_picker_field.dart';
-import 'package:insight_hub/feature/auth/widget/bottom_action_button.dart';
-import 'package:insight_hub/feature/auth/widget/card_container.dart';
-import 'package:insight_hub/model/profile_model.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/labor_list.dart';
+import 'package:InsightHub/cuibt/cubit/profile_cubit.dart';
+import 'package:InsightHub/feature/auth/widget/auth_input_decoration.dart';
+import 'package:InsightHub/feature/auth/widget/auth_layout.dart';
+import 'package:InsightHub/feature/auth/widget/birth_date_picker_field.dart';
+import 'package:InsightHub/feature/auth/widget/bottom_action_button.dart';
+import 'package:InsightHub/feature/auth/widget/card_container.dart';
+import 'package:InsightHub/model/profile_model.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class EditProfileScreen extends StatefulWidget {

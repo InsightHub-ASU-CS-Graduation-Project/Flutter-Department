@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
-import 'package:insight_hub/feature/home_and_explore/model/dashboard_item.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/dashboard_items_view.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/safe_error_widget.dart';
+import 'package:InsightHub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:InsightHub/feature/home_and_explore/model/dashboard_item.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/dashboard_items_view.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/safe_error_widget.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class DashboardStateView extends StatelessWidget {

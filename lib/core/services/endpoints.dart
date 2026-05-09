@@ -1,4 +1,4 @@
-import 'package:insight_hub/core/constant/api_constants.dart';
+import 'package:InsightHub/core/constant/api_constants.dart';
 
 class Endpoints {
   static String baseUrl = ApiConstants.baseUrl;

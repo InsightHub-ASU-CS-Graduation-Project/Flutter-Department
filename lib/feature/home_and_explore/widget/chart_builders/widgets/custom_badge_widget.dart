@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_styles.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/widgets/arrow_painter.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_styles.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/widgets/arrow_painter.dart';
 
 class CustomBadgeWidget extends StatelessWidget {
   const CustomBadgeWidget({

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/core/constant/labor_list.dart';
-import 'package:insight_hub/core/constant/routes.dart';
-import 'package:insight_hub/core/constant/storage_keys.dart';
-import 'package:insight_hub/core/services/secure_storege.dart';
-import 'package:insight_hub/feature/auth/widget/logo.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/labor_list.dart';
+import 'package:InsightHub/core/constant/routes.dart';
+import 'package:InsightHub/core/constant/storage_keys.dart';
+import 'package:InsightHub/core/services/secure_storege.dart';
+import 'package:InsightHub/feature/auth/widget/logo.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

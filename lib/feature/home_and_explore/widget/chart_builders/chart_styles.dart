@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

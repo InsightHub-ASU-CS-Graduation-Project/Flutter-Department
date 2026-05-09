@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/bar_chart_builder.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/column_chart_builder.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/doughnut_chart_builder.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/line_chart_builder.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/pie_chart_builder.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/treemap_chart_builder.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/bar_chart_builder.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/column_chart_builder.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/doughnut_chart_builder.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/line_chart_builder.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/pie_chart_builder.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/treemap_chart_builder.dart';
 
 class ChartBuilders {
   const ChartBuilders._();

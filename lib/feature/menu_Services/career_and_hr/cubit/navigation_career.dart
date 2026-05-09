@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/core/services/api_service.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/model/navigation_career_model.dart';
-import 'package:insight_hub/model/app_error.dart';
+import 'package:InsightHub/core/services/api_service.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/navigation_career_model.dart';
+import 'package:InsightHub/model/app_error.dart';
 import 'package:meta/meta.dart';
 
 enum NavigationTarget { questions, result, thankYou }

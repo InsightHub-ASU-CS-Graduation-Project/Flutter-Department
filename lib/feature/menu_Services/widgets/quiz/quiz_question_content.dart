@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/feature/menu_Services/widgets/quiz/quiz_code_block.dart';
+import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_code_block.dart';
 
 class QuizQuestionContent extends StatelessWidget {
   final String text;

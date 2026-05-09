@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:insight_hub/core/utils/safe_parser.dart';
+import 'package:InsightHub/core/utils/safe_parser.dart';
 
 class ChartHelpers {
   ChartHelpers._();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/utils/date_utils.dart';
+import 'package:InsightHub/core/utils/date_utils.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:insight_hub/core/utils/url_launcher_helper.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/models/news_model.dart';
+import 'package:InsightHub/core/utils/url_launcher_helper.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/models/news_model.dart';
 
 class NewsCard extends StatelessWidget {
   final NewsModel news;

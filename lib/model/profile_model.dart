@@ -1,4 +1,4 @@
-import 'package:insight_hub/core/utils/safe_parser.dart';
+import 'package:InsightHub/core/utils/safe_parser.dart';
 
 class ProfileModel {
   final String email;

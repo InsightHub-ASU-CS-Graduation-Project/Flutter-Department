@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/core/constant/labor_list.dart';
-import 'package:insight_hub/core/constant/routes.dart';
-import 'package:insight_hub/feature/auth/cubit/register_cubit.dart';
-import 'package:insight_hub/feature/auth/widget/auth_input_decoration.dart';
-import 'package:insight_hub/feature/auth/widget/auth_layout.dart';
-import 'package:insight_hub/feature/auth/widget/bottom_action_button.dart';
-import 'package:insight_hub/feature/auth/widget/card_container.dart';
+import 'package:InsightHub/core/constant/labor_list.dart';
+import 'package:InsightHub/core/constant/routes.dart';
+import 'package:InsightHub/feature/auth/cubit/register_cubit.dart';
+import 'package:InsightHub/feature/auth/widget/auth_input_decoration.dart';
+import 'package:InsightHub/feature/auth/widget/auth_layout.dart';
+import 'package:InsightHub/feature/auth/widget/bottom_action_button.dart';
+import 'package:InsightHub/feature/auth/widget/card_container.dart';
 
 class LaborInformationScreen extends StatefulWidget {
   const LaborInformationScreen({super.key});

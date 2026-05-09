@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_helpers.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/chart_builders/chart_styles.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/safe_error_widget.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_helpers.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/chart_builders/chart_styles.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/safe_error_widget.dart';
 import 'package:syncfusion_flutter_treemap/treemap.dart';
 
 class TreemapChartBuilder {

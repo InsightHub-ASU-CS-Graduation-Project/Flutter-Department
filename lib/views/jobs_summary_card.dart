@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:insight_hub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
 
-import 'package:insight_hub/feature/home_and_explore/model/dashboard_item.dart';
+import 'package:InsightHub/feature/home_and_explore/model/dashboard_item.dart';
 
 class JobsSummaryCard extends StatelessWidget {
   final DashboardItem item;

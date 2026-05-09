@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:insight_hub/core/services/dashboard_api.dart';
-import 'package:insight_hub/core/services/endpoints.dart';
-import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
-import 'package:insight_hub/feature/home_and_explore/model/dashboard_filter_selection.dart';
-import 'package:insight_hub/feature/home_and_explore/model/dashboard_item.dart';
+import 'package:InsightHub/core/services/dashboard_api.dart';
+import 'package:InsightHub/core/services/endpoints.dart';
+import 'package:InsightHub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:InsightHub/feature/home_and_explore/model/dashboard_filter_selection.dart';
+import 'package:InsightHub/feature/home_and_explore/model/dashboard_item.dart';
 
 class SearchDashboardCubit extends Cubit<DashboardState> {
   SearchDashboardCubit({DashboardApi? api})

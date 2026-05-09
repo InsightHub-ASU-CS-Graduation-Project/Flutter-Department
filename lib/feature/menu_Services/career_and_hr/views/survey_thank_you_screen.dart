@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/core/constant/routes.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/routes.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:insight_hub/widget/app_header.dart';
-import 'package:insight_hub/widget/app_motion.dart';
+import 'package:InsightHub/widget/app_header.dart';
+import 'package:InsightHub/widget/app_motion.dart';
 
 class SurveyThankYouScreen extends StatelessWidget {
   const SurveyThankYouScreen({super.key});

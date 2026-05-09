@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/jobs_state.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/models/job_model.dart';
-import 'package:insight_hub/core/services/api_service.dart';
-import 'package:insight_hub/core/services/endpoints.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/cubit/jobs_state.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/models/job_model.dart';
+import 'package:InsightHub/core/services/api_service.dart';
+import 'package:InsightHub/core/services/endpoints.dart';
 
 class JobsCubit extends Cubit<JobsState> {
   final ApiService _apiService = ApiService();

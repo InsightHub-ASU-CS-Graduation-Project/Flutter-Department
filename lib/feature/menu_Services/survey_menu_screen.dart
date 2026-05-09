@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/core/constant/routes.dart';
-import 'package:insight_hub/core/services/api_service.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/navigation_career.dart';
-import 'package:insight_hub/feature/menu_Services/widget/card_services.dart';
-import 'package:insight_hub/widget/app_header.dart';
-import 'package:insight_hub/widget/app_motion.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/routes.dart';
+import 'package:InsightHub/core/services/api_service.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/navigation_career.dart';
+import 'package:InsightHub/feature/menu_Services/widget/card_services.dart';
+import 'package:InsightHub/widget/app_header.dart';
+import 'package:InsightHub/widget/app_motion.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class SurveyMenuScreen extends StatefulWidget {

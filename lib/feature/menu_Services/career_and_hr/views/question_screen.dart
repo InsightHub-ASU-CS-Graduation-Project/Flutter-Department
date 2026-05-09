@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/core/constant/routes.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/match_cubit.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/widget/card_question_carrer.dart';
-import 'package:insight_hub/feature/menu_Services/widgets/quiz/quiz_error_view.dart';
-import 'package:insight_hub/feature/menu_Services/widgets/quiz/quiz_loading_view.dart';
-import 'package:insight_hub/feature/menu_Services/widgets/quiz/quiz_navigation_bar.dart';
-import 'package:insight_hub/feature/menu_Services/widgets/quiz/quiz_progress_header.dart';
-import 'package:insight_hub/feature/menu_Services/widgets/quiz/quiz_transition_switcher.dart';
-import 'package:insight_hub/widget/app_header.dart';
-import 'package:insight_hub/widget/app_motion.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/routes.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/match_cubit.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/card_question_carrer.dart';
+import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_error_view.dart';
+import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_loading_view.dart';
+import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_navigation_bar.dart';
+import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_progress_header.dart';
+import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_transition_switcher.dart';
+import 'package:InsightHub/widget/app_header.dart';
+import 'package:InsightHub/widget/app_motion.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class QuestionScreen extends StatefulWidget {

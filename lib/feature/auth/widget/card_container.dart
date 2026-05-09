@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
 class CardContainer extends StatelessWidget {
   const CardContainer({
     super.key,

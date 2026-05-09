@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/core/constant/routes.dart';
-import 'package:insight_hub/feature/auth/cubit/login_cubit.dart';
-import 'package:insight_hub/feature/auth/widget/auth_input_decoration.dart';
-import 'package:insight_hub/feature/auth/widget/auth_layout.dart';
-import 'package:insight_hub/feature/auth/widget/bottom_action_button.dart';
-import 'package:insight_hub/feature/auth/widget/card_container.dart';
-import 'package:insight_hub/feature/auth/widget/validatores.dart';
+import 'package:InsightHub/core/constant/routes.dart';
+import 'package:InsightHub/feature/auth/cubit/login_cubit.dart';
+import 'package:InsightHub/feature/auth/widget/auth_input_decoration.dart';
+import 'package:InsightHub/feature/auth/widget/auth_layout.dart';
+import 'package:InsightHub/feature/auth/widget/bottom_action_button.dart';
+import 'package:InsightHub/feature/auth/widget/card_container.dart';
+import 'package:InsightHub/feature/auth/widget/validatores.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

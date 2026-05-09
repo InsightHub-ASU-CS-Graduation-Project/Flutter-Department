@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/widget/card_news.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/widget/category_selector.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/news_cubit.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/news_state.dart';
-import 'package:insight_hub/widget/app_header.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/widget/card_news.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/widget/category_selector.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/cubit/news_cubit.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/cubit/news_state.dart';
+import 'package:InsightHub/widget/app_header.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:insight_hub/feature/menu_Services/jop_and_news/models/news_model.dart';
+import 'package:InsightHub/feature/menu_Services/jop_and_news/models/news_model.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});

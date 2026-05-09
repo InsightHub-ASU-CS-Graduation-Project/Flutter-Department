@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/feature/home_and_explore/model/dashboard_item.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/base_container.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/widget_factory.dart';
+import 'package:InsightHub/feature/home_and_explore/model/dashboard_item.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/base_container.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/widget_factory.dart';
 
 class DashboardItemCard extends StatelessWidget {
   final DashboardItem item;

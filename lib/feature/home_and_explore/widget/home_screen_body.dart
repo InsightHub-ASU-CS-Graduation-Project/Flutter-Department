@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/dashboard_state_view.dart';
-import 'package:insight_hub/widget/app_header.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/dashboard_state_view.dart';
+import 'package:InsightHub/widget/app_header.dart';
 
 class HomeScreenBody extends StatefulWidget {
   const HomeScreenBody({super.key});

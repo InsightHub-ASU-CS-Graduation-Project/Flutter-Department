@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/feature/auth/widget/auth_header.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/feature/auth/widget/auth_header.dart';
 
 class AuthLayout extends StatelessWidget {
   final String title;

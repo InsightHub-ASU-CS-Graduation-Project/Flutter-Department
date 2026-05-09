@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:insight_hub/core/constant/labor_list.dart';
-import 'package:insight_hub/core/services/endpoints.dart';
-import 'package:insight_hub/core/services/api_service.dart';
-import 'package:insight_hub/core/services/secure_storege.dart';
+import 'package:InsightHub/core/constant/labor_list.dart';
+import 'package:InsightHub/core/services/endpoints.dart';
+import 'package:InsightHub/core/services/api_service.dart';
+import 'package:InsightHub/core/services/secure_storege.dart';
 import 'package:meta/meta.dart';
 
 part 'logout_state.dart';

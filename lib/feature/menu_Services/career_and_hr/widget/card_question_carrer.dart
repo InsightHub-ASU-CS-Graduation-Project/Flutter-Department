@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/feature/menu_Services/career_and_hr/model/question_model.dart';
-import 'package:insight_hub/feature/menu_Services/widgets/quiz/quiz_question_card.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/question_model.dart';
+import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_question_card.dart';
 
 class QuestionCard extends StatelessWidget {
   final QuestionModel question;

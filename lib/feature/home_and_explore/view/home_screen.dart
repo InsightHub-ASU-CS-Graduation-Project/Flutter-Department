@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:insight_hub/core/constant/app_colors.dart';
-import 'package:insight_hub/views/profile.dart';
-import 'package:insight_hub/feature/home_and_explore/view/search_screen.dart';
-import 'package:insight_hub/feature/menu_Services/survey_menu_screen.dart';
-import 'package:insight_hub/widget/bottom_nav.dart';
-import 'package:insight_hub/feature/home_and_explore/widget/home_screen_body.dart';
+import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/views/profile.dart';
+import 'package:InsightHub/feature/home_and_explore/view/search_screen.dart';
+import 'package:InsightHub/feature/menu_Services/survey_menu_screen.dart';
+import 'package:InsightHub/widget/bottom_nav.dart';
+import 'package:InsightHub/feature/home_and_explore/widget/home_screen_body.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
