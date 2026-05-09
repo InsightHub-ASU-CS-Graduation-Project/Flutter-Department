@@ -14,7 +14,7 @@ class DynamicCard extends StatelessWidget {
       case 'jobs':
         return Icons.work_outline_rounded;
       case '/h':
-      case 'per hour':
+      case 'jobs/h':
         return Icons.schedule_rounded;
       case '%':
         return Icons.pie_chart_outline_rounded;

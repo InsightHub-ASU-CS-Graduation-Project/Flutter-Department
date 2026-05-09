@@ -1,6 +1,6 @@
+import 'package:InsightHub/widget/app_header.dart';
 import 'package:flutter/material.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
-import 'package:InsightHub/core/constant/routes.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_quiz_result_model.dart';
 
 class AnswerHrScreen extends StatefulWidget {
@@ -37,7 +37,12 @@ class _AnswerHrScreenState extends State<AnswerHrScreen>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.06),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutCubic,
+      ),
+    );
 
     _fadeAnimation = CurvedAnimation(
       parent: _controller,
@@ -45,7 +50,9 @@ class _AnswerHrScreenState extends State<AnswerHrScreen>
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _controller.forward(from: 0);
+      if (mounted) {
+        _controller.forward(from: 0);
+      }
     });
   }
 
@@ -56,12 +63,20 @@ class _AnswerHrScreenState extends State<AnswerHrScreen>
   }
 
   int get _correctCount => widget.result.result;
+
   int get _total => widget.totalQuestions;
 
   Color get _scoreColor {
     final pct = _correctCount / _total;
-    if (pct >= 0.8) return const Color(0xFF16A34A);
-    if (pct >= 0.5) return const Color(0xFFF97316);
+
+    if (pct >= 0.8) {
+      return const Color(0xFF16A34A);
+    }
+
+    if (pct >= 0.5) {
+      return const Color(0xFFF97316);
+    }
+
     return const Color(0xFFDC2626);
   }
 
@@ -69,125 +84,104 @@ class _AnswerHrScreenState extends State<AnswerHrScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(gradient: AppColors.bgGradient),
+        decoration: BoxDecoration(
+          gradient: AppColors.bgGradient,
+        ),
         child: SafeArea(
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: SlideTransition(
               position: _slideAnimation,
-              child: CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  /// ── GRADIENT HEADER ──────────────────────────────────
-                  SliverToBoxAdapter(
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColors.primaryBlue, Color(0xFF1D4ED8)],
-                        ),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(30),
-                          bottomRight: Radius.circular(30),
-                        ),
+              child: Column(
+                children: [
+                  /// ───────────────── HEADER (FIXED) ─────────────────
+                  AppHeader(
+                    title: widget.categoryName,
+                    subtitle: 'Review your answers below',
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.white,
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                widget.categoryName,
-                                style: const TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.close,
-                                    color: Colors.white),
-                                onPressed: () => Navigator.pushNamed(
-                                  context,
-                                  Routes.surveyMenuScreen,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Review your answers below',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.85),
-                              fontSize: 15,
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
+                      onPressed: () {
+                        Navigator.pop(
+                          context,
+                          
+                        );
+                      },
                     ),
                   ),
 
-                  /// ── BODY CONTENT ─────────────────────────────────────
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        /// Score Card
-                        _ScoreCard(
-                          correct: _correctCount,
-                          total: _total,
-                          scoreColor: _scoreColor,
-                        ),
+                  /// ───────────────── BODY ─────────────────
+                  Expanded(
+                    child: CustomScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      slivers: [
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(
+                            24,
+                            24,
+                            24,
+                            40,
+                          ),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate([
+                              /// Score Card
+                              _ScoreCard(
+                                correct: _correctCount,
+                                total: _total,
+                                scoreColor: _scoreColor,
+                              ),
 
-                        const SizedBox(height: 24),
+                              const SizedBox(height: 24),
 
-                        /// Section Label
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 14),
-                          child: Text(
-                            'Questions & Answers',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF0F172A),
-                            ),
+                              /// Section Label
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 14),
+                                child: Text(
+                                  'Questions & Answers',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF0F172A),
+                                  ),
+                                ),
+                              ),
+
+                              /// Question Cards
+                              ...widget.result.correctAnswers.map(
+                                (item) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 14),
+                                  child: _QuestionCard(item: item),
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              /// Done Button
+                              ElevatedButton.icon(
+                                onPressed: () => Navigator.pop(context),
+                                icon: const Icon(Icons.check),
+                                label: const Text('Done'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primaryBlue,
+                                  foregroundColor: Colors.white,
+                                  minimumSize:
+                                      const Size.fromHeight(54),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(16),
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ]),
                           ),
                         ),
-
-                        /// Question Cards
-                        ...widget.result.correctAnswers.map(
-                          (item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 14),
-                            child: _QuestionCard(item: item),
-                          ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        /// Done Button
-                        ElevatedButton.icon(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.check),
-                          label: const Text('Done'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryBlue,
-                            foregroundColor: Colors.white,
-                            minimumSize: const Size.fromHeight(54),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            textStyle: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ]),
+                      ],
                     ),
                   ),
                 ],
@@ -200,9 +194,9 @@ class _AnswerHrScreenState extends State<AnswerHrScreen>
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Score Card
-// ─────────────────────────────────────────────────────────────
+/// ─────────────────────────────────────────────────────────────
+/// Score Card
+/// ─────────────────────────────────────────────────────────────
 class _ScoreCard extends StatelessWidget {
   final int correct;
   final int total;
@@ -216,8 +210,15 @@ class _ScoreCard extends StatelessWidget {
 
   String get _label {
     final pct = correct / total;
-    if (pct >= 0.8) return 'Excellent Result!';
-    if (pct >= 0.5) return 'Good Effort!';
+
+    if (pct >= 0.8) {
+      return 'Excellent Result!';
+    }
+
+    if (pct >= 0.5) {
+      return 'Good Effort!';
+    }
+
     return 'Keep Practicing!';
   }
 
@@ -253,8 +254,12 @@ class _ScoreCard extends StatelessWidget {
                   child: CircularProgressIndicator(
                     value: progress,
                     strokeWidth: 8,
-                    backgroundColor: const Color(0xFFE2E8F0),
-                    valueColor: AlwaysStoppedAnimation<Color>(scoreColor),
+                    backgroundColor:
+                        const Color(0xFFE2E8F0),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(
+                      scoreColor,
+                    ),
                   ),
                 ),
                 Text(
@@ -273,7 +278,8 @@ class _ScoreCard extends StatelessWidget {
 
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   _label,
@@ -283,7 +289,9 @@ class _ScoreCard extends StatelessWidget {
                     color: Color(0xFF0F172A),
                   ),
                 ),
+
                 const SizedBox(height: 8),
+
                 Text(
                   'You answered $correct out of $total questions correctly.',
                   style: TextStyle(
@@ -301,26 +309,33 @@ class _ScoreCard extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────────
-// Question Card
-// ─────────────────────────────────────────────────────────────
+/// ─────────────────────────────────────────────────────────────
+/// Question Card
+/// ─────────────────────────────────────────────────────────────
 class _QuestionCard extends StatelessWidget {
-  final dynamic item; // HrCorrectAnswerModel
+  final dynamic item;
 
-  const _QuestionCard({required this.item});
+  const _QuestionCard({
+    required this.item,
+  });
 
   @override
   Widget build(BuildContext context) {
     final bool isCorrect = item.isCorrect;
-    final Color statusColor =
-        isCorrect ? const Color(0xFF22C55E) : const Color(0xFFEF4444);
+
+    final Color statusColor = isCorrect
+        ? const Color(0xFF22C55E)
+        : const Color(0xFFEF4444);
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: statusColor.withOpacity(0.4), width: 1.3),
+        border: Border.all(
+          color: statusColor.withOpacity(0.4),
+          width: 1.3,
+        ),
         boxShadow: const [
           BoxShadow(
             color: Color(0x100F172A),
@@ -330,31 +345,42 @@ class _QuestionCard extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
         children: [
           /// Status row
           Row(
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius:
+                      BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      isCorrect ? Icons.check_circle : Icons.cancel,
+                      isCorrect
+                          ? Icons.check_circle
+                          : Icons.cancel,
                       color: statusColor,
                       size: 16,
                     ),
+
                     const SizedBox(width: 6),
+
                     Text(
-                      isCorrect ? 'Correct' : 'Wrong',
+                      isCorrect
+                          ? 'Correct'
+                          : 'Wrong',
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
+                        fontWeight:
+                            FontWeight.w700,
                         fontSize: 13,
                         color: statusColor,
                       ),
@@ -362,15 +388,19 @@ class _QuestionCard extends StatelessWidget {
                   ],
                 ),
               ),
+
               const Spacer(),
 
               /// Difficulty badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFEFF6FF),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius:
+                      BorderRadius.circular(20),
                 ),
                 child: Text(
                   item.difficulty,
@@ -405,38 +435,51 @@ class _QuestionCard extends StatelessWidget {
             decoration: BoxDecoration(
               color: const Color(0xFFF8FAFC),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFE2E8F0)),
+              border: Border.all(
+                color: const Color(0xFFE2E8F0),
+              ),
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 /// Your answer
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      isCorrect ? Icons.check : Icons.close,
+                      isCorrect
+                          ? Icons.check
+                          : Icons.close,
                       size: 16,
                       color: statusColor,
                     ),
+
                     const SizedBox(width: 8),
+
                     Expanded(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start,
                         children: [
                           const Text(
                             'Your Answer',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF64748B),
+                              color:
+                                  Color(0xFF64748B),
                             ),
                           ),
+
                           const SizedBox(height: 3),
+
                           Text(
                             item.userAnswer,
                             style: TextStyle(
                               fontSize: 14,
-                              fontWeight: FontWeight.w600,
+                              fontWeight:
+                                  FontWeight.w600,
                               color: statusColor,
                             ),
                           ),
@@ -451,32 +494,41 @@ class _QuestionCard extends StatelessWidget {
 
                   /// Correct answer
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
                     children: [
                       const Icon(
                         Icons.check_circle_outline,
                         size: 16,
                         color: Color(0xFF16A34A),
                       ),
+
                       const SizedBox(width: 8),
+
                       Expanded(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
                           children: [
                             const Text(
                               'Correct Answer',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Color(0xFF64748B),
+                                color:
+                                    Color(0xFF64748B),
                               ),
                             ),
+
                             const SizedBox(height: 3),
+
                             Text(
                               item.correctAnswer,
                               style: const TextStyle(
                                 fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF16A34A),
+                                fontWeight:
+                                    FontWeight.w600,
+                                color:
+                                    Color(0xFF16A34A),
                               ),
                             ),
                           ],
@@ -500,14 +552,17 @@ class _QuestionCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 const Icon(
                   Icons.lightbulb_outline,
                   size: 16,
                   color: AppColors.primaryBlue,
                 ),
+
                 const SizedBox(width: 8),
+
                 Expanded(
                   child: Text(
                     item.explanation,
