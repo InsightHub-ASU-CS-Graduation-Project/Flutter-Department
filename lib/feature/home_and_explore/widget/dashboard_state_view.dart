@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:insight_hub/feature/home_and_explore/cubit/dashboard_cubit.dart';
+import 'package:insight_hub/feature/home_and_explore/model/dashboard_item.dart';
 import 'package:insight_hub/feature/home_and_explore/widget/dashboard_items_view.dart';
 import 'package:insight_hub/feature/home_and_explore/widget/safe_error_widget.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class DashboardStateView extends StatelessWidget {
   const DashboardStateView({
@@ -51,6 +53,21 @@ class DashboardStateView extends StatelessWidget {
   }
 
   Widget _buildLoadingState() {
-    return const Center(child: CircularProgressIndicator());
+    final mockItems = [
+      DashboardItem.dummyCard(),
+      DashboardItem.dummyCard(),
+      DashboardItem.dummyCard(),
+      DashboardItem.dummyCard(),
+      DashboardItem.dummyChart(),
+    ];
+
+    return Skeletonizer(
+      enabled: true,
+      child: DashboardItemsView(
+        items: mockItems,
+        onRefresh: onRefresh,
+        emptyMessage: emptyMessage,
+      ),
+    );
   }
 }

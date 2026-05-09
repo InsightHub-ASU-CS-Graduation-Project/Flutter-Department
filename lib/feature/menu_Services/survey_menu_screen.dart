@@ -7,10 +7,18 @@ import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/navigation
 import 'package:insight_hub/feature/menu_Services/widget/card_services.dart';
 import 'package:insight_hub/widget/app_header.dart';
 import 'package:insight_hub/widget/app_motion.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
-class SurveyMenuScreen extends StatelessWidget {
+class SurveyMenuScreen extends StatefulWidget {
   const SurveyMenuScreen({super.key});
+
+  @override
+  State<SurveyMenuScreen> createState() => _SurveyMenuScreenState();
+}
+
+class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
+  bool _isFetchingQuestions = false;
 
   @override
   Widget build(BuildContext context) {
@@ -19,24 +27,7 @@ class SurveyMenuScreen extends StatelessWidget {
       child: BlocListener<NavigationCubit, NavigationState>(
         listener: (context, state) {
           if (state is NavigationSuccess) {
-            if (!context.mounted) return;
-
-            switch (state.target) {
-              case NavigationTarget.questions:
-                print('SurveyMenuScreen: Navigating to questionScreen with isEmployed=${state.isEmployed}');
-                Navigator.pushNamed(
-                  context,
-                  Routes.questionScreen,
-                  arguments: state.isEmployed,
-                );
-                break;
-              case NavigationTarget.result:
-                Navigator.pushNamed(context, Routes.matchScreen);
-                break;
-              case NavigationTarget.thankYou:
-                Navigator.pushNamed(context, Routes.surveyThankYouScreen);
-                break;
-            }
+            // Handled in onTap to await data fetching
           }
 
           if (state is NavigationError) {
@@ -72,7 +63,7 @@ class SurveyMenuScreen extends StatelessWidget {
                           children: [
                           BlocBuilder<NavigationCubit, NavigationState>(
                             builder: (context, navState) {
-                              final isLoading = navState is NavigationLoading;
+                              final isLoading = navState is NavigationLoading || _isFetchingQuestions;
                               return buildSurveyCard(
                                 innerContext,
                                 title: 'Career Assessment',
@@ -83,10 +74,42 @@ class SurveyMenuScreen extends StatelessWidget {
                                 isLoading: isLoading,
                                 onTap: isLoading
                                     ? null
-                                    : () {
-                                        innerContext
-                                            .read<NavigationCubit>()
-                                            .decide();
+                                    : () async {
+                                        setState(() {
+                                          _isFetchingQuestions = true;
+                                        });
+                                        
+                                        final navCubit = innerContext.read<NavigationCubit>();
+                                        final navResult = await navCubit.decideAsync();
+                                        
+                                        if (!innerContext.mounted) return;
+                                        
+                                        if (navResult != null) {
+                                          switch (navResult.target) {
+                                            case NavigationTarget.questions:
+                                              final success = await innerContext.read<QuestionCubit>().fetchQuestionsAsync(isEmployed: navResult.isEmployed);
+                                              if (success && innerContext.mounted) {
+                                                Navigator.pushNamed(
+                                                  innerContext,
+                                                  Routes.questionScreen,
+                                                  arguments: navResult.isEmployed,
+                                                );
+                                              }
+                                              break;
+                                            case NavigationTarget.result:
+                                              Navigator.pushNamed(innerContext, Routes.matchScreen);
+                                              break;
+                                            case NavigationTarget.thankYou:
+                                              Navigator.pushNamed(innerContext, Routes.surveyThankYouScreen);
+                                              break;
+                                          }
+                                        }
+
+                                        if (mounted) {
+                                          setState(() {
+                                            _isFetchingQuestions = false;
+                                          });
+                                        }
                                       },
                               );
                             },

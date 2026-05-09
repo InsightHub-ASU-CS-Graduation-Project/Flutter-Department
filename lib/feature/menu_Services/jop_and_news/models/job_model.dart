@@ -38,6 +38,17 @@ class JobModel {
       'createdDate': createdDate?.toIso8601String(),
     };
   }
+
+  factory JobModel.dummy() {
+    return JobModel(
+      title: 'Senior Software Engineer',
+      companyName: 'Tech Innovators Inc.',
+      location: 'San Francisco, CA',
+      description: 'We are looking for an experienced software engineer to join our team. The ideal candidate will have strong skills in Flutter and Dart.',
+      redirectUrl: 'https://example.com/job',
+      createdDate: DateTime.now(),
+    );
+  }
 }
 
 class JobResponse {

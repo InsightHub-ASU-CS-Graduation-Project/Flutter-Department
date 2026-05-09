@@ -6,6 +6,8 @@ import 'package:insight_hub/core/constant/app_colors.dart';
 import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/news_cubit.dart';
 import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/news_state.dart';
 import 'package:insight_hub/widget/app_header.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/models/news_model.dart';
 
 class NewsScreen extends StatefulWidget {
   const NewsScreen({super.key});
@@ -78,7 +80,19 @@ class _NewsScreenState extends State<NewsScreen> {
                 child: BlocBuilder<NewsCubit, NewsState>(
                   builder: (context, state) {
                     if (state is NewsLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Skeletonizer(
+                        enabled: true,
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(12),
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return NewsCard(
+                              news: NewsModel.dummy(),
+                            );
+                          },
+                        ),
+                      );
                     }
 
                     if (state is NewsError) {
@@ -117,9 +131,14 @@ class _NewsScreenState extends State<NewsScreen> {
                               (state.hasMorePages ? 1 : 0),
                           itemBuilder: (context, index) {
                             if (index >= state.newsList.length) {
-                              return const Padding(
-                                padding: EdgeInsets.all(12),
-                                child: Center(child: CircularProgressIndicator()),
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
+                                child: Skeletonizer(
+                                  enabled: true,
+                                  child: NewsCard(
+                                    news: NewsModel.dummy(),
+                                  ),
+                                ),
                               );
                             }
 

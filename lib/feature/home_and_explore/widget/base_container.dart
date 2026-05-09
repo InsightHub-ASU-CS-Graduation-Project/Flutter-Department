@@ -61,7 +61,7 @@ class BaseContainer extends StatelessWidget {
                 title,
                 style: textTheme.titleMedium?.copyWith(
                   color: AppColors.textPrimary,
-                  fontSize: isCompact ? 12 : 18,
+                  fontSize: isCompact ? 8 : 12,
                   fontWeight: isCompact ? FontWeight.w600 : FontWeight.w700,
                 ),
                 maxLines: 2,
@@ -92,7 +92,7 @@ class BaseContainer extends StatelessWidget {
             if (description != null &&
                 description!.isNotEmpty) ...[
               SizedBox(
-                height: isCompact ? 14.0 : 20.0,
+                height: isCompact ? 8.0 : .0,
               ),
 
               Divider(

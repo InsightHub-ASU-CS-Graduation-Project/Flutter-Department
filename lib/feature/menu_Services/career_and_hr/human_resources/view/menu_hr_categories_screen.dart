@@ -4,10 +4,20 @@ import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/
 import 'package:insight_hub/feature/menu_Services/widget/card_services.dart';
 import 'package:insight_hub/widget/app_header.dart';
 
-class MenuHrCategoriesScreen extends StatelessWidget {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:insight_hub/feature/menu_Services/career_and_hr/human_resources/cubit/hr_question_cubit.dart';
+
+class MenuHrCategoriesScreen extends StatefulWidget {
   const MenuHrCategoriesScreen({super.key});
 
   static const String routeName = '/menuHrCategoriesScreen';
+
+  @override
+  State<MenuHrCategoriesScreen> createState() => _MenuHrCategoriesScreenState();
+}
+
+class _MenuHrCategoriesScreenState extends State<MenuHrCategoriesScreen> {
+  String? _loadingCategory;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +42,7 @@ class MenuHrCategoriesScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final category = categoriesHr[index];
 
+                    final isLoading = _loadingCategory == category.apiValue;
                     return buildSurveyCard(
                       context,
                       title: category.name,
@@ -39,16 +50,39 @@ class MenuHrCategoriesScreen extends StatelessWidget {
                           'Practice ${category.name} interview questions.',
                       icon: category.icon,
                       isActive: true,
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => QuestionHrScreen(
-                              categoryName: category.name,
-                              apiCategory: category.apiValue,
-                            ),
-                          ),
-                        );
-                      },
+                      isLoading: isLoading,
+                      onTap: _loadingCategory != null
+                          ? null
+                          : () async {
+                              setState(() {
+                                _loadingCategory = category.apiValue;
+                              });
+
+                              final success = await context.read<HrQuestionCubit>().fetchQuestionsAsync(
+                                category: category.apiValue,
+                              );
+
+                              if (!mounted) return;
+
+                              if (success) {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => QuestionHrScreen(
+                                      categoryName: category.name,
+                                      apiCategory: category.apiValue,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                // Error is emitted by cubit, might want to show snackbar here if not handled elsewhere
+                              }
+
+                              if (mounted) {
+                                setState(() {
+                                  _loadingCategory = null;
+                                });
+                              }
+                            },
                     );
                   },
                 ),

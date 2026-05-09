@@ -24,6 +24,47 @@ class CareerQuizResultModel {
       message: (json['message'] ?? '').toString(),
     );
   }
+
+  factory CareerQuizResultModel.dummy() {
+    return CareerQuizResultModel(
+      topTracks: [
+        TrackMatch(
+          track: TrackInfo(
+            trackId: 1,
+            trackName: 'Software Engineering',
+            description: 'Designing, developing, and maintaining software systems.',
+            requiredSkills: 'Dart, Flutter, UI/UX, Firebase, REST APIs, Git, Teamwork, Problem Solving, Clean Code, Architecture',
+            score: 95,
+            maxScore: 100,
+            percentage: 95,
+          ),
+          trackSimilarityScore: 90,
+          similarityMessage: 'Great match!',
+          marketInsights: MarketInsights(
+            totalEmployeesInTrack: 15000,
+            avgTechnicalLevel: 4.5,
+            avgSoftSkills: 4.2,
+            avgSalarySatisfaction: 4.0,
+            avgWorkLifeBalance: 3.8,
+            mostCommonEnvironment: 'Hybrid',
+            mostCommonCompanySize: 'Enterprise',
+            avgYearsExperience: 5.5,
+            avgConsistency: 4.0,
+            avgAdaptability: 4.2,
+            avgTeamwork: 4.5,
+            avgProblemSolving: 4.6,
+            avgLearningProactivity: 4.4,
+            avgCommunication: 4.1,
+            avgPrioritization: 4.0,
+            avgOwnership: 4.3,
+            avgCollaboration: 4.4,
+            avgResilience: 4.2,
+          ),
+        ),
+      ],
+      message: 'Loading your best matches...',
+    );
+  }
 }
 
 class TrackMatch {

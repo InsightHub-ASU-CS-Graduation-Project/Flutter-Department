@@ -61,6 +61,29 @@ class DashboardItem {
     );
   }
 
+  /// 💀 Dummy object for skeletonizer
+  factory DashboardItem.dummyCard() {
+    return const DashboardItem(
+      id: 'dummy_card',
+      type: 'cards',
+      title: 'Loading Data',
+      objective: '',
+      description: '',
+      data: 0.0,
+    );
+  }
+
+  factory DashboardItem.dummyChart() {
+    return const DashboardItem(
+      id: 'dummy_chart',
+      type: 'bar',
+      title: 'Loading Chart',
+      objective: 'Please wait...',
+      description: 'Fetching the latest data for your dashboard.',
+      data: [],
+    );
+  }
+
   /// 🧠 Helper
   bool get isValid => type != 'unknown';
 }

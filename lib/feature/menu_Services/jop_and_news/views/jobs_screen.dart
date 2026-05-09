@@ -7,6 +7,8 @@ import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/jobs_cubit.
 import 'package:insight_hub/feature/menu_Services/jop_and_news/cubit/jobs_state.dart';
 import 'package:insight_hub/feature/menu_Services/jop_and_news/widget/category_selector.dart';
 import 'package:insight_hub/widget/app_header.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:insight_hub/feature/menu_Services/jop_and_news/models/job_model.dart';
 
 class JobsScreen extends StatefulWidget {
   const JobsScreen({super.key});
@@ -86,7 +88,20 @@ class _JobsScreenState extends State<JobsScreen> {
                 child: BlocBuilder<JobsCubit, JobsState>(
                   builder: (context, state) {
                     if (state is JobsLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Skeletonizer(
+                        enabled: true,
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(16),
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            return JobCard(
+                              job: JobModel.dummy(),
+                              onTap: () {},
+                            );
+                          },
+                        ),
+                      );
                     }
 
                     if (state is JobsError) {
@@ -124,9 +139,15 @@ class _JobsScreenState extends State<JobsScreen> {
                               state.jobList.length + (state.hasMorePages ? 1 : 0),
                           itemBuilder: (context, index) {
                             if (index >= state.jobList.length) {
-                              return const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Center(child: CircularProgressIndicator()),
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
+                                child: Skeletonizer(
+                                  enabled: true,
+                                  child: JobCard(
+                                    job: JobModel.dummy(),
+                                    onTap: () {},
+                                  ),
+                                ),
                               );
                             }
 

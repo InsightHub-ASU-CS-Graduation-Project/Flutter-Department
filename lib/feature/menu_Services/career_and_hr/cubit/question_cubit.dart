@@ -78,12 +78,16 @@ class QuestionCubit extends Cubit<QuestionState> {
       super(const QuestionInitial());
 
   Future<void> fetchQuestions({required bool isEmployed}) async {
+    await fetchQuestionsAsync(isEmployed: isEmployed);
+  }
+
+  Future<bool> fetchQuestionsAsync({required bool isEmployed}) async {
     print(
-      "QuestionCubit: fetchQuestions called (isEmployed: $isEmployed), current state: $state",
+      "QuestionCubit: fetchQuestionsAsync called (isEmployed: $isEmployed), current state: $state",
     );
     if (state is QuestionLoading) {
       print("QuestionCubit: Already loading, skipping request.");
-      return;
+      return false;
     }
     emit(const QuestionLoading());
 
@@ -94,12 +98,14 @@ class QuestionCubit extends Cubit<QuestionState> {
 
       if (questions.isEmpty) {
         emit(const QuestionError('No questions are available right now.'));
-        return;
+        return false;
       }
 
       emit(QuestionLoaded(questions: questions, isEmployed: isEmployed));
+      return true;
     } catch (error) {
       emit(QuestionError(_messageFrom(error)));
+      return false;
     }
   }
 

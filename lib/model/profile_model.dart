@@ -36,6 +36,20 @@ class ProfileModel {
       trackName: SafeParser.getString(json, 'trackName'),
     );
   }
+
+  factory ProfileModel.dummy() {
+    return ProfileModel(
+      email: 'user@example.com',
+      firstName: 'John',
+      lastName: 'Doe',
+      gender: 1,
+      birthDate: DateTime.now().subtract(const Duration(days: 10000)),
+      collage: 'University of Technology',
+      isEmployed: true,
+      yearsExperience: 3,
+      trackName: 'Software Engineer',
+    );
+  }
 }
 
 

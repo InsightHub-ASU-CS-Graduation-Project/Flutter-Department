@@ -5,7 +5,7 @@ import 'package:insight_hub/core/constant/routes.dart';
 import 'package:insight_hub/core/constant/storage_keys.dart';
 import 'package:insight_hub/core/services/secure_storege.dart';
 import 'package:insight_hub/feature/auth/widget/logo.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -178,13 +178,8 @@ class _SplashScreenState extends State<SplashScreen>
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 48),
-                      Shimmer.fromColors(
-                        baseColor: _isDarkMode
-                            ? Colors.grey[700]!
-                            : Colors.grey[300]!,
-                        highlightColor: _isDarkMode
-                            ? Colors.grey[500]!
-                            : Colors.white,
+                      Skeletonizer(
+                        enabled: true,
                         child: Text(
                           'Loading',
                           style: TextStyle(

@@ -41,14 +41,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
         'QuestionScreen: received navigation argument isEmployed=$isEmployed',
       );
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-
-        context.read<QuestionCubit>().fetchQuestions(
-          isEmployed: isEmployed,
-        );
-      });
-
       _didLoadQuestions = true;
     }
   }

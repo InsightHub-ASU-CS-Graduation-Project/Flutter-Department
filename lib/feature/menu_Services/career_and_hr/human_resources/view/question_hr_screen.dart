@@ -34,15 +34,6 @@ class _QuestionHrScreenState extends State<QuestionHrScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) {
-        return;
-      }
-
-      context.read<HrQuestionCubit>().fetchQuestions(
-        category: widget.apiCategory,
-      );
-    });
   }
 
   void _retry() {

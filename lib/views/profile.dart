@@ -17,6 +17,7 @@ import 'package:insight_hub/model/profile_model.dart';
 import 'package:insight_hub/widget/app_header.dart';
 import 'package:intl/intl.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -184,11 +185,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
-                      if (state is ProfileLoading || state is ProfileInitial) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
+                      final bool isLoading = state is ProfileLoading || state is ProfileInitial;
 
-                      if (state is! ProfileSuccess) {
+                      if (!isLoading && state is! ProfileSuccess) {
                         return Center(
                           child: Padding(
                             padding: const EdgeInsets.all(24),
@@ -216,14 +215,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       }
 
-                      final profile = state.profile;
+                      final profile = isLoading ? ProfileModel.dummy() : (state as ProfileSuccess).profile;
                       final fullName = _fullName(profile);
                       final email = _email(profile);
                       final avatarInitials =
                           '${_initialFrom(profile.firstName)}${_initialFrom(profile.lastName)}';
                       final profileItems = _profileItems(profile);
 
-                      return SingleChildScrollView(
+                      return Skeletonizer(
+                        enabled: isLoading,
+                        child: SingleChildScrollView(
                         padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
                         child: Column(
                           children: [
@@ -412,7 +413,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         ),
-                      );
+                      ));
                     },
                   ),
                 ),

@@ -39,7 +39,11 @@ class NavigationCubit extends Cubit<NavigationState> {
   NavigationCubit(this.api) : super(const NavigationInitial());
 
   Future<void> decide() async {
-    print('NavigationCubit.decide() called');
+    await decideAsync();
+  }
+
+  Future<NavigationSuccess?> decideAsync() async {
+    print('NavigationCubit.decideAsync() called');
     emit(const NavigationLoading());
 
     try {
@@ -50,10 +54,14 @@ class NavigationCubit extends Cubit<NavigationState> {
       final target = _computeTarget(status);
       print('Navigation target computed: $target');
       print('Emitting NavigationSuccess with isEmployed=${status.isEmployed}');
-      emit(NavigationSuccess(target, status.isEmployed));
+      
+      final successState = NavigationSuccess(target, status.isEmployed);
+      emit(successState);
+      return successState;
     } catch (error) {
       print('NavigationCubit error: $error');
       emit(NavigationError(_errorMessage(error)));
+      return null;
     }
   }
 

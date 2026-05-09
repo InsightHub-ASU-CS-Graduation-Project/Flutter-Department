@@ -78,8 +78,12 @@ class HrQuestionCubit extends Cubit<HrQuestionState> {
       super(const HrQuestionInitial());
 
   Future<void> fetchQuestions({required String category}) async {
+    await fetchQuestionsAsync(category: category);
+  }
+
+  Future<bool> fetchQuestionsAsync({required String category}) async {
     if (state is HrQuestionLoading) {
-      return;
+      return false;
     }
 
     emit(const HrQuestionLoading());
@@ -96,7 +100,7 @@ class HrQuestionCubit extends Cubit<HrQuestionState> {
             'No supported quiz questions are available for this category right now.',
           ),
         );
-        return;
+        return false;
       }
 
       emit(
@@ -105,8 +109,10 @@ class HrQuestionCubit extends Cubit<HrQuestionState> {
           questions: supportedQuestions,
         ),
       );
+      return true;
     } catch (error) {
       emit(HrQuestionError(_messageFrom(error)));
+      return false;
     }
   }
 

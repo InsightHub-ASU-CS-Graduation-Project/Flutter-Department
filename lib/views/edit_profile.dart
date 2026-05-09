@@ -9,6 +9,7 @@ import 'package:insight_hub/feature/auth/widget/birth_date_picker_field.dart';
 import 'package:insight_hub/feature/auth/widget/bottom_action_button.dart';
 import 'package:insight_hub/feature/auth/widget/card_container.dart';
 import 'package:insight_hub/model/profile_model.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -389,14 +390,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               enabled: false,
               onPressed: null,
             ),
-            child: const CardContainer(
-              children: [
-                Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryBlue,
+            child: Skeletonizer(
+              enabled: true,
+              child: CardContainer(
+                children: [
+                  const Text('First Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    initialValue: 'Loading',
+                    decoration: authInputDecoration('First name'),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  const Text('Last Name'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    initialValue: 'Loading',
+                    decoration: authInputDecoration('Last name'),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('College'),
+                  const SizedBox(height: 8),
+                  TextFormField(
+                    initialValue: 'Loading',
+                    decoration: authInputDecoration('College name'),
+                  ),
+                ],
+              ),
             ),
           );
         }

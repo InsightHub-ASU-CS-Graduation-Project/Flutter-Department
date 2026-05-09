@@ -7,6 +7,7 @@ import 'package:insight_hub/feature/menu_Services/career_and_hr/cubit/question_c
 import 'package:insight_hub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:insight_hub/feature/menu_Services/career_and_hr/model/match_model.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MatchScreen extends StatefulWidget {
   const MatchScreen({super.key});
@@ -82,11 +83,6 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
               }
             },
             builder: (context, state) {
-              /// ✅ Loading
-              if (state is MatchLoading || state is MatchInitial) {
-                return const Center(child: CircularProgressIndicator());
-              }
-        
               /// ✅ Error
               if (state is MatchError) {
                 return _MatchErrorView(
@@ -103,18 +99,18 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
               }
 
               /// ❗ مهم جدًا: ما ترجعش شاشة فاضية
-              if (state is! MatchLoaded) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              final result = state.result;
+              final isLoading = state is MatchLoading || state is MatchInitial || state is! MatchLoaded;
+              final result = isLoading ? CareerQuizResultModel.dummy() : state.result;
         
               /// ===== Career Quiz Result =====
               if (result is CareerQuizResultModel) {
-                return _CareerQuizResultView(
-                  result: result,
-                  fadeAnimation: _fadeAnimation,
-                  slideAnimation: _slideAnimation,
+                return Skeletonizer(
+                  enabled: isLoading,
+                  child: _CareerQuizResultView(
+                    result: result,
+                    fadeAnimation: _fadeAnimation,
+                    slideAnimation: _slideAnimation,
+                  ),
                 );
               }
         
@@ -122,12 +118,14 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
               final matchResult = result as MatchResultModel;
               final scoreColor = _scoreColor(matchResult.similarityScore);
         
-              return FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: CustomScrollView(
-                    slivers: [
+              return Skeletonizer(
+                enabled: isLoading,
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: CustomScrollView(
+                      slivers: [
                       SliverToBoxAdapter(
                         child: Container(
                           width: double.infinity,
@@ -330,7 +328,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                     ],
                   ),
                 ),
-              );
+              ));
             },
           ),
         ),

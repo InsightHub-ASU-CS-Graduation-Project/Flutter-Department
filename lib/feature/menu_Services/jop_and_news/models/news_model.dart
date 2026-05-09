@@ -34,4 +34,14 @@ class NewsModel {
       'urlToImage': urlToImage,
     };
   }
+
+  factory NewsModel.dummy() {
+    return NewsModel(
+      title: 'Global Markets Rally as Tech Stocks Surge Higher',
+      sourceName: 'Tech Insider',
+      publishedAt: DateTime.now(),
+      url: 'https://example.com/news',
+      urlToImage: null,
+    );
+  }
 }

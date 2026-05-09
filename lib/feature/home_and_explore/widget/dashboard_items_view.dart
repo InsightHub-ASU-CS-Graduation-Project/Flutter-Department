@@ -6,6 +6,7 @@ import 'package:insight_hub/widget/app_motion.dart';
 
 class DashboardItemsView extends StatelessWidget {
   const DashboardItemsView({
+    
     super.key,
     required this.items,
     required this.onRefresh,
@@ -29,9 +30,11 @@ class DashboardItemsView extends StatelessWidget {
       onNotification: (overscroll) {
         overscroll.disallowIndicator();
         return true;
+
       },
       child: RefreshIndicator(
         onRefresh: onRefresh,
+
         child: AppMotion(
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
