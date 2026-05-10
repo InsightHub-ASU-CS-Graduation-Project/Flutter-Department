@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:InsightHub/core/constant/routes.dart';
 import 'package:InsightHub/feature/auth/cubit/register_cubit.dart';
+import 'package:InsightHub/feature/auth/views/register/otp_verification.dart';
 import 'package:InsightHub/feature/auth/widget/auth_input_decoration.dart';
 import 'package:InsightHub/feature/auth/widget/auth_layout.dart';
 import 'package:InsightHub/feature/auth/widget/bottom_action_button.dart';
@@ -46,9 +46,10 @@ class _RegisterAccountScreenState extends State<RegisterAccountScreen> {
   void _handleNext() {
     if (!_formKey.currentState!.validate()) return;
 
-    context.read<RegisterCubit>().saveEmail(_emailController.text.trim());
-    context.read<RegisterCubit>().savePassword(_passwordController.text);
-    Navigator.pushNamed(context, Routes.registerNameScreen);
+    final email = _emailController.text.trim();
+
+    // Check if email exists before proceeding
+    context.read<RegisterCubit>().checkEmailExistence(email);
   }
 
   String? _confirmValidator(String? value) {
@@ -63,87 +64,135 @@ class _RegisterAccountScreenState extends State<RegisterAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AuthLayout(
-      title: 'Create Account',
-      subtitle: 'Enter your email, password, and confirm to continue.',
-      action: BottomActionButton(
-        label: 'Next',
-        enabled: _canProceed,
-        onPressed: _canProceed ? _handleNext : null,
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CardContainer(
-              children: [
-                const Text(' Email address'),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  autofillHints: const [AutofillHints.email],
-                  inputFormatters: [
-                    FilteringTextInputFormatter.deny(RegExp(r"\s")),
-                  ],
-                  decoration: authInputDecoration('you@example.com'),
-                  validator: Validators.email,
-                  onChanged: (_) => setState(() {}),
-                ),
-                const SizedBox(height: 24),
-                const Text('Password'),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: !_showPassword,
-                  decoration: authInputDecoration(
-                    'Enter password',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _showPassword ? LucideIcons.eye : LucideIcons.eyeOff,
-                        size: 20,
-                      ),
-                      onPressed: () =>
-                          setState(() => _showPassword = !_showPassword),
-                    ),
-                  ),
-                  validator: Validators.strongPassword,
-                  onChanged: (_) => setState(() {}),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8, bottom: 12),
-                  child: Text(
-                    'Min 8 characters, at least one number, one uppercase letter and one special character.',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ),
-                const Text('Confirm Password'),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _confirmController,
-                  obscureText: !_showConfirmPassword,
-                  decoration: authInputDecoration(
-                    'Confirm password',
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _showConfirmPassword
-                            ? LucideIcons.eye
-                            : LucideIcons.eyeOff,
-                        size: 20,
-                      ),
-                      onPressed: () => setState(
-                        () => _showConfirmPassword = !_showConfirmPassword,
-                      ),
-                    ),
-                  ),
-                  validator: _confirmValidator,
-                  onChanged: (_) => setState(() {}),
-                ),
-              ],
+    return BlocListener<RegisterCubit, RegisterState>(
+      listener: (context, state) {
+        if (state is EmailExists) {
+          // Email already exists, show error snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('This email is already registered.'),
+              backgroundColor: Colors.red,
             ),
-          ],
-        ),
+          );
+        } else if (state is EmailDoesNotExist) {
+          // Email doesn't exist, proceed to send OTP
+          context.read<RegisterCubit>().sendOtp(state.email);
+        } else if (state is OtpSent) {
+          // OTP sent successfully, navigate to OTP verification screen
+          final email = _emailController.text.trim();
+          final password = _passwordController.text;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OtpVerificationScreen(
+                email: email,
+                password: password,
+              ),
+            ),
+          );
+        } else if (state is OtpSendFailure) {
+          // OTP send failed, show error snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      child: BlocBuilder<RegisterCubit, RegisterState>(
+        builder: (context, state) {
+          final isLoading =
+              state is CheckingEmailExistence || state is OtpSending;
+
+          return AuthLayout(
+            title: 'Create Account',
+            subtitle: 'Enter your email, password, and confirm to continue.',
+            action: BottomActionButton(
+              label: 'Next',
+              enabled: _canProceed && !isLoading,
+              isLoading: isLoading,
+              onPressed: _canProceed && !isLoading ? _handleNext : null,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CardContainer(
+                    children: [
+                      const Text(' Email address'),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r"\s")),
+                        ],
+                        decoration: authInputDecoration('you@example.com'),
+                        validator: Validators.email,
+                        onChanged: (_) => setState(() {}),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text('Password'),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: !_showPassword,
+                        decoration: authInputDecoration(
+                          'Enter password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _showPassword
+                                  ? LucideIcons.eye
+                                  : LucideIcons.eyeOff,
+                              size: 20,
+                            ),
+                            onPressed: () =>
+                                setState(() => _showPassword = !_showPassword),
+                          ),
+                        ),
+                        validator: Validators.strongPassword,
+                        onChanged: (_) => setState(() {}),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8, bottom: 12),
+                        child: Text(
+                          'Min 8 characters, at least one number, one uppercase letter and one special character.',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ),
+                      const Text('Confirm Password'),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _confirmController,
+                        obscureText: !_showConfirmPassword,
+                        decoration: authInputDecoration(
+                          'Confirm password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _showConfirmPassword
+                                  ? LucideIcons.eye
+                                  : LucideIcons.eyeOff,
+                              size: 20,
+                            ),
+                            onPressed: () => setState(
+                              () =>
+                                  _showConfirmPassword = !_showConfirmPassword,
+                            ),
+                          ),
+                        ),
+                        validator: _confirmValidator,
+                        onChanged: (_) => setState(() {}),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

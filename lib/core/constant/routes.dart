@@ -9,6 +9,8 @@ class Routes {
 
   static const String registerEmailScreen = '/registerEmailScreen';
 
+  static const String otpVerificationScreen = '/otpVerificationScreen';
+
   static const String registerPasswordScreen = '/registerPasswordScreen';
 
   static const String registerNameScreen = '/registerNameScreen';

@@ -9,6 +9,9 @@ class Endpoints {
   static const String profile = '/Account/profile';
   static const String deleteAccount = '/Account/DeleteAccount';
   static const String updateProfile = '/Account/UpdateProfile';
+  static const String checkEmailExistence = '/Account/EmailExistance';
+  static const String sendOtp = '/Account/send-otp';
+  static const String verifyOtp = '/Account/verify-otp';
 
   // Employee Survey Flow
   static const String questions = '/Survey/questions';
