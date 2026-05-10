@@ -308,7 +308,10 @@ class _OnboardingPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: const AnalyticsLogo(size: 72),
+                          child: AnalyticsLogo(
+  size: 72,
+  color: data.accentColor,
+),
                         ),
                       ],
                     ),
