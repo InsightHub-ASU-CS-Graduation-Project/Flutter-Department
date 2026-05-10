@@ -290,17 +290,32 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                   children: [
                     Expanded(
                       child: OutlinedButton.icon(
-                        onPressed: () {
-                          context
-                              .read<QuestionCubit>()
-                              .reset();
+                     onPressed: () async {
+  final cubit = context.read<QuestionCubit>();
 
-                          Navigator
-                              .pushReplacementNamed(
-                            context,
-                            Routes.questionScreen,
-                          );
-                        },
+  cubit.reset();
+
+  final success = await cubit.fetchQuestionsAsync(
+    isEmployed: true,
+  );
+
+  if (!context.mounted) return;
+
+  if (success) {
+    Navigator.pushReplacementNamed(
+      context,
+      Routes.questionScreen,
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Failed to load questions',
+        ),
+      ),
+    );
+  }
+},
                         icon: const Icon(
                           Icons.refresh,
                         ),

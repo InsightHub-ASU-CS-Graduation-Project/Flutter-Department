@@ -1,7 +1,7 @@
 final List<Map<String, dynamic>> jobs = [
-  {"id": 2, "name": "Backend"},
-  {"id": 3, "name": "Frontend"},
-  {"id": 4, "name": "Mobile"},
+  {"id": 2, "name": "Backend Dev"},
+  {"id": 3, "name": "Frontend Dev"},
+  {"id": 4, "name": "Mobile Dev"},
   {"id": 5, "name": "Game Dev"},
   {"id": 6, "name": "Cybersecurity"},
   {"id": 7, "name": "Embedded"},

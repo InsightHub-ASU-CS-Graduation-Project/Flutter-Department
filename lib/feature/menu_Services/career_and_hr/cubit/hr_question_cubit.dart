@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:InsightHub/core/services/api_service.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_question_model.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_quiz_result_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_question_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_quiz_result_model.dart';
 import 'package:meta/meta.dart';
 
 @immutable

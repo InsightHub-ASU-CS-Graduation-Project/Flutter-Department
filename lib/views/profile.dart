@@ -1,3 +1,4 @@
+import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/hr_question_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
@@ -10,7 +11,6 @@ import 'package:InsightHub/feature/home_and_explore/cubit/dashboard_cubit.dart';
 import 'package:InsightHub/feature/home_and_explore/cubit/search_dashboard_cubit.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/match_cubit.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/cubit/hr_question_cubit.dart';
 import 'package:InsightHub/feature/menu_Services/jop_and_news/cubit/jobs_cubit.dart';
 import 'package:InsightHub/feature/menu_Services/jop_and_news/cubit/news_cubit.dart';
 import 'package:InsightHub/model/profile_model.dart';

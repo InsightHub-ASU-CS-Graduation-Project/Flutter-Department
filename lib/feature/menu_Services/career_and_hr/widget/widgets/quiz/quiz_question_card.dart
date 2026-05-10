@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_answer_tile.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_question_content.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_answer_tile.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_question_content.dart';
 
 class QuizAnswerOption {
   final String text;

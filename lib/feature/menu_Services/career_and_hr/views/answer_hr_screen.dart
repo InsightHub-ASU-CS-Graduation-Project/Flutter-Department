@@ -1,7 +1,7 @@
 import 'package:InsightHub/widget/app_header.dart';
 import 'package:flutter/material.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_quiz_result_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_quiz_result_model.dart';
 
 class AnswerHrScreen extends StatefulWidget {
   final String categoryName;

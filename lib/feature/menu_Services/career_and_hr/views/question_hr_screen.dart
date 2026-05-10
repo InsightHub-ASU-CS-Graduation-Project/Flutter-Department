@@ -1,15 +1,15 @@
+import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/hr_question_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/cubit/hr_question_cubit.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_question_model.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/view/answer_hr_screen.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_error_view.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_loading_view.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_navigation_bar.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_progress_header.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_question_card.dart';
-import 'package:InsightHub/feature/menu_Services/widgets/quiz/quiz_transition_switcher.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_question_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/views/answer_hr_screen.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_error_view.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_loading_view.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_navigation_bar.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_progress_header.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_question_card.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/widgets/quiz/quiz_transition_switcher.dart';
 import 'package:InsightHub/widget/app_header.dart';
 
 class QuestionHrScreen extends StatefulWidget {

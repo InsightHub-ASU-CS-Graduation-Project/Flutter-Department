@@ -5,8 +5,8 @@ import 'package:InsightHub/feature/menu_Services/career_and_hr/model/navigation_
 import 'package:InsightHub/model/app_error.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/question_model.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_question_model.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/human_resources/model/hr_quiz_result_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_question_model.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_quiz_result_model.dart';
 import 'package:InsightHub/core/services/endpoints.dart';
 import 'package:InsightHub/core/services/secure_storege.dart';
 

@@ -16,22 +16,54 @@ class RegisterAccountScreen extends StatefulWidget {
   static const String routeName = '/registerAccountScreen';
 
   @override
-  State<RegisterAccountScreen> createState() => _RegisterAccountScreenState();
+  State<RegisterAccountScreen> createState() =>
+      _RegisterAccountScreenState();
 }
 
-class _RegisterAccountScreenState extends State<RegisterAccountScreen> {
+class _RegisterAccountScreenState
+    extends State<RegisterAccountScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmController = TextEditingController();
+
+  final TextEditingController _emailController =
+      TextEditingController();
+
+  final TextEditingController _passwordController =
+      TextEditingController();
+
+  final TextEditingController _confirmController =
+      TextEditingController();
 
   bool _showPassword = false;
   bool _showConfirmPassword = false;
 
+  bool get hasUppercase =>
+      RegExp(r'[A-Z]').hasMatch(_passwordController.text);
+
+  bool get hasLowercase =>
+      RegExp(r'[a-z]').hasMatch(_passwordController.text);
+
+  bool get hasNumber =>
+      RegExp(r'[0-9]').hasMatch(_passwordController.text);
+
+  bool get hasSpecialCharacter =>
+      RegExp(r'[!@#$%^&*(),.?":{}|<>]')
+          .hasMatch(_passwordController.text);
+
+  bool get hasMinLength =>
+      _passwordController.text.length >= 8;
+
+  bool get isPasswordValid =>
+      hasUppercase &&
+      hasLowercase &&
+      hasNumber &&
+      hasSpecialCharacter &&
+      hasMinLength;
+
   bool get _canProceed {
     return Validators.email(_emailController.text) == null &&
-        Validators.strongPassword(_passwordController.text) == null &&
-        _passwordController.text == _confirmController.text &&
+        isPasswordValid &&
+        _passwordController.text ==
+            _confirmController.text &&
         _confirmController.text.isNotEmpty;
   }
 
@@ -48,18 +80,53 @@ class _RegisterAccountScreenState extends State<RegisterAccountScreen> {
 
     final email = _emailController.text.trim();
 
-    // Check if email exists before proceeding
-    context.read<RegisterCubit>().checkEmailExistence(email);
+    context
+        .read<RegisterCubit>()
+        .checkEmailExistence(email);
   }
 
   String? _confirmValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password confirmation is required';
     }
+
     if (value != _passwordController.text) {
       return 'Passwords do not match';
     }
+
     return null;
+  }
+
+  Widget _buildRequirement(
+    String text,
+    bool valid,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 6),
+      child: Row(
+        children: [
+          Icon(
+            valid
+                ? Icons.check_circle
+                : Icons.cancel,
+            color:
+                valid ? Colors.green : Colors.red,
+            size: 18,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(
+              color: valid
+                  ? Colors.green
+                  : Colors.red,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -67,124 +134,248 @@ class _RegisterAccountScreenState extends State<RegisterAccountScreen> {
     return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is EmailExists) {
-          // Email already exists, show error snackbar
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('This email is already registered.'),
+              content: Text(
+                'This email is already registered.',
+              ),
               backgroundColor: Colors.red,
             ),
           );
         } else if (state is EmailDoesNotExist) {
-          // Email doesn't exist, proceed to send OTP
-          context.read<RegisterCubit>().sendOtp(state.email);
+          context
+              .read<RegisterCubit>()
+              .sendOtp(state.email);
         } else if (state is OtpSent) {
-          // OTP sent successfully, navigate to OTP verification screen
-          final email = _emailController.text.trim();
-          final password = _passwordController.text;
+          final email =
+              _emailController.text.trim();
+
+          final password =
+              _passwordController.text;
+
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => OtpVerificationScreen(
+              builder: (context) =>
+                  OtpVerificationScreen(
                 email: email,
                 password: password,
               ),
             ),
           );
         } else if (state is OtpSendFailure) {
-          // OTP send failed, show error snackbar
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(state.errorMessage),
+              content: Text(
+                state.errorMessage,
+              ),
               backgroundColor: Colors.red,
             ),
           );
         }
       },
-      child: BlocBuilder<RegisterCubit, RegisterState>(
+      child: BlocBuilder<
+          RegisterCubit,
+          RegisterState>(
         builder: (context, state) {
           final isLoading =
-              state is CheckingEmailExistence || state is OtpSending;
+              state is CheckingEmailExistence ||
+                  state is OtpSending;
 
           return AuthLayout(
             title: 'Create Account',
-            subtitle: 'Enter your email, password, and confirm to continue.',
+            subtitle:
+                'Enter your email and password to continue.',
             action: BottomActionButton(
               label: 'Next',
-              enabled: _canProceed && !isLoading,
+              enabled:
+                  _canProceed && !isLoading,
               isLoading: isLoading,
-              onPressed: _canProceed && !isLoading ? _handleNext : null,
+              onPressed:
+                  _canProceed && !isLoading
+                      ? _handleNext
+                      : null,
             ),
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
                 children: [
                   CardContainer(
                     children: [
-                      const Text(' Email address'),
-                      const SizedBox(height: 8),
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        autofillHints: const [AutofillHints.email],
-                        inputFormatters: [
-                          FilteringTextInputFormatter.deny(RegExp(r"\s")),
-                        ],
-                        decoration: authInputDecoration('you@example.com'),
-                        validator: Validators.email,
-                        onChanged: (_) => setState(() {}),
+                      const Text(
+                        'Email Address',
                       ),
-                      const SizedBox(height: 24),
-                      const Text('Password'),
+
                       const SizedBox(height: 8),
+
                       TextFormField(
-                        controller: _passwordController,
-                        obscureText: !_showPassword,
-                        decoration: authInputDecoration(
+                        controller:
+                            _emailController,
+                        keyboardType:
+                            TextInputType
+                                .emailAddress,
+                        autofillHints: const [
+                          AutofillHints.email,
+                        ],
+                        inputFormatters: [
+                          FilteringTextInputFormatter
+                              .deny(
+                            RegExp(r"\s"),
+                          ),
+                        ],
+                        decoration:
+                            authInputDecoration(
+                          'you@example.com',
+                        ),
+                        validator:
+                            Validators.email,
+                        onChanged: (_) =>
+                            setState(() {}),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      const Text('Password'),
+
+                      const SizedBox(height: 8),
+
+                      TextFormField(
+                        controller:
+                            _passwordController,
+                        obscureText:
+                            !_showPassword,
+                        decoration:
+                            authInputDecoration(
                           'Enter password',
-                          suffixIcon: IconButton(
+                          suffixIcon:
+                              IconButton(
                             icon: Icon(
                               _showPassword
-                                  ? LucideIcons.eye
-                                  : LucideIcons.eyeOff,
+                                  ? LucideIcons
+                                      .eye
+                                  : LucideIcons
+                                      .eyeOff,
                               size: 20,
                             ),
-                            onPressed: () =>
-                                setState(() => _showPassword = !_showPassword),
+                            onPressed: () {
+                              setState(() {
+                                _showPassword =
+                                    !_showPassword;
+                              });
+                            },
+                          ),
+                        ).copyWith(
+                          enabledBorder:
+                              OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius
+                                    .circular(
+                              14,
+                            ),
+                            borderSide:
+                                BorderSide(
+                              color:
+                                  _passwordController
+                                              .text
+                                              .isEmpty ||
+                                          isPasswordValid
+                                      ? Colors
+                                          .grey
+                                      : Colors
+                                          .red,
+                              width: 1.5,
+                            ),
+                          ),
+                          focusedBorder:
+                              OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius
+                                    .circular(
+                              14,
+                            ),
+                            borderSide:
+                                BorderSide(
+                              color:
+                                  isPasswordValid
+                                      ? Colors
+                                          .green
+                                      : Colors
+                                          .red,
+                              width: 2,
+                            ),
                           ),
                         ),
-                        validator: Validators.strongPassword,
-                        onChanged: (_) => setState(() {}),
+                        onChanged: (_) =>
+                            setState(() {}),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8, bottom: 12),
-                        child: Text(
-                          'Min 8 characters, at least one number, one uppercase letter and one special character.',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
+
+                      const SizedBox(height: 12),
+
+                      _buildRequirement(
+                        'At least 8 characters',
+                        hasMinLength,
                       ),
-                      const Text('Confirm Password'),
+
+                      _buildRequirement(
+                        'Contains uppercase letter',
+                        hasUppercase,
+                      ),
+
+                      _buildRequirement(
+                        'Contains lowercase letter',
+                        hasLowercase,
+                      ),
+
+                      _buildRequirement(
+                        'Contains number',
+                        hasNumber,
+                      ),
+
+                      _buildRequirement(
+                        'Contains special character',
+                        hasSpecialCharacter,
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      const Text(
+                        'Confirm Password',
+                      ),
+
                       const SizedBox(height: 8),
+
                       TextFormField(
-                        controller: _confirmController,
-                        obscureText: !_showConfirmPassword,
-                        decoration: authInputDecoration(
+                        controller:
+                            _confirmController,
+                        obscureText:
+                            !_showConfirmPassword,
+                        decoration:
+                            authInputDecoration(
                           'Confirm password',
-                          suffixIcon: IconButton(
+                          suffixIcon:
+                              IconButton(
                             icon: Icon(
                               _showConfirmPassword
-                                  ? LucideIcons.eye
-                                  : LucideIcons.eyeOff,
+                                  ? LucideIcons
+                                      .eye
+                                  : LucideIcons
+                                      .eyeOff,
                               size: 20,
                             ),
-                            onPressed: () => setState(
-                              () =>
-                                  _showConfirmPassword = !_showConfirmPassword,
-                            ),
+                            onPressed: () {
+                              setState(() {
+                                _showConfirmPassword =
+                                    !_showConfirmPassword;
+                              });
+                            },
                           ),
                         ),
-                        validator: _confirmValidator,
-                        onChanged: (_) => setState(() {}),
+                        validator:
+                            _confirmValidator,
+                        onChanged: (_) =>
+                            setState(() {}),
                       ),
                     ],
                   ),

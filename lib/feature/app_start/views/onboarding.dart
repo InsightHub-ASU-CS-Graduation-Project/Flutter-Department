@@ -9,40 +9,62 @@ class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  State<OnboardingScreen> createState() =>
+      _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _pageController = PageController();
+class _OnboardingScreenState
+    extends State<OnboardingScreen> {
+  final PageController _pageController =
+      PageController();
+
   int _currentPage = 0;
 
-  final List<_OnboardingPageData> _pages = const [
+  final List<_OnboardingPageData> _pages =
+      const [
     _OnboardingPageData(
-      title: 'Track the market faster',
+      headerTitle:
+          'FrontEnd Analytics',
+      headerSubtitle:
+          'React • Flutter • UI/UX',
+      title:
+          'Track Front-End Technology Trends',
       description:
-          'Follow practical labor and market signals in one place without jumping between scattered sources.',
-      icon: Icons.insights_rounded,
-      accentColor: AppColors.primaryBlue,
-      surfaceColor: Color(0xFFDCEBFF),
-      stats: ['Live trends', 'Clear signals', 'Faster decisions'],
+          'Analyze salaries, hiring growth, frameworks, and demanded skills across Flutter, React, Angular, and modern front-end technologies.',
+      accentColor:
+          AppColors.primaryBlue,
+      surfaceColor:
+          Color(0xFFDCEBFF),
     ),
+
     _OnboardingPageData(
-      title: 'Build a stronger profile',
+      headerTitle:
+          'BackEnd Intelligence',
+      headerSubtitle:
+          'Node.js • Laravel • APIs',
+      title:
+          'Understand Server-Side Market Demand',
       description:
-          'Highlight your background, skills, and preferences so Insight Hub can surface more relevant opportunities.',
-      icon: Icons.person_search_rounded,
-      accentColor: AppColors.primaryGreen,
-      surfaceColor: Color(0xFFDDF7E8),
-      stats: ['Smart matching', 'Skills first', 'Career-ready'],
+          'Monitor backend technologies including Node.js, Laravel, .NET, databases, scalable APIs, cloud systems, and DevOps engineering.',
+      accentColor:
+          Color(0xFF0F766E),
+      surfaceColor:
+          Color(0xFFD9F7F2),
     ),
+
     _OnboardingPageData(
-      title: 'Move from insight to action',
+      headerTitle:
+          'AI & Data Analytics',
+      headerSubtitle:
+          'Machine Learning • Data Science',
+      title:
+          'Discover AI and Data Career Insights',
       description:
-          'Turn what you learn into next steps with a smooth sign up and login flow designed for quick access.',
-      icon: Icons.rocket_launch_rounded,
-      accentColor: Color(0xFF0F766E),
-      surfaceColor: Color(0xFFD9F7F2),
-      stats: ['Focused setup', 'Quick access', 'One-tap start'],
+          'Explore machine learning, cybersecurity, data analysis, and game development careers powered by intelligent market analytics.',
+      accentColor:
+          Color(0xFF4F46E5),
+      surfaceColor:
+          Color(0xFFE7E5FF),
     ),
   ];
 
@@ -53,21 +75,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Future<void> _finishOnboarding() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(onboardingSeenKey, true);
+    final prefs =
+        await SharedPreferences.getInstance();
+
+    await prefs.setBool(
+      onboardingSeenKey,
+      true,
+    );
 
     if (!mounted) return;
-    Navigator.pushReplacementNamed(context, Routes.welcomeScreen);
+
+    Navigator.pushReplacementNamed(
+      context,
+      Routes.welcomeScreen,
+    );
   }
 
   Future<void> _handlePrimaryAction() async {
-    if (_currentPage == _pages.length - 1) {
+    if (_currentPage ==
+        _pages.length - 1) {
       await _finishOnboarding();
       return;
     }
 
     await _pageController.nextPage(
-      duration: const Duration(milliseconds: 300),
+      duration:
+          const Duration(milliseconds: 350),
       curve: Curves.easeOutCubic,
     );
   }
@@ -75,114 +108,190 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final page = _pages[_currentPage];
-    final isLastPage = _currentPage == _pages.length - 1;
+
+    final isLastPage =
+        _currentPage == _pages.length - 1;
 
     return Scaffold(
-      backgroundColor: AppColors.bgWhite,
+      backgroundColor:
+          const Color(0xFFF8FAFC),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding:
+              const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 16,
+          ),
           child: Column(
             children: [
+              /// TOP BAR
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment:
+                    MainAxisAlignment
+                        .spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
+                    padding:
+                        const EdgeInsets.symmetric(
+                      horizontal: 16,
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.bgLightGray,
-                      borderRadius: BorderRadius.circular(999),
+                      color: Colors.white,
+                      borderRadius:
+                          BorderRadius.circular(
+                        999,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black
+                              .withAlpha(10),
+                          blurRadius: 12,
+                          offset:
+                              const Offset(
+                            0,
+                            6,
+                          ),
+                        ),
+                      ],
                     ),
                     child: Text(
                       '${_currentPage + 1}/${_pages.length}',
-                      style: const TextStyle(
-                        color: AppColors.textGray,
-                        fontWeight: FontWeight.w600,
+                      style:
+                          const TextStyle(
+                        color: AppColors
+                            .textDark,
+                        fontWeight:
+                            FontWeight.w700,
                       ),
                     ),
                   ),
+
                   TextButton(
-                    onPressed: _finishOnboarding,
+                    onPressed:
+                        _finishOnboarding,
                     child: const Text(
                       'Skip',
                       style: TextStyle(
-                        color: AppColors.textGray,
-                        fontWeight: FontWeight.w600,
+                        color: AppColors
+                            .textGray,
+                        fontWeight:
+                            FontWeight.w600,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+
+              const SizedBox(height: 18),
+
               Expanded(
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: _pages.length,
-                  onPageChanged: (index) {
+                child:
+                    PageView.builder(
+                  controller:
+                      _pageController,
+                  itemCount:
+                      _pages.length,
+                  onPageChanged:
+                      (index) {
                     setState(() {
-                      _currentPage = index;
+                      _currentPage =
+                          index;
                     });
                   },
-                  itemBuilder: (context, index) {
-                    final item = _pages[index];
+                  itemBuilder:
+                      (context, index) {
+                    final item =
+                        _pages[index];
+
                     return _OnboardingPage(
                       data: item,
-                      isActive: index == _currentPage,
                     );
                   },
                 ),
               ),
+
               const SizedBox(height: 20),
+
+              /// PAGE INDICATOR
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment:
+                    MainAxisAlignment.center,
                 children: List.generate(
                   _pages.length,
-                  (index) => AnimatedContainer(
-                    duration: const Duration(milliseconds: 220),
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: index == _currentPage ? 28 : 10,
+                  (index) =>
+                      AnimatedContainer(
+                    duration:
+                        const Duration(
+                      milliseconds: 220,
+                    ),
+                    margin:
+                        const EdgeInsets.symmetric(
+                      horizontal: 4,
+                    ),
+                    width:
+                        index == _currentPage
+                            ? 30
+                            : 10,
                     height: 10,
-                    decoration: BoxDecoration(
-                      color: index == _currentPage
-                          ? page.accentColor
-                          : AppColors.borderMedium,
-                      borderRadius: BorderRadius.circular(999),
+                    decoration:
+                        BoxDecoration(
+                      color:
+                          index ==
+                                  _currentPage
+                              ? page
+                                  .accentColor
+                              : Colors
+                                  .grey
+                                  .shade300,
+                      borderRadius:
+                          BorderRadius.circular(
+                        999,
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+
+              const SizedBox(height: 28),
+
+              /// BUTTON
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: page.accentColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18),
+                  style:
+                      ElevatedButton.styleFrom(
+                    backgroundColor:
+                        page.accentColor,
+                    foregroundColor:
+                        Colors.white,
+                    elevation: 0,
+                    padding:
+                        const EdgeInsets.symmetric(
+                      vertical: 18,
+                    ),
+                    shape:
+                        RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(
+                        20,
+                      ),
                     ),
                   ),
-                  onPressed: _handlePrimaryAction,
+                  onPressed:
+                      _handlePrimaryAction,
                   child: Text(
-                    isLastPage ? 'Get started' : 'Next',
-                    style: const TextStyle(
+                    isLastPage
+                        ? 'Start Exploring'
+                        : 'Continue',
+                    style:
+                        const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight:
+                          FontWeight.w700,
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                isLastPage
-                    ? 'Your account journey starts on the next screen.'
-                    : 'Swipe or tap next to keep going.',
-                style: const TextStyle(color: AppColors.textGray, fontSize: 14),
-                textAlign: TextAlign.center,
               ),
             ],
           ),
@@ -192,200 +301,662 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 }
 
-class _OnboardingPage extends StatelessWidget {
-  const _OnboardingPage({required this.data, required this.isActive});
+class _OnboardingPage
+    extends StatelessWidget {
+  const _OnboardingPage({
+    required this.data,
+  });
 
   final _OnboardingPageData data;
-  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      duration: const Duration(milliseconds: 240),
-      opacity: isActive ? 1 : 0.75,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [data.surfaceColor, Colors.white],
-                ),
-                borderRadius: BorderRadius.circular(32),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 72,
-                    width: 72,
-                    decoration: BoxDecoration(
-                      color: data.accentColor,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: data.accentColor.withOpacity(0.18),
-                          blurRadius: 18,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Icon(data.icon, color: Colors.white, size: 36),
-                  ),
-                  const SizedBox(height: 28),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: data.stats
-                        .map(
-                          (stat) => Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 14,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(999),
-                              border: Border.all(
-                                color: data.accentColor.withOpacity(0.15),
-                              ),
-                            ),
-                            child: Text(
-                              stat,
-                              style: TextStyle(
-                                color: data.accentColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  const SizedBox(height: 28),
-                  Container(
-                    height: 180,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: data.accentColor.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          top: 26,
-                          left: 24,
-                          child: _MetricCard(
-                            label: 'Insight score',
-                            value: '+24%',
-                            accentColor: data.accentColor,
-                          ),
-                        ),
-                        Positioned(
-                          top: 68,
-                          right: 24,
-                          child: _MetricCard(
-                            label: 'Profile match',
-                            value: '89%',
-                            accentColor: data.accentColor,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(14),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: data.accentColor.withOpacity(0.12),
-                                blurRadius: 20,
-                                offset: const Offset(0, 10),
-                              ),
-                            ],
-                          ),
-                          child: AnalyticsLogo(
-  size: 72,
-  color: data.accentColor,
-),
-                        ),
-                      ],
-                    ),
-                  ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        children: [
+          /// MAIN CARD
+          Container(
+            width: double.infinity,
+            padding:
+                const EdgeInsets.all(
+              24,
+            ),
+            decoration: BoxDecoration(
+              gradient:
+                  LinearGradient(
+                begin:
+                    Alignment.topLeft,
+                end:
+                    Alignment.bottomRight,
+                colors: [
+                  data.surfaceColor,
+                  Colors.white,
                 ],
               ),
-            ),
-            const SizedBox(height: 32),
-            Text(
-              data.title,
-              style: const TextStyle(
-                fontSize: 30,
-                height: 1.15,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textDark,
+              borderRadius:
+                  BorderRadius.circular(
+                34,
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: data
+                      .accentColor
+                      .withAlpha(20),
+                  blurRadius: 24,
+                  offset:
+                      const Offset(
+                    0,
+                    14,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              data.description,
-              style: const TextStyle(
-                fontSize: 16,
-                height: 1.6,
-                color: AppColors.textGray,
-              ),
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment
+                      .start,
+              children: [
+                /// HEADER
+                Row(
+                  children: [
+                    AnalyticsLogo(
+                      size: 62,
+                      color: data
+                          .accentColor,
+                    ),
+
+                    const SizedBox(
+                      width: 16,
+                    ),
+
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment
+                                .start,
+                        children: [
+                          Text(
+                            data
+                                .headerTitle,
+                            style:
+                                const TextStyle(
+                              fontSize:
+                                  22,
+                              fontWeight:
+                                  FontWeight
+                                      .w800,
+                              color:
+                                  AppColors
+                                      .textDark,
+                            ),
+                          ),
+
+                          const SizedBox(
+                            height: 4,
+                          ),
+
+                          Text(
+                            data
+                                .headerSubtitle,
+                            style:
+                                const TextStyle(
+                              fontSize:
+                                  14,
+                              color:
+                                  AppColors
+                                      .textGray,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(
+                  height: 28,
+                ),
+
+                /// ANALYTICS DASHBOARD
+                Container(
+                  width:
+                      double.infinity,
+                  padding:
+                      const EdgeInsets.all(
+                    20,
+                  ),
+                  decoration:
+                      BoxDecoration(
+                    color: Colors.white
+                        .withAlpha(
+                      235,
+                    ),
+                    borderRadius:
+                        BorderRadius.circular(
+                      30,
+                    ),
+                    border: Border.all(
+                      color: data
+                          .accentColor
+                          .withAlpha(
+                        20,
+                      ),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      /// HEADER
+                      Row(
+                        children: [
+                          AnalyticsLogo(
+                            size: 42,
+                            color: data
+                                .accentColor,
+                          ),
+
+                          const SizedBox(
+                            width: 12,
+                          ),
+
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                                  CrossAxisAlignment
+                                      .start,
+                              children: [
+                                Text(
+                                  'Technology Insights',
+                                  style:
+                                      TextStyle(
+                                    fontSize:
+                                        16,
+                                    fontWeight:
+                                        FontWeight
+                                            .w800,
+                                    color: data
+                                        .accentColor,
+                                  ),
+                                ),
+
+                                const SizedBox(
+                                  height:
+                                      2,
+                                ),
+
+                                const Text(
+                                  'Live market analytics',
+                                  style:
+                                      TextStyle(
+                                    fontSize:
+                                        12,
+                                    color:
+                                        AppColors.textGray,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          Container(
+                            padding:
+                                const EdgeInsets.symmetric(
+                              horizontal:
+                                  10,
+                              vertical:
+                                  6,
+                            ),
+                            decoration:
+                                BoxDecoration(
+                              color:
+                                  const Color(
+                                0xFFDCFCE7,
+                              ),
+                              borderRadius:
+                                  BorderRadius.circular(
+                                999,
+                              ),
+                            ),
+                            child:
+                                const Row(
+                              mainAxisSize:
+                                  MainAxisSize
+                                      .min,
+                              children: [
+                                Icon(
+                                  Icons
+                                      .trending_up,
+                                  size:
+                                      14,
+                                  color:
+                                      Color(0xFF16A34A),
+                                ),
+
+                                SizedBox(
+                                  width:
+                                      4,
+                                ),
+
+                                Text(
+                                  '+18.2%',
+                                  style:
+                                      TextStyle(
+                                    fontSize:
+                                        11,
+                                    fontWeight:
+                                        FontWeight.w700,
+                                    color:
+                                        Color(0xFF16A34A),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(
+                        height: 24,
+                      ),
+
+                      /// METRICS
+                      Row(
+                        children: [
+                          Expanded(
+                            child:
+                                _MetricCard(
+                              label:
+                                  'Front-End',
+                              value:
+                                  '+32%',
+                              accentColor:
+                                  data.accentColor,
+                              trendUp:
+                                  true,
+                            ),
+                          ),
+
+                          const SizedBox(
+                            width: 12,
+                          ),
+
+                          Expanded(
+                            child:
+                                _MetricCard(
+                              label:
+                                  'Back-End',
+                              value:
+                                  '-4%',
+                              accentColor:
+                                  data.accentColor,
+                              trendUp:
+                                  false,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(
+                        height: 28,
+                      ),
+
+                      /// CHART
+                      Container(
+                        height: 220,
+                        padding:
+                            const EdgeInsets.symmetric(
+                          horizontal:
+                              8,
+                          vertical:
+                              12,
+                        ),
+                        decoration:
+                            BoxDecoration(
+                          gradient:
+                              LinearGradient(
+                            begin:
+                                Alignment
+                                    .topCenter,
+                            end:
+                                Alignment
+                                    .bottomCenter,
+                            colors: [
+                              data
+                                  .accentColor
+                                  .withAlpha(
+                                8,
+                              ),
+                              Colors
+                                  .transparent,
+                            ],
+                          ),
+                          borderRadius:
+                              BorderRadius.circular(
+                            24,
+                          ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment:
+                              CrossAxisAlignment
+                                  .end,
+                          mainAxisAlignment:
+                              MainAxisAlignment
+                                  .spaceAround,
+                          children: [
+                            _buildAnalyticsBar(
+                              label:
+                                  'Flutter',
+                              value:
+                                  '+14%',
+                              height:
+                                  55,
+                              color: data
+                                  .accentColor,
+                            ),
+
+                            _buildAnalyticsBar(
+                              label:
+                                  'React',
+                              value:
+                                  '+31%',
+                              height:
+                                  120,
+                              color: data
+                                  .accentColor,
+                            ),
+
+                            _buildAnalyticsBar(
+                              label:
+                                  'Node',
+                              value:
+                                  '+19%',
+                              height:
+                                  82,
+                              color: data
+                                  .accentColor,
+                            ),
+
+                            _buildAnalyticsBar(
+                              label:
+                                  'AI',
+                              value:
+                                  '+52%',
+                              height:
+                                  145,
+                              color: data
+                                  .accentColor,
+                            ),
+
+                            _buildAnalyticsBar(
+                              label:
+                                  'Data',
+                              value:
+                                  '+28%',
+                              height:
+                                  102,
+                              color: data
+                                  .accentColor,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 24,
+                      ),
+
+                      /// TAGS
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: [
+                          _buildTag(
+                            'Front-End',
+                            data
+                                .accentColor,
+                          ),
+
+                          _buildTag(
+                            'Back-End',
+                            data
+                                .accentColor,
+                          ),
+
+                          _buildTag(
+                            'AI',
+                            data
+                                .accentColor,
+                          ),
+
+                          _buildTag(
+                            'Mobile',
+                            data
+                                .accentColor,
+                          ),
+
+                          _buildTag(
+                            'Game Dev',
+                            data
+                                .accentColor,
+                          ),
+
+                          _buildTag(
+                            'Data Analysis',
+                            data
+                                .accentColor,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
+
+          const SizedBox(height: 36),
+
+          Text(
+            data.title,
+            style:
+                const TextStyle(
+              fontSize: 31,
+              height: 1.2,
+              fontWeight:
+                  FontWeight.w800,
+              color:
+                  AppColors.textDark,
+            ),
+          ),
+
+          const SizedBox(height: 18),
+
+          Text(
+            data.description,
+            style:
+                const TextStyle(
+              fontSize: 16,
+              height: 1.7,
+              color:
+                  AppColors.textGray,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnalyticsBar({
+    required String label,
+    required String value,
+    required double height,
+    required Color color,
+  }) {
+    return Column(
+      mainAxisAlignment:
+          MainAxisAlignment.end,
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            color: color,
+            fontWeight:
+                FontWeight.w700,
+            fontSize: 11,
+          ),
+        ),
+
+        const SizedBox(height: 8),
+
+        Container(
+          width: 26,
+          height: height,
+          decoration: BoxDecoration(
+            gradient:
+                LinearGradient(
+              begin:
+                  Alignment.topCenter,
+              end:
+                  Alignment.bottomCenter,
+              colors: [
+                color,
+                color.withAlpha(70),
+              ],
+            ),
+            borderRadius:
+                BorderRadius.circular(
+              16,
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 10),
+
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight:
+                FontWeight.w600,
+            color:
+                AppColors.textGray,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTag(
+    String text,
+    Color color,
+  ) {
+    return Container(
+      padding:
+          const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 10,
+      ),
+      decoration: BoxDecoration(
+        color: color.withAlpha(18),
+        borderRadius:
+            BorderRadius.circular(
+          999,
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: color,
+          fontWeight:
+              FontWeight.w700,
+          fontSize: 12,
         ),
       ),
     );
   }
 }
 
-class _MetricCard extends StatelessWidget {
+class _MetricCard
+    extends StatelessWidget {
   const _MetricCard({
     required this.label,
     required this.value,
     required this.accentColor,
+    this.trendUp = true,
   });
 
   final String label;
   final String value;
   final Color accentColor;
+  final bool trendUp;
 
   @override
   Widget build(BuildContext context) {
+    final trendColor =
+        trendUp
+            ? const Color(
+                0xFF16A34A,
+              )
+            : const Color(
+                0xFFDC2626,
+              );
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding:
+          const EdgeInsets.symmetric(
+        horizontal: 14,
+        vertical: 12,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: accentColor.withOpacity(0.08),
-            blurRadius: 14,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        borderRadius:
+            BorderRadius.circular(
+          18,
+        ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: const TextStyle(color: AppColors.textGray, fontSize: 12),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              color: accentColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
+            style:
+                const TextStyle(
+              color:
+                  AppColors.textGray,
+              fontSize: 12,
             ),
+          ),
+
+          const SizedBox(height: 6),
+
+          Row(
+            children: [
+              Icon(
+                trendUp
+                    ? Icons
+                        .trending_up
+                    : Icons
+                        .trending_down,
+                color: trendColor,
+                size: 18,
+              ),
+
+              const SizedBox(width: 4),
+
+              Text(
+                value,
+                style:
+                    TextStyle(
+                  color:
+                      trendColor,
+                  fontSize: 18,
+                  fontWeight:
+                      FontWeight.w800,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -397,16 +968,16 @@ class _OnboardingPageData {
   const _OnboardingPageData({
     required this.title,
     required this.description,
-    required this.icon,
     required this.accentColor,
     required this.surfaceColor,
-    required this.stats,
+    required this.headerTitle,
+    required this.headerSubtitle,
   });
 
   final String title;
   final String description;
-  final IconData icon;
   final Color accentColor;
   final Color surfaceColor;
-  final List<String> stats;
+  final String headerTitle;
+  final String headerSubtitle;
 }

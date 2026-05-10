@@ -22,24 +22,41 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NavigationCubit>(
-      create: (_) => NavigationCubit(ApiService()),
-      child: BlocListener<NavigationCubit, NavigationState>(
-        listener: (context, state) {
-          if (state is NavigationSuccess) {
-            // Handled in onTap to await data fetching
-          }
-
-          if (state is NavigationError) {
-            if (!context.mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Error: ${state.message}'),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        },
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NavigationCubit>(
+          create: (_) => NavigationCubit(ApiService()),
+        ),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<NavigationCubit, NavigationState>(
+            listener: (context, state) {
+              if (state is NavigationError) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error: ${state.message}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          ),
+          BlocListener<QuestionCubit, QuestionState>(
+            listener: (context, state) {
+              if (state is QuestionError) {
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error: ${state.message}'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
         child: Scaffold(
           backgroundColor: AppColors.bgLightGray,
           body: Container(

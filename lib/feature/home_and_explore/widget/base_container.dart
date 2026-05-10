@@ -61,7 +61,7 @@ class BaseContainer extends StatelessWidget {
                 title,
                 style: textTheme.titleMedium?.copyWith(
                   color: AppColors.textPrimary,
-                  fontSize: isCompact ? 8 : 12,
+                  fontSize: isCompact ? 12 : 16,
                   fontWeight: isCompact ? FontWeight.w600 : FontWeight.w700,
                 ),
                 maxLines: 2,
@@ -110,8 +110,7 @@ class BaseContainer extends StatelessWidget {
                   isCompact ? 10.0 : 12.0,
                 ),
                 decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer
-                      .withValues(alpha: 0.24),
+                  color: AppColors.shadowblue.withValues(alpha: 0.24),
                   borderRadius:
                       BorderRadius.circular(8.0),
                   border: Border.all(
@@ -128,7 +127,7 @@ class BaseContainer extends StatelessWidget {
                         Icon(
                           Icons.analytics_outlined,
                           size: 16,
-                          color: colorScheme.primary,
+                          color: AppColors.primaryBlue,
                         ),
 
                         const SizedBox(width: 8.0),
@@ -139,7 +138,7 @@ class BaseContainer extends StatelessWidget {
                             style: textTheme.labelSmall
                                 ?.copyWith(
                                   color:
-                                      colorScheme.primary,
+                                     AppColors.primaryBlue,
                                   fontWeight:
                                       FontWeight.w700,
                                 ),
@@ -160,6 +159,7 @@ class BaseContainer extends StatelessWidget {
                             color: colorScheme
                                 .onSurfaceVariant,
                             height: 1.45,
+                            fontSize: isCompact ? 11 : 13,
                           ),
                       maxLines:
                           isCompact ? 3 : 5,

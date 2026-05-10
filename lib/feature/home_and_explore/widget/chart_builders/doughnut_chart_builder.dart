@@ -30,7 +30,7 @@ static const List<Color> chartColors = [
       return StatefulBuilder(
         builder: (context, setState) {
           return SfCircularChart(
-            margin: const EdgeInsets.all(20),
+            margin: const EdgeInsets.all(10),
 
             legend: const Legend(
               isVisible: true,

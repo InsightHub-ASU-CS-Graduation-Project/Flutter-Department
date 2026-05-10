@@ -17,17 +17,16 @@ class JobsCubit extends Cubit<JobsState> {
   int _pageSize = 15;
 
   static const List<String> categories = [
-    'Backend',
-    'Frontend',
+    'Backend Dev',
+    'Frontend Dev',
     'Full Stack',
     'Q/A Testing',
     'Data Analysis',
     'AI/ML',
-    'Mobile',
+    'Mobile Dev',
     'Embedded',
     'Game Dev',
     'Cybersecurity',
-    
   ];
 
   JobsCubit() : super(JobsInitial());
