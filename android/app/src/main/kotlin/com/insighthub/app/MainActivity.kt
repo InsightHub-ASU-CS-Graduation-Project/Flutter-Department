@@ -1,4 +1,4 @@
-package com.example.insight_hub
+package com.insighthub.app
 
 import io.flutter.embedding.android.FlutterActivity
 
