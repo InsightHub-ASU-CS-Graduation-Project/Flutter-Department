@@ -75,7 +75,7 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           children: [
             AppHeader(
-              title: 'Search',
+              title: 'Market Explorer',
 
               extra: _SearchToolbar(
                 controller: _searchController,
@@ -164,14 +164,13 @@ class _SearchToolbar extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width:4),
               _FilterButton(
                 activeFilterCount: activeFilterCount,
                 onPressed: onOpenFilters,
               ),
             ],
           ),
-          const SizedBox(height: 10),
           SizedBox(
             width: double.infinity,
             child: FilledButton.icon(
@@ -495,7 +494,7 @@ class _SearchInitialView extends StatelessWidget {
               Icon(Icons.query_stats, color: AppColors.primary, size: 38),
               SizedBox(height: 14),
               Text(
-                'Apply search or filters to view analytics.',
+                'The dashboard is yours!\n\nType a keyword or apply filters to Start Exploring',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.textPrimary,

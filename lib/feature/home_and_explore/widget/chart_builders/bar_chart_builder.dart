@@ -6,7 +6,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 class BarChartBuilder {
   const BarChartBuilder._();
-
+static const List<Color> chartColors = [
+    Color(0xFF004AAD), // Principal
+    Color(0xFF38B6FF), // Lead
+    Color(0xFF5271FF), // Senior
+    Color(0xFFBDE0FE), // Trainee
+    Color.fromARGB(255, 216, 238, 253), // القيمة الخامسة والأصغر (Ice Blue)
+  ];
   static Widget build(List<Map<String, dynamic>> rawData) {
     try {
       if (rawData.isEmpty) {
@@ -82,9 +88,18 @@ class BarChartBuilder {
         return ChartHelpers.selectedAwareLabel(data, index, selectedIndex);
       },
       yValueMapper: (data, _) => ChartHelpers.value(data),
-      pointColorMapper: (data, index) {
-        return ChartStyles.selectablePointColor(index, selectedIndex);
-      },
+    pointColorMapper: (data, index) {
+  final baseColor =
+      chartColors[index! % chartColors.length];
+
+  if (selectedIndex == null) {
+    return baseColor;
+  }
+
+  return index == selectedIndex
+      ? baseColor
+      : baseColor.withOpacity(0.25);
+},
       dataLabelSettings: const DataLabelSettings(
         isVisible: true,
         labelPosition: ChartDataLabelPosition.outside,

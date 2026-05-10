@@ -68,7 +68,7 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                                 innerContext,
                                 title: 'Career Assessment',
                                 subtitle:
-                                    'Match your personality with the ideal career path.',
+                                    'Let our algorithm suggest the best careers for you.',
                                 icon: LucideIcons.briefcase,
                                 isActive: true,
                                 isLoading: isLoading,
@@ -119,7 +119,7 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                               innerContext,
                               title: 'News ',
                               subtitle:
-                                  'Tech news tailored to your career interests.',
+                                  ' Fresh drops and market updates.',
                               icon: LucideIcons.clipboardCheck,
                               isActive: true,
                               onTap: () {
@@ -130,7 +130,7 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                             buildSurveyCard(
                               innerContext,
                               title: 'Job  ',
-                              subtitle: ' Discover job ',
+                              subtitle: 'Discover our real-time job feed.',
                               icon: LucideIcons.home,
                               isActive: true,
                               onTap: () {
@@ -140,9 +140,9 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                             const SizedBox(height: 16),
                             buildSurveyCard(
                               innerContext,
-                              title: 'HR Services ',
+                              title: 'Tech Interview Prep',
                               subtitle:
-                                  'Explore industries that excite you most.',
+                                  'Simulate technical rounds with verified engineering,',
                               icon: LucideIcons.users,
                               isActive: true,
                               onTap: () {

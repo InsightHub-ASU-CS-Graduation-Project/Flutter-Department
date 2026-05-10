@@ -36,8 +36,8 @@ class _HomeScreenBodyState extends State<HomeScreenBody> {
         child: Column(
           children: [
             const AppHeader(
-              title: 'Home',
-              subtitle: 'Overview of your daily insights and metrics',
+              title: 'Your Insight Hub',
+              subtitle: 'Your Fresh insights from the last 90 days, Updated live.',
             ),
 
             Expanded(

@@ -6,14 +6,15 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class ChartStyles {
   const ChartStyles._();
 
-  static const Color primaryChartColor = AppColors.primary;
+  static const Color primaryChartColor =     Color(0xFF004AAD) // Principal
+;
   static const Color axisBorderColor = AppColors.border;
   static const Color mutedAxisLabelColor = Color(0xFF9CA3AF);
   static const Color activeAxisLabelColor = AppColors.textPrimary;
   static const Color tooltipTextColor = AppColors.bgWhite;
   static const Color treemapLowColor = Color(0xFF4DB6AC);
-  static const Color treemapMidColor = Color(0xFF42A5F5);
-  static const Color treemapHighColor = Color(0xFF3949AB);
+  static const Color treemapMidColor = Color(0xFF38B6FF);
+  static const Color treemapHighColor = Color(0xFF004AAD);
 
   static const double compactChartHeight = 320;
   static const double selectableChartHeight = 420;
