@@ -36,11 +36,11 @@ class ApiService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await SecureStorage.readData(key: tokenKey);
-            print("🔥 TOKEN FROM STORAGE: $token"); // 👈 هنا
+            print("🔥 TOKEN FROM STORAGE: $token"); 
 
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
-              print("🔥 Added Authorization header to request: Bear  ""$token"); // 👈 هنا
+              print("🔥 Added Authorization header to request: Bear  ""$token"); 
           }
           return handler.next(options);
         },
@@ -104,7 +104,7 @@ class ApiService {
 
     try {
       await SecureStorage.deleteData(key: tokenKey);
-      print("🔥 Unauthorized detected. Token cleared from storage."); // 👈 هنا
+      print("🔥 Unauthorized detected. Token cleared from storage."); 
       unauthorizedNotifier.value++;
     } finally {
       _isHandlingUnauthorized = false;
@@ -211,8 +211,6 @@ class ApiService {
     
     print("ApiService: fetchQuestions called for ${isEmployed ? 'employed' : 'non-employed'} using endpoint: $endpoint");
 
-    // For the existing employee flow, we keep the 'target' query parameter if it was used.
-    // For the new career quiz flow, we hit the endpoint directly.
     final result = await get(
       endpoint,
       queryParameters: isEmployed ? {'target': 'employed'} : null,

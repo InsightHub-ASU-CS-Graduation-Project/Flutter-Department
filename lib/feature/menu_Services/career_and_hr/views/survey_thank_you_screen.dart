@@ -33,7 +33,6 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
                 title: 'Survey Complete',
                 subtitle: 'Thank you for sharing your insights.',
               ),
-              // Body
               Expanded(
                 child: AppMotion(
                   child: Center(
@@ -42,7 +41,6 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Icon
                           Container(
                             width: 100,
                             height: 100,
@@ -67,7 +65,6 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
                           ),
                           const SizedBox(height: 32),
 
-                          // Title
                           const Text(
                             'Thank You!',
                             style: TextStyle(
@@ -78,7 +75,6 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
                           ),
                           const SizedBox(height: 14),
 
-                          // Message
                           const Text(
                             'Your survey responses have been recorded successfully. Since you are employed, your answers will help us improve our career matching for others.',
                             textAlign: TextAlign.center,
@@ -90,7 +86,6 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
                           ),
                           const SizedBox(height: 40),
 
-                          // Retake button
                           SizedBox(
                             width: double.infinity,
                             child: OutlinedButton.icon(
@@ -152,7 +147,6 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
                           ),
                           const SizedBox(height: 14),
 
-                          // Back to home
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(

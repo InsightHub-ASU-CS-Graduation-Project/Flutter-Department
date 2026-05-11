@@ -173,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: const Color(0xFFF9FAFB),
         body: Container(
           decoration: BoxDecoration(
-            gradient: AppColors.bgGradient, // 👈 هنا
+            gradient: AppColors.bgGradient, 
           ),
           child: SafeArea(
             child: Column(

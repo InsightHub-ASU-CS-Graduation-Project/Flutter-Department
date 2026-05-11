@@ -150,7 +150,6 @@ class MarketInsights {
   final String mostCommonCompanySize;
   final double avgYearsExperience;
   
-  // New metrics from JSON
   final double avgConsistency;
   final double avgAdaptability;
   final double avgTeamwork;

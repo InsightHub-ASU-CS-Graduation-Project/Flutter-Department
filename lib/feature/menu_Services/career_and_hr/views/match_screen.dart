@@ -74,7 +74,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppColors.bgGradient, // 👈 هنا
+          gradient: AppColors.bgGradient, 
         ),
         child: SafeArea(
           child: BlocConsumer<MatchCubit, MatchState>(
@@ -84,12 +84,10 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
               }
             },
             builder: (context, state) {
-              /// ✅ Error
               if (state is MatchError) {
                 return _MatchErrorView(
                   message: state.message,
                   onRetry: () {
-                    // context.read<MatchCubit>().reset(); // 🔥 Don't reset result here
                     context.read<QuestionCubit>().reset();
                     Navigator.pushReplacementNamed(
                       context,
@@ -99,11 +97,9 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                 );
               }
 
-              /// ❗ مهم جدًا: ما ترجعش شاشة فاضية
               final isLoading = state is MatchLoading || state is MatchInitial || state is! MatchLoaded;
               final result = isLoading ? CareerQuizResultModel.dummy() : state.result;
         
-              /// ===== Career Quiz Result =====
               if (result is CareerQuizResultModel) {
                 return Skeletonizer(
                   enabled: isLoading,
@@ -115,7 +111,6 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                 );
               }
         
-              /// ===== Matching Result =====
               final matchResult = result as MatchResultModel;
               final scoreColor = _scoreColor(matchResult.similarityScore);
         
@@ -127,7 +122,6 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                     position: _slideAnimation,
                 child: Column(
   children: [
-    /// ───────── FIXED HEADER ─────────
     Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -163,7 +157,6 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
       ),
     ),
 
-    /// ───────── SCROLLABLE BODY ─────────
     Expanded(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(),
@@ -428,7 +421,6 @@ class _CareerQuizResultViewState extends State<_CareerQuizResultView> {
               position: widget.slideAnimation,
               child: Column(
                 children: [
-                  /// ───────────── FIXED APP HEADER ─────────────
                   AppHeader(
                     title: 'Career Matches',
                     subtitle: 'Based on your quiz.',
@@ -447,7 +439,6 @@ class _CareerQuizResultViewState extends State<_CareerQuizResultView> {
                     ),
                   ),
 
-                  /// ───────────── SCROLLABLE BODY ─────────────
                   Expanded(
                     child: CustomScrollView(
                       physics: const BouncingScrollPhysics(),
@@ -477,7 +468,6 @@ class _CareerQuizResultViewState extends State<_CareerQuizResultView> {
                           ),
                         ),
 
-                        /// Bottom Buttons
                         SliverToBoxAdapter(
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(
@@ -630,7 +620,6 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header with Rank and Score
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -710,7 +699,6 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Skills section (Always visible)
                   const Text(
                     'Key Skills',
                     style: TextStyle(
@@ -740,7 +728,6 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
                   if (_isExpanded) ...[
                     const Divider(height: 40),
 
-                    // Performance Metrics Section
                     const Row(
                       children: [
                         Icon(
@@ -799,7 +786,6 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
 
                     const Divider(height: 40),
 
-                    // Market Deep Dive Section
                     const Row(
                       children: [
                         Icon(
@@ -886,7 +872,7 @@ class _TrackMatchCardState extends State<_TrackMatchCard> {
 
 class _SkillProgressBar extends StatelessWidget {
   final String label;
-  final double value; // 0 to 5 scale
+  final double value; 
 
   const _SkillProgressBar({required this.label, required this.value});
 

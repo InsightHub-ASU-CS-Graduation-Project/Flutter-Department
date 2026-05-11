@@ -38,12 +38,10 @@ class MatchCubit extends Cubit<MatchState> {
     emit(const MatchInitial());
   }
 
-  /// تستخدم لما تكون النتيجة جاية من submit (زي QuestionScreen)
   void emitResult(dynamic result) {
     emit(MatchLoaded(result));
   }
 
-  /// تستخدم لما تحتاج تجيب النتيجة من السيرفر مباشرة
   Future<void> fetchResult() async {
     emit(const MatchLoading());
 

@@ -8,8 +8,6 @@ class DashboardApi {
   DashboardApi({ApiService? apiService})
     : _apiService = apiService ?? ApiService();
 
-  /// Fetches JSON from API and handles all errors.
-  /// Always returns a safe List<Map<String, dynamic>>.
   Future<List<Map<String, dynamic>>> fetchDashboardData(
     String endpoint, {
     Map<String, dynamic> requestBody = const {},

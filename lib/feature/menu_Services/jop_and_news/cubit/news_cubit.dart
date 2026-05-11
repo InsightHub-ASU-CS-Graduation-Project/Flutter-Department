@@ -7,7 +7,6 @@ import 'package:InsightHub/core/services/endpoints.dart';
 class NewsCubit extends Cubit<NewsState> {
   final ApiService _apiService = ApiService();
 
-  // Filters
   List<String> _selectedCategories = [];
   String _searchQuery = '';
   DateTime? _startDate;
@@ -31,14 +30,12 @@ class NewsCubit extends Cubit<NewsState> {
 
   NewsCubit() : super(NewsInitial());
 
-  // Getters
   List<String> get selectedCategories => _selectedCategories;
   String get searchQuery => _searchQuery;
   DateTime? get startDate => _startDate;
   DateTime? get endDate => _endDate;
   String get sortBy => _sortBy;
 
-  // ================= FILTERS =================
 
   void setCategories(List<String> categories) {
     _selectedCategories = categories;
@@ -78,7 +75,6 @@ class NewsCubit extends Cubit<NewsState> {
         _sortBy != 'latest';
   }
 
-  // ================= CORE =================
 
   Future<void> loadNews({bool reset = false}) async {
     if (reset) {
@@ -148,7 +144,7 @@ class NewsCubit extends Cubit<NewsState> {
       emit(NewsLoaded(
         newsList: allNews,
         currentPage: page,
-        totalPages: page + 1, // fallback
+        totalPages: page + 1, 
         totalCount: allNews.length,
         isLoadingMore: false,
         hasMorePages: newNews.length == _pageSize,
@@ -173,7 +169,6 @@ class NewsCubit extends Cubit<NewsState> {
     }
   }
 
-  // ================= HELPERS =================
 
   Map<String, dynamic> _buildQueryParams(int page) {
     return {
