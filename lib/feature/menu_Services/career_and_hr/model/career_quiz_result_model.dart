@@ -1,19 +1,4 @@
 
-/// يمثل الاستجابة الكاملة القادمة من endpoints الخاصة بـ **Career Quiz**:
-/// - `POST /CareerQuiz/full-match` (بعد إرسال إجابات الـ quiz مباشرة)
-/// - `GET  /CareerQuiz/result`     (جلب آخر نتيجة محفوظة للمستخدم)
-///
-/// ## شكل JSON (مختصر)
-/// ```json
-/// {
-///   "topTracks": [ { "track": {...}, "trackSimilarityScore": 80.4, "combinedScore": 88.2,
-///                   "similarityMessage": "...", "marketInsights": {...} } ],
-///   "message": "Top recommendation: Mobile Dev."
-/// }
-/// ```
-///
-/// ## لماذا هذا model منفصل؟
-/// لأن الـ backend يرجّع شكل JSON مختلف تمامًا عن employed flow (employee match).
 class CareerQuizResultModel {
   final List<TrackMatch> topTracks;
   final String message;
@@ -25,14 +10,11 @@ class CareerQuizResultModel {
 
   factory CareerQuizResultModel.fromJson(Map<String, dynamic> json) {
     final tracksRaw = (json['topTracks'] as List<dynamic>? ?? const []);
-    print("CareerQuizResultModel: Parsing ${tracksRaw.length} tracks from JSON");
     
     final parsedTracks = tracksRaw
         .whereType<Map>()
         .map((item) => TrackMatch.fromJson(Map<String, dynamic>.from(item)))
         .toList();
-        
-    print("CareerQuizResultModel: Successfully parsed ${parsedTracks.length} tracks");
 
     return CareerQuizResultModel(
       topTracks: parsedTracks,
@@ -84,31 +66,14 @@ class CareerQuizResultModel {
 }
 
 class TrackMatch {
-  /// معلومات المسار نفسه (Nested model).
-  ///
-  /// لماذا Nested؟
-  /// لأن `TrackInfo` يُستخدم كـ "وحدة بيانات" مستقلة ممكن تتكرر/تُشارك
-  /// بين endpoints مختلفة بدون تكرار نفس الحقول داخل كذا model.
   final TrackInfo track;
 
-  /// مقياس تشابه (عادة 0..100) يعبّر عن "كم هذا المسار قريب من المستخدم".
   final double trackSimilarityScore;
 
-  /// **Primary score** المقترح عرضه بشكل بارز في UI.
-  ///
-  /// سبب وجوده:
-  /// - يجمع بين score مختلفة داخل backend (مثلاً aptitude + preference alignment)
-  /// - يعطي ranking أفضل من الاعتماد على percentage وحدها
   final double combinedScore;
 
-  /// جملة تفسيرية موجهة للمستخدم: "لماذا هذا المسار مناسب لك؟"
   final String similarityMessage;
 
-  /// Insights سوق العمل والـ metrics (Nested model).
-  ///
-  /// لماذا Nested؟
-  /// لأن هذه المجموعة من الحقول كبيرة، ولها منطق عرض مختلف تمامًا عن
-  /// Track overview / Skills، وبالتالي فصلها يحسن الصيانة ووضوح الـ UI.
   final MarketInsights marketInsights;
 
   const TrackMatch({
@@ -138,29 +103,18 @@ class TrackMatch {
 }
 
 class TrackInfo {
-  /// معرف المسار من الـ backend.
   final int trackId;
 
-  /// اسم المسار (مثل: Mobile Dev).
   final String trackName;
 
-  /// وصف مختصر للمسار.
   final String description;
 
-  /// المهارات المطلوبة كما تأتي من الـ backend (سلسلة مفصولة بفواصل).
-  ///
-  /// ملاحظة UX:
-  /// - لا نعرضها كسطر نصي طويل.
-  /// - نحولها في UI إلى Chips/Tags باستخدام `requiredSkillsList`.
   final String requiredSkills;
 
-  /// score الداخلي (حسب أسئلة الـ quiz) — عادة يكون أقل معنى للمستخدم من combinedScore.
   final double score;
 
-  /// الحد الأقصى للـ score.
   final double maxScore;
 
-  /// نسبة مئوية (0..100) — metric ثانوية مقارنة بـ combinedScore.
   final double percentage;
 
   const TrackInfo({
@@ -173,7 +127,6 @@ class TrackInfo {
     required this.percentage,
   });
 
-  /// Parsed skills as clean list of chips/tags.
   List<String> get requiredSkillsList => requiredSkills
       .split(',')
       .map((s) => s.trim())
@@ -205,31 +158,22 @@ class TrackInfo {
 }
 
 class MarketInsights {
-  /// إجمالي عدد الموظفين/المحترفين داخل هذا المسار في البيانات (للـ context السوقي).
   final int totalEmployeesInTrack;
 
-  /// متوسط المستوى التقني (عادة scale من 1..5).
   final double avgTechnicalLevel;
 
-  /// متوسط الـ soft skills.
   final double avgSoftSkills;
 
-  /// رضا الرواتب.
   final double avgSalarySatisfaction;
 
-  /// توازن الحياة والعمل.
   final double avgWorkLifeBalance;
 
-  /// بيئة العمل الأكثر شيوعًا (Office / Remote / Hybrid).
   final String mostCommonEnvironment;
 
-  /// حجم الشركة الأكثر شيوعًا.
   final String mostCommonCompanySize;
 
-  /// متوسط سنوات الخبرة.
   final double avgYearsExperience;
   
-  /// Metrics سلوكية/أداء (1..5).
   final double avgConsistency;
   final double avgAdaptability;
   final double avgTeamwork;

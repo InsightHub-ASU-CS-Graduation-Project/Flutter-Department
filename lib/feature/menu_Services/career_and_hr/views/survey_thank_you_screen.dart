@@ -5,14 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:InsightHub/widget/app_header.dart';
 import 'package:InsightHub/widget/app_motion.dart';
 
-/// نهاية مسار المستخدم **الموظّف** بعد إرسال الاستبيان بنجاح.
-///
-/// المتطلبات المعمارية لهذا المسار:
-/// - لا توجد شاشة “match” أو analytics بعد الإرسال — المنتج ينتهي هنا تأكيدًا للمشاركة.
-/// - لا يوجد Retake بعد الشكر؛ المستخدم يعود للرئيسية. (إعادة الاستبيان تتم فقط بدخول
-///   الخدمة من جديد إن كان المنتج يدعم ذلك مستقبلًا؛ حاليًا خارج نطاق employed flow.)
-/// - الفارق عن غير الموظّف: غير الموظّف بعد الإرسال ينتقل إلى `CareerResultScreen`
-///   لعرض توصيات المسارات وبيانات السوق.
+
 class SurveyThankYouScreen extends StatelessWidget {
   const SurveyThankYouScreen({super.key});
 

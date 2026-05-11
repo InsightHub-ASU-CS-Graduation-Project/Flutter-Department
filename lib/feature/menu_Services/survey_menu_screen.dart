@@ -159,7 +159,7 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                               innerContext,
                               title: 'Job  ',
                               subtitle: 'Discover our real-time job feed.',
-                              icon: LucideIcons.home,
+                              icon: LucideIcons.building2,
                               isActive: true,
                               onTap: () {
                                 Navigator.pushNamed(innerContext, Routes.jobScreen);

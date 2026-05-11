@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/metric_tile.dart';
 
-/// Professional Metrics Section
-///
-/// الهدف: تجميع الـ metrics "المهنية" تحت Category واحدة.
-/// بدل ما تكون dump تحت عنوان عام.
 class ProfessionalMetricsSection extends StatelessWidget {
   final MarketInsights insights;
 
@@ -15,37 +11,45 @@ class ProfessionalMetricsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CategoryCard(
       title: 'Professional metrics',
-      subtitle: 'How professionals in this track typically perform (1–5).',
+      subtitle: 'How professionals in this track typically perform (100%).',
       child: Column(
         children: [
           MetricTile(
-            label: 'avgTechnicalLevel',
+            label: 'Technical Level',
             value: insights.avgTechnicalLevel,
-            description: 'Average technical depth required to thrive in this track.',
+            description:
+                'Average technical depth required to thrive in this track.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgSoftSkills',
+            label: 'Soft Skills',
             value: insights.avgSoftSkills,
-            description: 'How important soft skills are for success in this track.',
+            description:
+                'How important soft skills are for success in this track.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgCommunication',
+            label: 'Communication',
             value: insights.avgCommunication,
             description: 'How much clear communication is typically needed.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgProblemSolving',
+            label: 'Problem Solving',
             value: insights.avgProblemSolving,
-            description: 'How strongly problem-solving skills are used day-to-day.',
+            description:
+                'How strongly problem-solving skills are used day-to-day.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgTeamwork',
+            label: 'Teamwork',
             value: insights.avgTeamwork,
-            description: 'How often collaboration and teamwork matter in this track.',
+            description:
+                'How often collaboration and teamwork matter in this track.',
           ),
         ],
       ),
@@ -67,7 +71,7 @@ class _CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(16),
@@ -99,4 +103,3 @@ class _CategoryCard extends StatelessWidget {
     );
   }
 }
-

@@ -36,11 +36,9 @@ class ApiService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await SecureStorage.readData(key: tokenKey);
-            print("🔥 TOKEN FROM STORAGE: $token"); 
 
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
-              print("🔥 Added Authorization header to request: Bear  ""$token"); 
           }
           return handler.next(options);
         },
@@ -104,7 +102,6 @@ class ApiService {
 
     try {
       await SecureStorage.deleteData(key: tokenKey);
-      print("🔥 Unauthorized detected. Token cleared from storage."); 
       unauthorizedNotifier.value++;
     } finally {
       _isHandlingUnauthorized = false;
@@ -156,7 +153,6 @@ class ApiService {
     String endpoint, {
     Map<String, dynamic>? queryParameters,
   }) {
-    print("ApiService: GET request to $endpoint, params: $queryParameters");
     return _handleRequest(
       _dio.get(endpoint, queryParameters: queryParameters),
     );
@@ -209,14 +205,10 @@ class ApiService {
   Future<List<QuestionModel>> fetchQuestions({required bool isEmployed}) async {
     final endpoint = isEmployed ? Endpoints.questions : Endpoints.careerQuizQuestions;
     
-    print("ApiService: fetchQuestions called for ${isEmployed ? 'employed' : 'non-employed'} using endpoint: $endpoint");
-
     final result = await get(
       endpoint,
       queryParameters: isEmployed ? {'target': 'employed'} : null,
     );
-
-    print("ApiService: fetchQuestions result success: ${result['success']}");
 
     if (result['success'] != true) {
       throw Exception(result['error']?.toString() ?? 'Failed to load questions.');
@@ -229,12 +221,6 @@ class ApiService {
         .toList();
   }
 
-  /// Builds the backend payload format used by BOTH flows.
-  ///
-  /// Backend expects:
-  /// ```json
-  /// { "answers": [ { "questionId": 1, "answerValue": 3 }, ... ] }
-  /// ```
   Map<String, dynamic> _buildAnswersPayload(Map<int, int> answers) {
     return {
       'answers': answers.entries
@@ -248,11 +234,6 @@ class ApiService {
     };
   }
 
-  /// Submits answers for the **employed** flow (`/Survey/submit`).
-  ///
-  /// Employed users do **not** get a result / analytics UI in this app—the flow ends
-  /// at the survey thank-you screen after HTTP success. We therefore only validate
-  /// `success` and intentionally do **not** parse the response body into a model.
   Future<void> submitEmployedSurveyAnswers({required Map<int, int> answers}) async {
     final payload = _buildAnswersPayload(answers);
     final result = await post(Endpoints.answers, data: payload);
@@ -264,11 +245,6 @@ class ApiService {
     }
   }
 
-  /// Submits answers for the **non-employed** flow (career recommendations).
-  ///
-  /// Architecture note:
-  /// - Endpoint: `Endpoints.careerQuizFullMatch` (`/CareerQuiz/full-match`)
-  /// - Response shape: `CareerQuizResultModel`
   Future<CareerQuizResultModel> submitCareerQuizAnswers({
     required Map<int, int> answers,
   }) async {

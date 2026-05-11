@@ -3,13 +3,6 @@ import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/section_card.dart';
 
-/// Match Score Section
-///
-/// **combinedScore** هو الـ Primary score (أكبر رقم في UI).
-/// - لأنه الأقرب لقرار ranking النهائي.
-///
-/// أما باقي القيم (percentage / trackSimilarityScore / score-maxScore)
-/// فهي Secondary metrics لتوضيح التفاصيل.
 class MatchScoreSection extends StatelessWidget {
   final TrackMatch trackMatch;
 
@@ -49,7 +42,7 @@ class MatchScoreSection extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        trackMatch.combinedScore.toStringAsFixed(1),
+                        '${trackMatch.combinedScore.toStringAsFixed(1)}%',
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w900,
@@ -58,7 +51,7 @@ class MatchScoreSection extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       const Text(
-                        'Combined',
+                        'Similarity',
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w800,
@@ -73,37 +66,13 @@ class MatchScoreSection extends StatelessWidget {
               Expanded(
                 child: Text(
                   trackMatch.similarityMessage,
-                  style: const TextStyle(
-                    color: Color(0xFF475569),
-                    height: 1.4,
-                  ),
+                  style: const TextStyle(color: Color(0xFF475569), height: 1.4),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 14),
           const Divider(height: 20),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              _SmallStat(
-                label: 'Track similarity',
-                value: trackMatch.trackSimilarityScore.toStringAsFixed(1),
-                hint: 'How close your profile is to this track',
-              ),
-              _SmallStat(
-                label: 'Quiz score',
-                value: '${track.score.toStringAsFixed(0)}/${track.maxScore.toStringAsFixed(0)}',
-                hint: 'Raw score based on your answers',
-              ),
-              _SmallStat(
-                label: 'Percentage',
-                value: '${track.percentage.toStringAsFixed(0)}%',
-                hint: 'Normalized quiz score percentage',
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -165,4 +134,3 @@ class _SmallStat extends StatelessWidget {
     );
   }
 }
-

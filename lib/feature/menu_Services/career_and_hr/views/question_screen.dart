@@ -115,8 +115,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
     return BlocListener<QuestionCubit, QuestionState>(
       listener: (context, state) {
         if (state is QuestionLoaded && state.didSubmitSucceed) {
-          // Employed: submit only — no parsing, no analytics, no match UI.
-          // Non-employed: navigate to typed career recommendations screen.
           if (state.isEmployed) {
             Navigator.pushReplacementNamed(
               context,

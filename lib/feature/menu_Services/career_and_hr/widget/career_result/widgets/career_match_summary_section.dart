@@ -3,11 +3,6 @@ import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/section_card.dart';
 
-/// Career Match Summary في أعلى الصفحة.
-///
-/// الهدف:
-/// - إعطاء المستخدم "الصورة الكبيرة" قبل الدخول في التفاصيل.
-/// - عرض أفضل recommendation + مقارنة سريعة لأفضل 3 tracks.
 class CareerMatchSummarySection extends StatelessWidget {
   final CareerQuizResultModel result;
 
@@ -30,15 +25,8 @@ class CareerMatchSummarySection extends StatelessWidget {
               color: Color(0xFF0F172A),
             ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            top == null ? 'No recommendations yet.' : 'Top recommendation: ${top.track.trackName}',
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: AppColors.primaryBlue,
-            ),
-          ),
+          
+          
           const SizedBox(height: 10),
           if (top != null)
             Text(
@@ -48,17 +36,9 @@ class CareerMatchSummarySection extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-          const SizedBox(height: 14),
-          const Divider(height: 20),
-          const Text(
-            'Top 3 comparison (combinedScore)',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF64748B),
-              letterSpacing: 0.3,
-            ),
-          ),
+          const SizedBox(height: 5),
+          const Divider(height: 10),
+       
           const SizedBox(height: 10),
           Column(
             children: top3.map((t) {
@@ -68,7 +48,7 @@ class CareerMatchSummarySection extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(
-                      width: 110,
+                      width: 120,
                       child: Text(
                         t.track.trackName,
                         maxLines: 1,

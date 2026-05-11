@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 
-/// Widget صغير لعرض Metric واحدة مع شرح "Beginner-friendly".
-///
-/// - **label**: اسم الـ metric
-/// - **value**: قيمتها (مثلاً 3.6)
-/// - **description**: معنى metric للمستخدم
-/// - **scaleMax**: لو كانت metric على مقياس 1..5 (default) نعرض progress bar بسيط
 class MetricTile extends StatelessWidget {
   final String label;
+
   final double value;
+
   final String description;
+
   final double scaleMax;
 
   const MetricTile({
@@ -23,14 +20,19 @@ class MetricTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = (scaleMax <= 0) ? 0.0 : (value / scaleMax).clamp(0.0, 1.0);
+    final percentage =
+        scaleMax <= 0 ? 0.0 : ((value / scaleMax) * 100);
+
+    final progress = (percentage / 100).clamp(0.0, 1.0);
 
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
+        border: Border.all(
+          color: const Color(0xFFE2E8F0),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +48,9 @@ class MetricTile extends StatelessWidget {
                   ),
                 ),
               ),
+
               Text(
-                value.toStringAsFixed(1),
+                '${percentage.toStringAsFixed(1)}%',
                 style: const TextStyle(
                   fontWeight: FontWeight.w800,
                   color: AppColors.primaryBlue,
@@ -55,7 +58,9 @@ class MetricTile extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 8),
+
           Text(
             description,
             style: const TextStyle(
@@ -64,7 +69,9 @@ class MetricTile extends StatelessWidget {
               color: Color(0xFF64748B),
             ),
           ),
+
           const SizedBox(height: 10),
+
           Container(
             height: 6,
             width: double.infinity,
@@ -75,6 +82,7 @@ class MetricTile extends StatelessWidget {
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
               widthFactor: progress,
+
               child: Container(
                 decoration: BoxDecoration(
                   color: AppColors.primaryBlue,
@@ -88,4 +96,3 @@ class MetricTile extends StatelessWidget {
     );
   }
 }
-

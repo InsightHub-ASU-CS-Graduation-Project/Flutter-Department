@@ -3,13 +3,6 @@ import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/section_card.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/skill_chip.dart';
 
-/// Skills Section
-///
-/// يعرض `requiredSkills` كـ Chips بدل dump نص طويل.
-///
-/// لماذا؟
-/// - `requiredSkills` في JSON هي قائمة مفاهيمية (skills units)
-/// - تحويلها لـ Chips يعمل visual grouping ويخليها قابلة للقراءة.
 class SkillsSection extends StatelessWidget {
   final TrackInfo track;
 

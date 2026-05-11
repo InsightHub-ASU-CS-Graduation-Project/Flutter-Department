@@ -98,21 +98,11 @@ class NewsCubit extends Cubit<NewsState> {
     final queryParams = _buildQueryParams(page);
     final body = _buildBody();
 
-    print('=== NEWS API REQUEST ===');
-    print('Endpoint: ${Endpoints.relatedJobs}');
-    print('Query Params: $queryParams');
-    print('Body: $body');
-    print('========================');
-
     final response = await _apiService.post(
       Endpoints.relatedJobs,
       queryParameters: queryParams,
       data: body,
     );
-
-    print('=== NEWS API RESPONSE ===');
-    print(response);
-    print('========================');
 
     if (response['success'] == true && response['data'] != null) {
       dynamic rawData = response['data'];

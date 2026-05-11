@@ -2,12 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 
-/// Track Header Section
-/// - يعرض اسم المسار + الترتيب + نسبة percentage (secondary).
-///
-/// لماذا هذا section مستقل؟
-/// - لأن header سيتكرر داخل كل track card
-/// - ويسهل تغييره/تطويره بدون لمس باقي أقسام الـ UI
 class TrackHeaderSection extends StatelessWidget {
   final int rank;
   final TrackMatch trackMatch;
@@ -54,13 +48,6 @@ class TrackHeaderSection extends StatelessWidget {
                 fontWeight: FontWeight.w900,
                 color: Color(0xFF0F172A),
               ),
-            ),
-          ),
-          Text(
-            '${track.percentage.round()}%',
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              color: AppColors.primaryBlue,
             ),
           ),
         ],

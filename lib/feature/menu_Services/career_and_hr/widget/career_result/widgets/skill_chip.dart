@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 
-/// Chip لعرض مهارة واحدة.
-///
-/// لماذا Chip؟
-/// - الـ backend يرجع `requiredSkills` كسلسلة نصية
-/// - UX الأفضل: تحويلها إلى Tags/Chips بحيث المستخدم "يشوفها كوحدات"
 class SkillChip extends StatelessWidget {
   final String label;
 

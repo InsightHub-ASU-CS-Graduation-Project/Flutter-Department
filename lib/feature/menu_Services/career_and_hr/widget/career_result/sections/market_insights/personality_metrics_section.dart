@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/metric_tile.dart';
 
-/// Personality & Behavior Metrics Section
-///
-/// يركز على السلوكيات/الأساليب التي تظهر عادة لدى المحترفين في هذا المسار.
 class PersonalityMetricsSection extends StatelessWidget {
   final MarketInsights insights;
 
@@ -14,41 +11,48 @@ class PersonalityMetricsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CategoryCard(
       title: 'Personality & behavior',
-      subtitle: 'Behavior patterns common in this track (1–5).',
+      subtitle: 'Behavior patterns common in this track .',
       child: Column(
         children: [
           MetricTile(
-            label: 'avgAdaptability',
+            label: 'Adaptability',
             value: insights.avgAdaptability,
             description: 'How well professionals typically adapt to change.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgOwnership',
+            label: 'Ownership',
             value: insights.avgOwnership,
             description: 'How often people take responsibility and ownership.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgCollaboration',
+            label: 'Collaboration',
             value: insights.avgCollaboration,
             description: 'How strongly collaboration is part of daily work.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgConsistency',
+            label: 'Consistency',
             value: insights.avgConsistency,
-            description: 'How consistently professionals execute tasks over time.',
+            description:
+                'How consistently professionals execute tasks over time.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgLearningProactivity',
+            label: 'Learning Initiative',
             value: insights.avgLearningProactivity,
-            description: 'How proactive people are about learning and improving.',
+            description:
+                'How proactive people are about learning and improving.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgPrioritization',
+            label: 'Prioritization',
             value: insights.avgPrioritization,
             description: 'How well professionals prioritize tasks and time.',
           ),
@@ -72,7 +76,7 @@ class _CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(16),
@@ -104,4 +108,3 @@ class _CategoryCard extends StatelessWidget {
     );
   }
 }
-

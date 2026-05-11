@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 
-/// Work Environment Section
-///
-/// JSON mapping:
-/// `marketInsights.mostCommonEnvironment`
-/// `marketInsights.mostCommonCompanySize`
-/// `marketInsights.avgYearsExperience`
-/// `marketInsights.totalEmployeesInTrack`
 class WorkEnvironmentSection extends StatelessWidget {
   final MarketInsights insights;
 
@@ -21,23 +14,29 @@ class WorkEnvironmentSection extends StatelessWidget {
       child: Column(
         children: [
           _StatRow(
-            label: 'Most common environment',
+            label: 'Work Environment',
             value: insights.mostCommonEnvironment,
           ),
-          const SizedBox(height: 10),
+
+          const SizedBox(height: 12),
+
           _StatRow(
-            label: 'Most common company size',
+            label: 'Typical Company Size',
             value: insights.mostCommonCompanySize,
           ),
-          const SizedBox(height: 10),
+
+          const SizedBox(height: 12),
+
           _StatRow(
-            label: 'Average years of experience',
-            value: '${insights.avgYearsExperience.toStringAsFixed(1)} years',
+            label: 'Average Experience',
+            value: '${insights.avgYearsExperience.toStringAsFixed(1)} Years',
           ),
-          const SizedBox(height: 10),
+
+          const SizedBox(height: 12),
+
           _StatRow(
-            label: 'Industry professionals in dataset',
-            value: '${insights.totalEmployeesInTrack}',
+            label: 'Professionals Analyzed',
+            value: insights.totalEmployeesInTrack.toString(),
           ),
         ],
       ),
@@ -124,4 +123,3 @@ class _StatRow extends StatelessWidget {
     );
   }
 }
-

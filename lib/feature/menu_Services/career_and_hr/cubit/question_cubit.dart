@@ -4,21 +4,7 @@ import 'package:InsightHub/core/services/api_service.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:meta/meta.dart';
 
-/// Questions + submission for **both** employment paths.
-///
-/// ═══════════════════════════════════════════════════════════════════════════
-/// **Non-employed (career quiz)**
-/// `QuestionScreen` → `submitAnswers()` → `submitCareerQuizAnswers()` →
-/// `CareerQuizResultModel` → navigate to `CareerResultScreen` (with optional
-/// pre-parsed result as route args).
-///
-/// ═══════════════════════════════════════════════════════════════════════════
-/// **Employed**
-/// `QuestionScreen` → `submitAnswers()` → `submitEmployedSurveyAnswers()` →
-/// HTTP success only → navigate to `SurveyThankYouScreen`.
-///
-/// Employed users intentionally have **no** result screen, **no** match UI, and
-/// **no** client-side parsing of a “match” payload—product flow ends at thank-you.
+
 @immutable
 sealed class QuestionState {
   const QuestionState();
@@ -44,7 +30,6 @@ final class QuestionLoaded extends QuestionState {
   final bool isSubmitting;
   final bool didSubmitSucceed;
   final String? validationMessage;
-  /// Only set when [isEmployed] is false and submit succeeded.
   final CareerQuizResultModel? careerResult;
   final bool isEmployed;
 

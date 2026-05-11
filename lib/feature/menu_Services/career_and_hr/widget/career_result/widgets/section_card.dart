@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Container UI reusable لعمل "Section" واضح.
-///
-/// لماذا هذا widget؟
-/// - يعزل الـ styling المشترك لكل الأقسام (padding/border/shadow)
-/// - يقلل تكرار الكود داخل الشاشة ويحسن الصيانة.
 class SectionCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;

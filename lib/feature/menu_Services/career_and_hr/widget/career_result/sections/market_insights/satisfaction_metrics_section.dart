@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/metric_tile.dart';
 
-/// Career Satisfaction Metrics Section
-///
-/// Examples:
-/// - `avgSalarySatisfaction`
-/// - `avgWorkLifeBalance`
-/// - `avgResilience`
+
 class SatisfactionMetricsSection extends StatelessWidget {
   final MarketInsights insights;
 
@@ -17,25 +12,30 @@ class SatisfactionMetricsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CategoryCard(
       title: 'Career satisfaction',
-      subtitle: 'How professionals feel about salary and balance (1–5).',
+      subtitle: 'How professionals feel about salary and balance (100%).',
       child: Column(
         children: [
           MetricTile(
-            label: 'avgSalarySatisfaction',
+            label: 'Salary Satisfaction',
             value: insights.avgSalarySatisfaction,
-            description: 'Higher means professionals are generally satisfied with compensation.',
+            description:
+                'Higher means professionals are generally satisfied with compensation.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgWorkLifeBalance',
+            label: 'Work-Life Balance',
             value: insights.avgWorkLifeBalance,
-            description: 'Higher means better perceived balance between work and life.',
+            description:
+                'Higher means better perceived balance between work and life.',
           ),
           const SizedBox(height: 10),
+
           MetricTile(
-            label: 'avgResilience',
+            label: 'Resilience',
             value: insights.avgResilience,
-            description: 'How much resilience is typically needed to handle pressure.',
+            description:
+                'How much resilience is typically needed to handle pressure.',
           ),
         ],
       ),
@@ -57,7 +57,7 @@ class _CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(16),
@@ -89,4 +89,3 @@ class _CategoryCard extends StatelessWidget {
     );
   }
 }
-

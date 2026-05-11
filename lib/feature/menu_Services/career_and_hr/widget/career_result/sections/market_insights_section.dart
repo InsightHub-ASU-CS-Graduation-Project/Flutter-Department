@@ -6,14 +6,6 @@ import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_res
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/sections/market_insights/personality_metrics_section.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/section_card.dart';
 
-/// Market Insights Section
-///
-/// هذا section يعكس الـ JSON الحقيقي:
-/// `topTracks[] -> marketInsights`
-///
-/// لماذا نقسمه داخليًا؟
-/// - لأن `marketInsights` تحتوي مجموعات metrics مختلفة (بيئة العمل/مهنية/رضا/سلوك)
-/// - تجميعهم تحت عنوان واحد "Performance Metrics" يضيع المعنى ويضعف UX.
 class MarketInsightsSection extends StatelessWidget {
   final MarketInsights insights;
 
@@ -26,7 +18,7 @@ class MarketInsightsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Market insights (deep dive)',
+            'Market insights ',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w900,
@@ -35,8 +27,8 @@ class MarketInsightsSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'These insights summarize common patterns among professionals already working in this track.',
-            style: TextStyle(color: Color(0xFF64748B), height: 1.35),
+'Based on real professionals working in this career path.'        
+,    style: TextStyle(color: Color(0xFF64748B), height: 1.35),
           ),
           const SizedBox(height: 14),
           WorkEnvironmentSection(insights: insights),

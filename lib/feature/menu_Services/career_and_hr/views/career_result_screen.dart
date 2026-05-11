@@ -9,50 +9,6 @@ import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_res
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/career_match_summary_section.dart';
 import 'package:InsightHub/widget/app_header.dart';
 
-/// شاشة عرض نتيجة الـ Career Quiz (non-employed flow).
-///
-/// ────────────────────────────────────────────────────────────────────────────
-/// ## Beginner‑Friendly Flow Explanation (من أول الرحلة لحد الـ UI)
-///
-/// 1) المستخدم يبدأ من `QuestionScreen`
-///    - `QuestionCubit.fetchQuestions(isEmployed: false)` يجيب أسئلة career quiz
-///
-/// 2) المستخدم يجاوب ثم يضغط Submit
-///    - `QuestionCubit.submitAnswers()` ينادي:
-///      `ApiService.submitCareerQuizAnswers()`
-///
-/// 3) اختيار الـ endpoint
-///    - لأن `isEmployed=false` → نستخدم:
-///      `POST /CareerQuiz/full-match`
-///
-/// 4) Parsing للـ JSON
-///    - `CareerQuizResultModel.fromJson()`
-///      - `topTracks` → List<TrackMatch>
-///      - `TrackMatch` يحتوي:
-///        - `track: TrackInfo` (Overview + requiredSkills)
-///        - `marketInsights: MarketInsights` (Metrics مصنفة للـ UI)
-///
-/// 5) Navigation
-///    - `QuestionScreen` يعمل navigate إلى `Routes.careerResultScreen`
-///      ومعاه result كـ argument (جاهز already parsed)
-///
-/// 6) Data داخل Cubit
-///    - `CareerResultCubit.setResult(result)` يخزن الـ model في state strongly‑typed
-///
-/// 7) UI Rendering Flow
-///    - `CareerResultScreen` يقرأ `CareerQuizResultModel`
-///    - يبني UI طبقي يعكس Structure الحقيقي للـ JSON:
-///
-/// CareerQuizResultModel
-///   ↓ topTracks (List)
-/// TrackMatch
-///   ↓ track (TrackInfo)        → Track Overview + Skills
-///   ↓ marketInsights           → Market Insights categories
-///
-/// ────────────────────────────────────────────────────────────────────────────
-/// الفرق بين employed و non‑employed في التطبيق:
-/// - employed: لا توجد شاشة نتائج — بعد `POST /Survey/submit` النجاح يفتح شاشة شكر فقط.
-/// - non‑employed: بعد `full-match` تُعرض التوصيات هنا كـ analytics UI.
 class CareerResultScreen extends StatefulWidget {
   const CareerResultScreen({super.key});
 
@@ -160,13 +116,13 @@ class _CareerResultScreenState extends State<CareerResultScreen> {
                       physics: const BouncingScrollPhysics(),
                       slivers: [
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+                          padding: const EdgeInsets.fromLTRB(14, 14, 14, 16),
                           sliver: SliverToBoxAdapter(
                             child: CareerMatchSummarySection(result: result),
                           ),
                         ),
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 24),
                           sliver: SliverList.separated(
                             itemBuilder: (context, index) {
                               final track = result.topTracks[index];

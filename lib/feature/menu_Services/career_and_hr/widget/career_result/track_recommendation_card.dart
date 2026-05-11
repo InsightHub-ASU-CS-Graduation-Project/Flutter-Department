@@ -6,19 +6,7 @@ import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_res
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/sections/track_header_section.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/widget/career_result/widgets/section_card.dart';
 
-/// Track Recommendation Card (per TrackMatch).
-///
-/// UI Hierarchy:
-/// CareerResultScreen
-///   ↓ TrackRecommendationCard
-///     ↓ TrackHeaderSection
-///     ↓ MatchScoreSection
-///     ↓ SkillsSection
-///     ↓ MarketInsightsSection
-///
-/// لماذا هذا التنظيم؟
-/// - يعكس طبقات الـ JSON: track + marketInsights
-/// - يسهل إضافة categories مستقبلًا بدون تعديل Card ضخمة
+
 class TrackRecommendationCard extends StatelessWidget {
   final int rank;
   final TrackMatch trackMatch;
