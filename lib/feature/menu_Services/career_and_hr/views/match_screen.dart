@@ -396,7 +396,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
   }
 }
 
-class _CareerQuizResultView extends StatelessWidget {
+class _CareerQuizResultView extends StatefulWidget {
   final CareerQuizResultModel result;
   final Animation<double> fadeAnimation;
   final Animation<Offset> slideAnimation;
@@ -408,154 +408,188 @@ class _CareerQuizResultView extends StatelessWidget {
   });
 
   @override
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: Container(
-      decoration: BoxDecoration(
-        gradient: AppColors.bgGradient,
-      ),
-      child: SafeArea(
-        child: FadeTransition(
-          opacity: fadeAnimation,
-          child: SlideTransition(
-            position: slideAnimation,
-            child: Column(
-              children: [
-                /// ───────────── FIXED APP HEADER ─────────────
-                AppHeader(
-                  title: 'Career Matches',
-                  subtitle:
-                      'Based on your quiz.',
-                  trailing: IconButton(
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        Routes.homeScreen,
-                        (route) => false,
-                      );
-                    },
-                  ),
-                ),
+  State<_CareerQuizResultView> createState() => _CareerQuizResultViewState();
+}
 
-                /// ───────────── SCROLLABLE BODY ─────────────
-                Expanded(
-                  child: CustomScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    slivers: [
-                      SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(
-                          24,
-                          24,
-                          24,
-                          20,
-                        ),
-                        sliver: SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final trackMatch =
-                                  result.topTracks[index];
+class _CareerQuizResultViewState extends State<_CareerQuizResultView> {
+  bool _isLoading = false;
 
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(bottom: 24),
-                                child: _TrackMatchCard(
-                                  trackMatch: trackMatch,
-                                  rank: index + 1,
-                                ),
-                              );
-                            },
-                            childCount: result.topTracks.length,
-                          ),
-                        ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.bgGradient,
+        ),
+        child: SafeArea(
+          child: FadeTransition(
+            opacity: widget.fadeAnimation,
+            child: SlideTransition(
+              position: widget.slideAnimation,
+              child: Column(
+                children: [
+                  /// ───────────── FIXED APP HEADER ─────────────
+                  AppHeader(
+                    title: 'Career Matches',
+                    subtitle: 'Based on your quiz.',
+                    trailing: IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.white,
                       ),
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          Routes.homeScreen,
+                          (route) => false,
+                        );
+                      },
+                    ),
+                  ),
 
-                      /// Bottom Buttons
-                      SliverToBoxAdapter(
-                        child: Padding(
+                  /// ───────────── SCROLLABLE BODY ─────────────
+                  Expanded(
+                    child: CustomScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      slivers: [
+                        SliverPadding(
                           padding: const EdgeInsets.fromLTRB(
                             24,
-                            0,
                             24,
-                            40,
+                            24,
+                            20,
                           ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () {
-                                    context
-                                        .read<QuestionCubit>()
-                                        .reset();
+                          sliver: SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final trackMatch = widget.result.topTracks[index];
 
-                                    Navigator.pushReplacementNamed(
-                                      context,
-                                      Routes.questionScreen,
-                                    );
-                                  },
-                                  icon: const Icon(Icons.refresh),
-                                  label: const Text('Retake'),
-                                  style: OutlinedButton.styleFrom(
-                                    padding:
-                                        const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(16),
-                                    ),
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 24),
+                                  child: _TrackMatchCard(
+                                    trackMatch: trackMatch,
+                                    rank: index + 1,
                                   ),
-                                ),
-                              ),
-
-                              const SizedBox(width: 12),
-
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    Navigator
-                                        .pushNamedAndRemoveUntil(
-                                      context,
-                                      Routes.homeScreen,
-                                      (route) => false,
-                                    );
-                                  },
-                                  icon: const Icon(Icons.check),
-                                  label: const Text('Finish'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor:
-                                        AppColors.primaryBlue,
-                                    padding:
-                                        const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(16),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                                );
+                              },
+                              childCount: widget.result.topTracks.length,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+
+                        /// Bottom Buttons
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              24,
+                              0,
+                              24,
+                              40,
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton.icon(
+                                    onPressed: _isLoading
+                                        ? null
+                                        : () async {
+                                            setState(() {
+                                              _isLoading = true;
+                                            });
+
+                                            final cubit = context.read<QuestionCubit>();
+                                            cubit.reset();
+
+                                            final success = await cubit.fetchQuestionsAsync(
+                                              isEmployed: false,
+                                            );
+
+                                            if (!mounted) return;
+
+                                            if (success) {
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                Routes.questionScreen,
+                                                arguments: false,
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text('Failed to load questions'),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                            }
+
+                                            if (mounted) {
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+                                            }
+                                          },
+                                    icon: _isLoading
+                                        ? const SizedBox(
+                                            width: 18,
+                                            height: 18,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: AppColors.primaryBlue,
+                                            ),
+                                          )
+                                        : const Icon(Icons.refresh),
+                                    label: Text(_isLoading ? 'Loading...' : 'Retake'),
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 12),
+
+                                Expanded(
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      Navigator.pushNamedAndRemoveUntil(
+                                        context,
+                                        Routes.homeScreen,
+                                        (route) => false,
+                                      );
+                                    },
+                                    icon: const Icon(Icons.check),
+                                    label: const Text('Finish'),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      foregroundColor: AppColors.primaryBlue,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
-}}
+    );
+  }
+}
 
 class _TrackMatchCard extends StatefulWidget {
   final TrackMatch trackMatch;

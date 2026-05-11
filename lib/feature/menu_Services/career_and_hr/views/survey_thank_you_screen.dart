@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/core/constant/routes.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:InsightHub/widget/app_header.dart';
 import 'package:InsightHub/widget/app_motion.dart';
 
-class SurveyThankYouScreen extends StatelessWidget {
+class SurveyThankYouScreen extends StatefulWidget {
   const SurveyThankYouScreen({super.key});
 
   static const String routeName = '/surveyThankYouScreen';
+
+  @override
+  State<SurveyThankYouScreen> createState() => _SurveyThankYouScreenState();
+}
+
+class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: AppColors.bgGradient, // 👈 هنا
+          gradient: AppColors.bgGradient,
         ),
         child: SafeArea(
           child: Column(
@@ -82,32 +91,91 @@ class SurveyThankYouScreen extends StatelessWidget {
                           const SizedBox(height: 40),
 
                           // Retake button
+                          SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoading
+                                  ? null
+                                  : () async {
+                                      setState(() {
+                                        _isLoading = true;
+                                      });
+
+                                      final cubit = context.read<QuestionCubit>();
+                                      cubit.reset();
+
+                                      final success = await cubit.fetchQuestionsAsync(
+                                        isEmployed: true,
+                                      );
+
+                                      if (!mounted) return;
+
+                                      if (success) {
+                                        Navigator.pushReplacementNamed(
+                                          context,
+                                          Routes.questionScreen,
+                                          arguments: true,
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Failed to load questions'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
+                                      }
+
+                                      if (mounted) {
+                                        setState(() {
+                                          _isLoading = false;
+                                        });
+                                      }
+                                    },
+                              icon: _isLoading
+                                  ? const SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: AppColors.primaryBlue,
+                                      ),
+                                    )
+                                  : const Icon(Icons.refresh),
+                              label: Text(_isLoading ? 'Loading...' : 'Retake Survey'),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                              ),
+                            ),
+                          ),
                           const SizedBox(height: 14),
 
                           // Back to home
                           SizedBox(
-  width: double.infinity,
-  child: ElevatedButton.icon(
-    onPressed: () {
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        Routes.homeScreen,
-        (route) => false,
-      );
-    },
-    icon: const Icon(Icons.home_outlined),
-    label: const Text('Go to Home'),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: AppColors.primaryBlue,
-      foregroundColor: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      elevation: 0,
-    ),
-  ),
-),
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  Routes.homeScreen,
+                                  (route) => false,
+                                );
+                              },
+                              icon: const Icon(Icons.home_outlined),
+                              label: const Text('Go to Home'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryBlue,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                elevation: 0,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),

@@ -96,36 +96,47 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                                           _isFetchingQuestions = true;
                                         });
                                         
-                                        final navCubit = innerContext.read<NavigationCubit>();
-                                        final navResult = await navCubit.decideAsync();
-                                        
-                                        if (!innerContext.mounted) return;
-                                        
-                                        if (navResult != null) {
-                                          switch (navResult.target) {
-                                            case NavigationTarget.questions:
-                                              final success = await innerContext.read<QuestionCubit>().fetchQuestionsAsync(isEmployed: navResult.isEmployed);
-                                              if (success && innerContext.mounted) {
-                                                Navigator.pushNamed(
-                                                  innerContext,
-                                                  Routes.questionScreen,
-                                                  arguments: navResult.isEmployed,
-                                                );
-                                              }
-                                              break;
-                                            case NavigationTarget.result:
-                                              Navigator.pushNamed(innerContext, Routes.matchScreen);
-                                              break;
-                                            case NavigationTarget.thankYou:
-                                              Navigator.pushNamed(innerContext, Routes.surveyThankYouScreen);
-                                              break;
+                                        try {
+                                          final navCubit = innerContext.read<NavigationCubit>();
+                                          final navResult = await navCubit.decideAsync();
+                                          
+                                          if (!innerContext.mounted) return;
+                                          
+                                          if (navResult != null) {
+                                            switch (navResult.target) {
+                                              case NavigationTarget.questions:
+                                                final success = await innerContext.read<QuestionCubit>().fetchQuestionsAsync(isEmployed: navResult.isEmployed);
+                                                if (success && innerContext.mounted) {
+                                                  Navigator.pushNamed(
+                                                    innerContext,
+                                                    Routes.questionScreen,
+                                                    arguments: navResult.isEmployed,
+                                                  );
+                                                }
+                                                break;
+                                              case NavigationTarget.result:
+                                                Navigator.pushNamed(innerContext, Routes.matchScreen);
+                                                break;
+                                              case NavigationTarget.thankYou:
+                                                Navigator.pushNamed(innerContext, Routes.surveyThankYouScreen);
+                                                break;
+                                            }
                                           }
-                                        }
-
-                                        if (mounted) {
-                                          setState(() {
-                                            _isFetchingQuestions = false;
-                                          });
+                                        } catch (e) {
+                                          if (innerContext.mounted) {
+                                            ScaffoldMessenger.of(innerContext).showSnackBar(
+                                              SnackBar(
+                                                content: Text('An unexpected error occurred: $e'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
+                                        } finally {
+                                          if (mounted) {
+                                            setState(() {
+                                              _isFetchingQuestions = false;
+                                            });
+                                          }
                                         }
                                       },
                               );
