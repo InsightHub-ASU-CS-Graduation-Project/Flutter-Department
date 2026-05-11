@@ -229,37 +229,64 @@ class ApiService {
         .toList();
   }
 
-  Future<dynamic> submitAnswers({
-    required Map<int, dynamic> answers,
-    required bool isEmployed,
-  }) async {
-    final payload = {
+  /// Builds the backend payload format used by BOTH flows.
+  ///
+  /// Backend expects:
+  /// ```json
+  /// { "answers": [ { "questionId": 1, "answerValue": 3 }, ... ] }
+  /// ```
+  Map<String, dynamic> _buildAnswersPayload(Map<int, int> answers) {
+    return {
       'answers': answers.entries
           .map(
             (entry) => {
               'questionId': entry.key,
-              'answerValue': entry.value is int
-                  ? entry.value
-                  : int.tryParse('${entry.value}') ?? 0,
+              'answerValue': entry.value,
             },
           )
           .toList(),
     };
+  }
 
-    final endpoint = isEmployed ? Endpoints.answers : Endpoints.careerQuizFullMatch;
-    final result = await post(endpoint, data: payload);
+  /// Submits answers for the **employed** flow (`/Survey/submit`).
+  ///
+  /// Employed users do **not** get a result / analytics UI in this app—the flow ends
+  /// at the survey thank-you screen after HTTP success. We therefore only validate
+  /// `success` and intentionally do **not** parse the response body into a model.
+  Future<void> submitEmployedSurveyAnswers({required Map<int, int> answers}) async {
+    final payload = _buildAnswersPayload(answers);
+    final result = await post(Endpoints.answers, data: payload);
 
     if (result['success'] != true) {
-      throw Exception(result['error']?.toString() ?? 'Failed to submit answers.');
-    }
-
-    if (!isEmployed && result['data'] != null) {
-      return CareerQuizResultModel.fromJson(
-        Map<String, dynamic>.from(result['data']),
+      throw Exception(
+        result['error']?.toString() ?? 'Failed to submit survey answers.',
       );
     }
-    
-    return null;
+  }
+
+  /// Submits answers for the **non-employed** flow (career recommendations).
+  ///
+  /// Architecture note:
+  /// - Endpoint: `Endpoints.careerQuizFullMatch` (`/CareerQuiz/full-match`)
+  /// - Response shape: `CareerQuizResultModel`
+  Future<CareerQuizResultModel> submitCareerQuizAnswers({
+    required Map<int, int> answers,
+  }) async {
+    final payload = _buildAnswersPayload(answers);
+    final result = await post(Endpoints.careerQuizFullMatch, data: payload);
+
+    if (result['success'] != true) {
+      throw Exception(
+        result['error']?.toString() ?? 'Failed to submit career quiz answers.',
+      );
+    }
+
+    final data = result['data'];
+    if (data is! Map) {
+      throw Exception('Invalid career quiz result format.');
+    }
+
+    return CareerQuizResultModel.fromJson(Map<String, dynamic>.from(data));
   }
 
   Future<CareerQuizResultModel?> fetchCareerQuizResult() async {

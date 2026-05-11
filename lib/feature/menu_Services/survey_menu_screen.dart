@@ -115,7 +115,7 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                                                 }
                                                 break;
                                               case NavigationTarget.result:
-                                                Navigator.pushNamed(innerContext, Routes.matchScreen);
+                                                Navigator.pushNamed(innerContext, Routes.careerResultScreen);
                                                 break;
                                               case NavigationTarget.thankYou:
                                                 Navigator.pushNamed(innerContext, Routes.surveyThankYouScreen);

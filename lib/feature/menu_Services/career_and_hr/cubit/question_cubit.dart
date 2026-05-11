@@ -1,8 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/question_model.dart';
 import 'package:InsightHub/core/services/api_service.dart';
+import 'package:InsightHub/feature/menu_Services/career_and_hr/model/career_quiz_result_model.dart';
 import 'package:meta/meta.dart';
 
+/// Questions + submission for **both** employment paths.
+///
+/// ═══════════════════════════════════════════════════════════════════════════
+/// **Non-employed (career quiz)**
+/// `QuestionScreen` → `submitAnswers()` → `submitCareerQuizAnswers()` →
+/// `CareerQuizResultModel` → navigate to `CareerResultScreen` (with optional
+/// pre-parsed result as route args).
+///
+/// ═══════════════════════════════════════════════════════════════════════════
+/// **Employed**
+/// `QuestionScreen` → `submitAnswers()` → `submitEmployedSurveyAnswers()` →
+/// HTTP success only → navigate to `SurveyThankYouScreen`.
+///
+/// Employed users intentionally have **no** result screen, **no** match UI, and
+/// **no** client-side parsing of a “match” payload—product flow ends at thank-you.
 @immutable
 sealed class QuestionState {
   const QuestionState();
@@ -24,12 +40,14 @@ final class QuestionError extends QuestionState {
 
 final class QuestionLoaded extends QuestionState {
   final List<QuestionModel> questions;
-  final Map<int, dynamic> answers;
+  final Map<int, int> answers;
   final bool isSubmitting;
   final bool didSubmitSucceed;
   final String? validationMessage;
-  final dynamic submissionResult;
+  /// Only set when [isEmployed] is false and submit succeeded.
+  final CareerQuizResultModel? careerResult;
   final bool isEmployed;
+
   const QuestionLoaded({
     required this.questions,
     required this.isEmployed,
@@ -37,7 +55,7 @@ final class QuestionLoaded extends QuestionState {
     this.isSubmitting = false,
     this.didSubmitSucceed = false,
     this.validationMessage,
-    this.submissionResult,
+    this.careerResult,
   });
 
   bool isAnswered(int questionId) => answers.containsKey(questionId);
@@ -48,13 +66,14 @@ final class QuestionLoaded extends QuestionState {
 
   QuestionLoaded copyWith({
     List<QuestionModel>? questions,
-    Map<int, dynamic>? answers,
+    Map<int, int>? answers,
     bool? isSubmitting,
     bool? didSubmitSucceed,
     String? validationMessage,
-    dynamic submissionResult,
+    CareerQuizResultModel? careerResult,
     bool? isEmployed,
     bool clearValidationMessage = false,
+    bool clearCareerResult = false,
   }) {
     return QuestionLoaded(
       questions: questions ?? this.questions,
@@ -65,7 +84,8 @@ final class QuestionLoaded extends QuestionState {
       validationMessage: clearValidationMessage
           ? null
           : validationMessage ?? this.validationMessage,
-      submissionResult: submissionResult ?? this.submissionResult,
+      careerResult:
+          clearCareerResult ? null : careerResult ?? this.careerResult,
     );
   }
 }
@@ -109,20 +129,22 @@ class QuestionCubit extends Cubit<QuestionState> {
     }
   }
 
-  void answerQuestion(int questionId, dynamic value) {
-    print("Q:$questionId → value:$value");
+  void answerQuestion(int questionId, Object? value) {
+    final normalized = value is int ? value : int.tryParse('$value') ?? 0;
+    print("Q:$questionId → value:$value (normalized=$normalized)");
     final currentState = state;
     if (currentState is! QuestionLoaded) {
       return;
     }
 
-    final updatedAnswers = Map<int, dynamic>.from(currentState.answers)
-      ..[questionId] = value;
+    final updatedAnswers = Map<int, int>.from(currentState.answers)
+      ..[questionId] = normalized;
 
     emit(
       currentState.copyWith(
         answers: updatedAnswers,
         didSubmitSucceed: false,
+        clearCareerResult: true,
         clearValidationMessage: true,
       ),
     );
@@ -157,19 +179,33 @@ class QuestionCubit extends Cubit<QuestionState> {
     );
 
     try {
-      final result = await _apiService.submitAnswers(
-        answers: currentState.answers,
-        isEmployed: currentState.isEmployed,
-      );
+      if (currentState.isEmployed) {
+        await _apiService.submitEmployedSurveyAnswers(
+          answers: currentState.answers,
+        );
 
-      emit(
-        currentState.copyWith(
-          isSubmitting: false,
-          didSubmitSucceed: true,
-          clearValidationMessage: true,
-          submissionResult: result,
-        ),
-      );
+        emit(
+          currentState.copyWith(
+            isSubmitting: false,
+            didSubmitSucceed: true,
+            clearValidationMessage: true,
+            clearCareerResult: true,
+          ),
+        );
+      } else {
+        final career = await _apiService.submitCareerQuizAnswers(
+          answers: currentState.answers,
+        );
+
+        emit(
+          currentState.copyWith(
+            isSubmitting: false,
+            didSubmitSucceed: true,
+            clearValidationMessage: true,
+            careerResult: career,
+          ),
+        );
+      }
     } catch (error) {
       emit(
         currentState.copyWith(

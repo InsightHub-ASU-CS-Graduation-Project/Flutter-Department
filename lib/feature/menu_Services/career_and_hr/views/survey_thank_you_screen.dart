@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/core/constant/routes.dart';
-import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/question_cubit.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:InsightHub/widget/app_header.dart';
 import 'package:InsightHub/widget/app_motion.dart';
 
-class SurveyThankYouScreen extends StatefulWidget {
+/// نهاية مسار المستخدم **الموظّف** بعد إرسال الاستبيان بنجاح.
+///
+/// المتطلبات المعمارية لهذا المسار:
+/// - لا توجد شاشة “match” أو analytics بعد الإرسال — المنتج ينتهي هنا تأكيدًا للمشاركة.
+/// - لا يوجد Retake بعد الشكر؛ المستخدم يعود للرئيسية. (إعادة الاستبيان تتم فقط بدخول
+///   الخدمة من جديد إن كان المنتج يدعم ذلك مستقبلًا؛ حاليًا خارج نطاق employed flow.)
+/// - الفارق عن غير الموظّف: غير الموظّف بعد الإرسال ينتقل إلى `CareerResultScreen`
+///   لعرض توصيات المسارات وبيانات السوق.
+class SurveyThankYouScreen extends StatelessWidget {
   const SurveyThankYouScreen({super.key});
 
   static const String routeName = '/surveyThankYouScreen';
-
-  @override
-  State<SurveyThankYouScreen> createState() => _SurveyThankYouScreenState();
-}
-
-class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -88,67 +87,6 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
 
                           SizedBox(
                             width: double.infinity,
-                            child: OutlinedButton.icon(
-                              onPressed: _isLoading
-                                  ? null
-                                  : () async {
-                                      setState(() {
-                                        _isLoading = true;
-                                      });
-
-                                      final cubit = context.read<QuestionCubit>();
-                                      cubit.reset();
-
-                                      final success = await cubit.fetchQuestionsAsync(
-                                        isEmployed: true,
-                                      );
-
-                                      if (!mounted) return;
-
-                                      if (success) {
-                                        Navigator.pushReplacementNamed(
-                                          context,
-                                          Routes.questionScreen,
-                                          arguments: true,
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Failed to load questions'),
-                                            backgroundColor: Colors.red,
-                                          ),
-                                        );
-                                      }
-
-                                      if (mounted) {
-                                        setState(() {
-                                          _isLoading = false;
-                                        });
-                                      }
-                                    },
-                              icon: _isLoading
-                                  ? const SizedBox(
-                                      width: 18,
-                                      height: 18,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: AppColors.primaryBlue,
-                                      ),
-                                    )
-                                  : const Icon(Icons.refresh),
-                              label: Text(_isLoading ? 'Loading...' : 'Retake Survey'),
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          SizedBox(
-                            width: double.infinity,
                             child: ElevatedButton.icon(
                               onPressed: () {
                                 Navigator.pushNamedAndRemoveUntil(
@@ -162,7 +100,8 @@ class _SurveyThankYouScreenState extends State<SurveyThankYouScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primaryBlue,
                                 foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                 ),

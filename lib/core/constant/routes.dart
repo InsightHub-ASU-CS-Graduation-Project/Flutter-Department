@@ -23,7 +23,11 @@ class Routes {
 
   static const String questionScreen = '/questionScreen';
 
+  /// Legacy alias for [careerResultScreen] (deep links / old navigation).
   static const String matchScreen = '/matchScreen';
+
+  /// Non-employed only: Career recommendations + market insights UI.
+  static const String careerResultScreen = '/careerResultScreen';
 
   static const String profileScreen = '/profileScreen';
 
