@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
+import 'package:InsightHub/core/constant/app_strings.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/core/constant/routes.dart';
 import 'package:InsightHub/core/services/api_service.dart';
@@ -33,26 +35,14 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
           BlocListener<NavigationCubit, NavigationState>(
             listener: (context, state) {
               if (state is NavigationError) {
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Error: ${state.message}'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+                SnackbarHelper.showError(context, state.message);
               }
             },
           ),
           BlocListener<QuestionCubit, QuestionState>(
             listener: (context, state) {
               if (state is QuestionError) {
-                if (!context.mounted) return;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Error: ${state.message}'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+                SnackbarHelper.showError(context, state.message);
               }
             },
           ),
@@ -124,11 +114,9 @@ class _SurveyMenuScreenState extends State<SurveyMenuScreen> {
                                           }
                                         } catch (e) {
                                           if (innerContext.mounted) {
-                                            ScaffoldMessenger.of(innerContext).showSnackBar(
-                                              SnackBar(
-                                                content: Text('An unexpected error occurred: $e'),
-                                                backgroundColor: Colors.red,
-                                              ),
+                                            SnackbarHelper.showError(
+                                              innerContext,
+                                              AppStrings.errorUnexpected,
                                             );
                                           }
                                         } finally {

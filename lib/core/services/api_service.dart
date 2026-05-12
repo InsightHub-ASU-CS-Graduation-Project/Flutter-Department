@@ -9,6 +9,7 @@ import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_question
 import 'package:InsightHub/feature/menu_Services/career_and_hr/model/hr_quiz_result_model.dart';
 import 'package:InsightHub/core/services/endpoints.dart';
 import 'package:InsightHub/core/services/secure_storege.dart';
+import 'package:InsightHub/core/constant/app_strings.dart';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -72,7 +73,7 @@ class ApiService {
         'success': false,
         'statusCode': null,
         'data': null,
-        'error': 'Unexpected error: $e',
+        'error': AppStrings.errorUnexpected,
       };
     }
   }
@@ -115,11 +116,11 @@ class ApiService {
     if (e.type == DioExceptionType.connectionTimeout ||
         e.type == DioExceptionType.receiveTimeout ||
         e.type == DioExceptionType.sendTimeout) {
-      return 'The server is not responding right now. Please try again in a moment.';
+      return AppStrings.errorTimeout;
     }
 
     if (e.type == DioExceptionType.connectionError) {
-      return 'Unable to connect. Please check your internet or try again later.';
+      return AppStrings.errorNoInternet;
     }
 
     if (statusCode == 401) {
@@ -133,7 +134,7 @@ class ApiService {
         }
       }
 
-      return 'The email or password is invalid.';
+      return AppStrings.errorInvalidCredentials;
     }
 
     if (e.type == DioExceptionType.badResponse &&
@@ -143,10 +144,10 @@ class ApiService {
 
     final responseText = responseData?.toString() ?? '';
     if (responseText.contains('ERR_NGROK_3200')) {
-      return 'The server is currently offline. Please try again later.';
+      return AppStrings.errorServerUnavailable;
     }
 
-    return e.message ?? 'Something went wrong. Please try again.';
+    return AppStrings.errorGeneric;
   }
 
   Future<Map<String, dynamic>> get(

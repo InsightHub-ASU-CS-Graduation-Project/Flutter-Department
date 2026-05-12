@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'package:InsightHub/core/constant/app_strings.dart';
+
 class SafeErrorWidget extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
 
   const SafeErrorWidget({
     super.key,
-    this.message = 'Something went wrong. Please try again.',
+    this.message = AppStrings.errorGeneric,
     this.onRetry,
   });
 

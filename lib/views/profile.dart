@@ -1,6 +1,7 @@
 import 'package:InsightHub/feature/menu_Services/career_and_hr/cubit/hr_question_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
 import 'package:InsightHub/core/constant/routes.dart';
 import 'package:InsightHub/cuibt/cubit/logout_cubit.dart';
@@ -149,22 +150,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _clearSessionState();
               _goToSignIn();
             } else if (state is LogoutFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+              SnackbarHelper.showError(context, state.errorMessage);
             } else if (state is DeleteAccountFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+              SnackbarHelper.showError(context, state.errorMessage);
             }
           },
         ),
         BlocListener<ProfileCubit, ProfileState>(
           listener: (context, state) {
             if (state is ProfileFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
+              SnackbarHelper.showError(context, state.message);
             }
           },
         ),

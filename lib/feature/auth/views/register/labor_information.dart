@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
 import 'package:InsightHub/core/constant/labor_list.dart';
 import 'package:InsightHub/core/constant/routes.dart';
 import 'package:InsightHub/feature/auth/cubit/register_cubit.dart';
@@ -39,9 +40,7 @@ class _LaborInformationScreenState extends State<LaborInformationScreen> {
         if (state is RegisterSuccess) {
           Navigator.pushNamed(context, Routes.confirmationScreen);
         } else if (state is RegisterFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${state.errorMessage}')),
-          );
+          SnackbarHelper.showError(context, state.errorMessage);
         }
       },
       builder: (context, state) {

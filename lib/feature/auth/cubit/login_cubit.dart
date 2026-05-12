@@ -3,6 +3,7 @@ import 'package:InsightHub/core/constant/labor_list.dart';
 import 'package:InsightHub/core/services/endpoints.dart';
 import 'package:InsightHub/core/services/api_service.dart';
 import 'package:InsightHub/core/services/secure_storege.dart';
+import 'package:InsightHub/core/constant/app_strings.dart';
 import 'package:meta/meta.dart';
 
 part 'login_state.dart';
@@ -29,10 +30,10 @@ class LoginCubit extends Cubit<LoginState> {
 
         emit(LoginSuccess(result));
       } else {
-        emit(LoginFailure(result['error']?.toString() ?? 'Login failed'));
+        emit(LoginFailure(result['error']?.toString() ?? AppStrings.errorGeneric));
       }
     } catch (e) {
-      emit(LoginFailure('Unexpected error'));
+      emit(LoginFailure(AppStrings.errorUnexpected));
     }
   }
 

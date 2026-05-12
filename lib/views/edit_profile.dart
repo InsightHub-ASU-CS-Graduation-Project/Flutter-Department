@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:InsightHub/core/constant/app_colors.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
 import 'package:InsightHub/core/constant/labor_list.dart';
 import 'package:InsightHub/cuibt/cubit/profile_cubit.dart';
 import 'package:InsightHub/feature/auth/widget/auth_input_decoration.dart';
@@ -259,13 +260,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
       
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Employee status requires work experience. Please select '
-              'non-employee.',
-            ),
-          ),
+        SnackbarHelper.showInfo(
+          context,
+          'Employee status requires work experience. Please select non-employee.',
         );
       }
     }
@@ -335,14 +332,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return BlocConsumer<ProfileCubit, ProfileState>(
       listener: (context, state) {
         if (state is ProfileUpdateSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Profile updated successfully.')),
-          );
+          SnackbarHelper.showSuccess(context, 'Profile updated successfully.');
           Navigator.pop(context);
         } else if (state is ProfileUpdateFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          SnackbarHelper.showError(context, state.message);
         }
       },
       builder: (context, state) {

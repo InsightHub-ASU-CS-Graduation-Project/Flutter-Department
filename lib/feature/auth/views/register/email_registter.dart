@@ -8,6 +8,7 @@ import 'package:InsightHub/feature/auth/widget/auth_layout.dart';
 import 'package:InsightHub/feature/auth/widget/bottom_action_button.dart';
 import 'package:InsightHub/feature/auth/widget/card_container.dart';
 import 'package:InsightHub/feature/auth/widget/validatores.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 class RegisterAccountScreen extends StatefulWidget {
@@ -134,14 +135,7 @@ class _RegisterAccountScreenState
     return BlocListener<RegisterCubit, RegisterState>(
       listener: (context, state) {
         if (state is EmailExists) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'This email is already registered.',
-              ),
-              backgroundColor: Colors.red,
-            ),
-          );
+          SnackbarHelper.showError(context, 'This email is already registered.');
         } else if (state is EmailDoesNotExist) {
           context
               .read<RegisterCubit>()
@@ -164,14 +158,7 @@ class _RegisterAccountScreenState
             ),
           );
         } else if (state is OtpSendFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                state.errorMessage,
-              ),
-              backgroundColor: Colors.red,
-            ),
-          );
+          SnackbarHelper.showError(context, state.errorMessage);
         }
       },
       child: BlocBuilder<

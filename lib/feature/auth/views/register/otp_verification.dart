@@ -7,6 +7,7 @@ import 'package:InsightHub/feature/auth/widget/auth_layout.dart';
 import 'package:InsightHub/feature/auth/widget/bottom_action_button.dart';
 import 'package:InsightHub/feature/auth/widget/card_container.dart';
 import 'package:InsightHub/feature/auth/widget/otp_countdown_timer.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String email;
@@ -75,26 +76,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       listener: (context, state) {
         if (state is OtpVerified) {
           context.read<RegisterCubit>().savePassword(widget.password);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('OTP verified successfully!')),
-          );
+          SnackbarHelper.showSuccess(context, 'OTP verified successfully!');
           Navigator.pushNamedAndRemoveUntil(
             context,
             Routes.registerNameScreen,
             (route) => false,
           );
         } else if (state is OtpVerifyFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage)),
-          );
+          SnackbarHelper.showError(context, state.errorMessage);
         } else if (state is OtpSent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('OTP sent successfully!')),
-          );
+          SnackbarHelper.showSuccess(context, 'OTP sent successfully!');
         } else if (state is OtpSendFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.errorMessage)),
-          );
+          SnackbarHelper.showError(context, state.errorMessage);
         }
       },
       child: BlocBuilder<RegisterCubit, RegisterState>(

@@ -3,6 +3,7 @@ import 'package:InsightHub/core/constant/labor_list.dart';
 import 'package:InsightHub/core/services/endpoints.dart';
 import 'package:InsightHub/core/services/api_service.dart';
 import 'package:InsightHub/core/services/secure_storege.dart';
+import 'package:InsightHub/core/constant/app_strings.dart';
 import 'package:meta/meta.dart';
 import 'package:InsightHub/feature/auth/models/register_model.dart';
 
@@ -95,12 +96,12 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(
           RegisterFailure(
             result['error']?.toString() ??
-                'Registration failed',
+                AppStrings.errorGeneric,
           ),
         );
       }
     } catch (e) {
-      emit(RegisterFailure('Unexpected error: $e'));
+      emit(RegisterFailure(AppStrings.errorUnexpected));
     }
   }
 
@@ -125,7 +126,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     } catch (e) {
       emit(
         RegisterFailure(
-          'Error checking email: $e',
+          AppStrings.errorUnexpected,
         ),
       );
     }
@@ -152,14 +153,14 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(
           OtpSendFailure(
             result['error']?.toString() ??
-                'Failed to send OTP',
+                AppStrings.errorGeneric,
           ),
         );
       }
     } catch (e) {
       emit(
         OtpSendFailure(
-          'Error sending OTP: $e',
+          AppStrings.errorUnexpected,
         ),
       );
     }
@@ -186,14 +187,14 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(
           OtpVerifyFailure(
             result['error']?.toString() ??
-                'Invalid OTP code',
+                AppStrings.errorGeneric,
           ),
         );
       }
     } catch (e) {
       emit(
         OtpVerifyFailure(
-          'Error verifying OTP: $e',
+          AppStrings.errorUnexpected,
         ),
       );
     }

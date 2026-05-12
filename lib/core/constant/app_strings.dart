@@ -13,4 +13,13 @@ class AppStrings {
       "Password must contain at least one number";
   static const passwordSpecial =
       "Password must contain at least one special character";
+
+  // Error Messages
+  static const errorUnexpected = "An unexpected error occurred. Please try again.";
+  static const errorNoInternet = "No internet connection. Please check your network.";
+  static const errorServerUnavailable = "The server is currently unavailable. Please try again later.";
+  static const errorTimeout = "The request timed out. Please try again.";
+  static const errorUnauthorized = "Session expired. Please login again.";
+  static const errorInvalidCredentials = "The email or password is invalid.";
+  static const errorGeneric = "Something went wrong. Please try again.";
 }

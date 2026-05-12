@@ -14,6 +14,8 @@ class AppColors {
 
   static const border = Color(0xFFE5E7EB);
 
+  static const error = Color(0xFFEF4444);
+
   static const chipBorder = Color(0xFFD1D5DB);
 
   static const disabled = Color(0xFFD1D5DB);

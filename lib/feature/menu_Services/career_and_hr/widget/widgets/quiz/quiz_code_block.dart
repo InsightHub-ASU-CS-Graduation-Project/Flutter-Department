@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:highlight/highlight.dart' show highlight, Node;
 import 'package:flutter_highlight/themes/atom-one-dark.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
 
 class QuizCodeBlock extends StatefulWidget {
   final String code;
@@ -105,22 +106,7 @@ class _QuizCodeBlockState extends State<QuizCodeBlock> {
 
   void _copyToClipboard() {
     Clipboard.setData(ClipboardData(text: widget.code));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: const [
-            Icon(Icons.check_circle, color: Colors.white, size: 20),
-            SizedBox(width: 8),
-            Text('Code copied to clipboard', style: TextStyle(color: Colors.white)),
-          ],
-        ),
-        backgroundColor: const Color(0xFF1E293B),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      ),
-    );
+    SnackbarHelper.showInfo(context, 'Code copied to clipboard');
   }
 
   @override

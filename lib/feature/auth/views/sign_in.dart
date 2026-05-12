@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:InsightHub/core/utils/snackbar_helper.dart';
 import 'package:InsightHub/core/constant/routes.dart';
 import 'package:InsightHub/feature/auth/cubit/login_cubit.dart';
 import 'package:InsightHub/feature/auth/widget/auth_input_decoration.dart';
@@ -62,9 +63,7 @@ class _SignInScreenState extends State<SignInScreen> {
             (route) => false,
           );
         } else if (state is LoginFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.error)));
+          SnackbarHelper.showError(context, state.error);
         }
       },
       builder: (context, state) {

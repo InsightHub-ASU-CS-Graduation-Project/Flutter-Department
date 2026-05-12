@@ -3,6 +3,7 @@ import 'package:InsightHub/core/constant/labor_list.dart';
 import 'package:InsightHub/core/services/endpoints.dart';
 import 'package:InsightHub/core/services/api_service.dart';
 import 'package:InsightHub/core/services/secure_storege.dart';
+import 'package:InsightHub/core/constant/app_strings.dart';
 import 'package:meta/meta.dart';
 
 part 'logout_state.dart';
@@ -45,13 +46,13 @@ class LogoutCubit extends Cubit<LogoutState> {
       emit(
         DeleteAccountFailure(
           result['error']?.toString() ??
-              'Could not delete your account. Please try again.',
+              AppStrings.errorGeneric,
         ),
       );
     } catch (_) {
       emit(
         DeleteAccountFailure(
-          'Could not delete your account. Please try again.',
+          AppStrings.errorGeneric,
         ),
       );
     }
